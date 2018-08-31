@@ -73,4 +73,9 @@ export default (function () {
       window.dispatchEvent(window.EVENT);
     }, 300);
   });
+
+  $(document).on('click', '.js-logout', function () {
+      console.log('clicked')
+      $('.js-logout-form').submit();
+  })
 }());

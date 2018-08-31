@@ -11,8 +11,8 @@
 |
 */
 
-// Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'Admin\DashboardController@index')->name('home');
-// });
+});
 
 Auth::routes();

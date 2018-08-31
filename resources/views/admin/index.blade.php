@@ -18,12 +18,8 @@
 
         <!-- ### $App Screen Footer ### -->
         <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
-          <span>Copyright © 2018 Designed by <a href="#" target='_blank' title="CarFlow">Car Flow</a>. All rights reserved.</span>
+          <span>Copyright © 2018 Car Flow. All rights reserved.</span>
         </footer>
       </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script type="text/javascript" src="/js/admin.js"></script>
-@endpush
