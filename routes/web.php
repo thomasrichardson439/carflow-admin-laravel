@@ -11,10 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('pages.index');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', 'Admin\DashboardController@index')->name('home');
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
