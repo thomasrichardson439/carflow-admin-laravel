@@ -15,7 +15,7 @@
           @csrf
           <div class="form-group">
             <label class="text-normal text-dark">Username</label>
-            <input name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" Placeholder='John Doe'>
+            <input name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" Placeholder='Name'>
 
             @if ($errors->has('name'))
                 <span class="invalid-feedback" role="alert">
@@ -25,7 +25,7 @@
           </div>
           <div class="form-group">
             <label class="text-normal text-dark">Email Address</label>
-            <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" Placeholder='name@email.com'>
+            <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" Placeholder='Email'>
 
             @if ($errors->has('email'))
                 <span class="invalid-feedback" role="alert">

@@ -16,7 +16,7 @@
 
           <div class="form-group">
             <label class="text-normal text-dark">Username</label>
-            <input name="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="John Doe">
+            <input name="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email">
 
             @if ($errors->has('email'))
                 <span class="invalid-feedback" role="alert">
