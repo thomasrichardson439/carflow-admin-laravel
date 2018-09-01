@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use Validator;
 use App\Models\User;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -141,7 +142,7 @@ class AuthController extends Controller
                 'path' => 'storage/'.$path
             ));
         }
-        
+
         return true;
     }
 }
