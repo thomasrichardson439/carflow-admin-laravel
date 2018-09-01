@@ -16,8 +16,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'street', 'city', 'zip_code', 'phone',
-        'step'
+        'full_name', 'email', 'password', 'street', 'city', 'zip_code',
+        'phone', 'step', 'state', 'status', 'uber_approved'
     ];
 
     /**
@@ -28,4 +28,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
 }

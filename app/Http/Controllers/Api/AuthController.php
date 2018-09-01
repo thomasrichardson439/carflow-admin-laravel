@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use Validator;
 use App\Models\User;
 use App\Models\Document;
@@ -19,9 +18,9 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        if (Auth::attemp(['email' => $request->email,
+        if (auth()->attempt(['email' => $request->email,
                           'password' => $request->password])) {
-            $user = Auth::user();
+            $user = auth()->user();
             $token = $user->createToken('Car Flow')->accessToken;
 
             return response()->json(['auth_token' => $token], 200);
@@ -70,10 +69,11 @@ class AuthController extends Controller
     public function registerStep2(Request $request)
     {
         $validator = Validator::make($request->all(), [
-           'name' => 'required|min:2|max:100',
+           'full_name' => 'required|min:2|max:100',
            'street' => 'required|min:2|max:100',
            'city' => 'required|min:2|max:100',
            'zip_code' => 'required|min:5|max:10',
+           'state' => 'required|min:2|max:15',
            'phone' => 'required|min:9|max:19'
         ]);
 
@@ -81,16 +81,9 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        Auth::user()->update([
-            'name' => $request->name,
-            'street' => $request->street,
-            'city' => $request->city,
-            'zip_code' => $request->zip_code,
-            'phone' => $request->phone,
-            'step' => 2,
-        ]);
+        auth()->user()->update($request->merge(['step' => 2])->all());
 
-        return response()->json(['user' => Auth::user()], 200);
+        return response()->json(['user' => auth()->user()], 200);
     }
 
     /**
@@ -112,13 +105,13 @@ class AuthController extends Controller
         }
 
         $this->storeDocuments($request);
-        $user = Auth::user();
-        $user->status = $request->uber_approved ? 'pending' : 'approved',
-        $user->uber_approved = $request->uber_approved,
-        $user->step = 3
-        $user->save()
+        $request->merge([
+             'status' => $request->uber_approved ? 'pending' : 'approved',
+             'step' => 3
+        ]);
+        auth()->user()->update($request->all());
 
-        return response()->json(['user' => $user], 204);
+        return response()->json(['user' => auth()->user()], 200);
     }
 
     /**
@@ -135,12 +128,12 @@ class AuthController extends Controller
 
         foreach ($request->documents as $document) {
             $path = $document->storeAs(
-                'documents/'.Auth::id(),
+                'documents/' . auth()->id(),
                 $document->getCLientOriginalName()
             );
-            Auth::user()->documents()->save(new Document(
+            auth()->user()->documents()->save(new Document([
                 'path' => 'storage/'.$path
-            ));
+            ]));
         }
 
         return true;
