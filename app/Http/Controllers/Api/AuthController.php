@@ -32,7 +32,7 @@ class AuthController extends Controller
 
 
     /**
-    * Store a new user in database.
+    * Store user in database
     *
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
@@ -40,16 +40,18 @@ class AuthController extends Controller
     public function registerStep1(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|confirmable|min:6',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed|min:6',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $request->merge(['step' => 1]);
-        $user = User::create($request->all());
+        $user = User::create([
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
         $auth_token = $user->createToken('Car Flow')->accessToken;
 
         return response()->json([
@@ -59,7 +61,7 @@ class AuthController extends Controller
     }
 
     /**
-    * Registration step2 for storing user details
+    * Storing used additional details
     *
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
@@ -75,20 +77,23 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $request->merge(['step' => 2]);
-        $user = Auth::user()->update($request->all());
+        Auth::user()->update([
+            'name' => $request->name,
+            'street' => $request->street,
+            'city' => $request->city,
+            'zip_code' => $request->zip_code,
+            'phone' => $request->phone,
+            'step' => 2,
+        ]);
 
-        return response()->json([
-           'user' => $user,
-           'auth_token' => $auth_token
-        ], 201);
+        return response()->json(['user' => Auth::user()], 200);
     }
 
     /**
-    * Registration step3 for storing user driving documents
+    * Store user driving details
     *
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
@@ -96,21 +101,47 @@ class AuthController extends Controller
     public function registerStep3(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'work_for_uber' => 'required|boolean',
-            'documents.*' => 'required_if:work_for_uber,1|image|max:5000'
+            'uber_approved' => 'required|boolean',
+            'documents' => 'required_if:uber_approved,1',
+            'documents.*' => 'image|max:5000'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $request->merge(['step' => 3]);
-        $user = Auth::user()->update($request->all());
-        // Savign documents and sending email
+        $this->storeDocuments($request);
+        $user = Auth::user();
+        $user->status = $request->uber_approved ? 'pending' : 'approved',
+        $user->uber_approved = $request->uber_approved,
+        $user->step = 3
+        $user->save()
 
-        return response()->json([
-           'user' => $user,
-           'auth_token' => $auth_token
-        ], 204);
+        return response()->json(['user' => $user], 204);
+    }
+
+    /**
+    * Store user documents if user approved for uber
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return boolean
+    */
+    private function storeDocuments($request)
+    {
+        if (!$request->uber_approved) {
+            return false;
+        }
+
+        foreach ($request->documents as $document) {
+            $path = $document->storeAs(
+                'documents/'.Auth::id(),
+                $document->getCLientOriginalName()
+            );
+            Auth::user()->documents()->save(new Document(
+                'path' => 'storage/'.$path
+            ));
+        }
+        
+        return true;
     }
 }
