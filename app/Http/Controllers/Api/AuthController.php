@@ -14,20 +14,22 @@ class AuthController extends Controller
     /**
      * Login user
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
     {
-        if (auth()->attempt(['email' => $request->email,
-                          'password' => $request->password])) {
-            $user = auth()->user();
-            $token = $user->createToken('Car Flow')->accessToken;
+        if (auth()->attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ])) {
+            $token = auth()->user()->createToken('Car Flow')->accessToken;
 
-            return response()->json(['auth_token' => $token], 200);
+            return response()->json(['auth_token' => $token]);
         }
 
         return response()->json([
-            'message' => 'Invalid login or password'], 401);
+            'message' => 'Invalid login or password'
+        ], 401);
     }
 
 
@@ -35,19 +37,11 @@ class AuthController extends Controller
     * Store user in database
     *
     * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
+    * @return \Illuminate\Http\JsonResponse
     */
     public function registerStep1(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
+        $this->validate($request, $this->rules(1));
         $user = User::create([
             'email' => $request->email,
             'password' => bcrypt($request->password)
@@ -64,46 +58,25 @@ class AuthController extends Controller
     * Storing used additional details
     *
     * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
+    * @return \Illuminate\Http\JsonResponse
     */
     public function registerStep2(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-           'full_name' => 'required|min:2|max:100',
-           'street' => 'required|min:2|max:100',
-           'city' => 'required|min:2|max:100',
-           'zip_code' => 'required|min:5|max:10',
-           'state' => 'required|min:2|max:15',
-           'phone' => 'required|min:9|max:19'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
+        $this->validate($request, $this->rules(2));
         auth()->user()->update($request->merge(['step' => 2])->all());
 
-        return response()->json(['user' => auth()->user()], 200);
+        return response()->json(['user' => auth()->user()]);
     }
 
     /**
     * Store user driving details
     *
     * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
+    * @return \Illuminate\Http\JsonResponse
     */
     public function registerStep3(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'uber_approved' => 'required|boolean',
-            'documents' => 'required_if:uber_approved,1',
-            'documents.*' => 'image|max:5000'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
+        $this->validate($request, $this->rules(3));
         $this->storeDocuments($request);
         $request->merge([
              'status' => $request->uber_approved ? 'pending' : 'approved',
@@ -111,7 +84,7 @@ class AuthController extends Controller
         ]);
         auth()->user()->update($request->all());
 
-        return response()->json(['user' => auth()->user()], 200);
+        return response()->json(['user' => auth()->user()]);
     }
 
     /**
@@ -131,11 +104,42 @@ class AuthController extends Controller
                 'documents/' . auth()->id(),
                 $document->getCLientOriginalName()
             );
-            auth()->user()->documents()->save(new Document([
-                'path' => 'storage/'.$path
-            ]));
+            auth()->user()->documents()->save(
+                new Document(['path' => 'storage/'.$path])
+            );
         }
 
         return true;
+    }
+
+    /**
+     * Get rules for register step
+     *
+     * @return array
+     */
+    protected function rules($step)
+    {
+        switch ($step) {
+            case 1:
+                return [
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required|confirmed|min:6'
+                ];
+            case 2:
+                return [
+                    'full_name' => 'required|min:2|max:100',
+                    'street' => 'required|min:2|max:100',
+                    'city' => 'required|min:2|max:100',
+                    'zip_code' => 'required|min:5|max:10',
+                    'state' => 'required|min:2|max:15',
+                    'phone' => 'required|min:9|max:19'
+                ];
+            case 3:
+                return [
+                    'uber_approved' => 'required|boolean',
+                    'documents' => 'required_if:uber_approved,1',
+                    'documents.*' => 'image|max:5000'
+                ];
+        }
     }
 }

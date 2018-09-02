@@ -11,8 +11,13 @@
 |
 */
 
-Route::group(['middleware' => 'auth.admin'], function () {
-    Route::get('/', 'Admin\DashboardController@index')->name('home');
+Route::group([
+    'namespace' => 'Admin',
+    'middleware' => 'auth.admin'
+], function () {
+    Route::get('/', 'DashboardController@index')->name('home');
 });
 
 Auth::routes();
+
+Route::get('/reset-success', 'Auth\ResetPasswordController@showSuccessPage');

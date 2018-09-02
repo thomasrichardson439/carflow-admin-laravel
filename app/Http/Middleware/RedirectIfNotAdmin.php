@@ -19,7 +19,7 @@ class RedirectIfNotAdmin
         if (Auth::user() && Auth::user()->admin) {
             return $next($request);
         } elseif (Auth::user()) {
-            abort(404);
+            abort(403);
         }
 
         return redirect('/login');
