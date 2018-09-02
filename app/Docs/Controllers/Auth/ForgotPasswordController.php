@@ -27,14 +27,8 @@
  *   ),
  *
  *   @OA\Response(
- *       response="401",
- *       description="Unauthorized",
- *       @OA\JsonContent(@OA\Property(property="message", example="Invalid login or password", type="string"))
- *   ),
- *
- *   @OA\Response(
  *       response="404",
- *       description="Unauthorized",
+ *       description="Not Found",
  *       @OA\JsonContent(@OA\Property(property="message", example="User with email not found", type="string"))
  *   ),
  *

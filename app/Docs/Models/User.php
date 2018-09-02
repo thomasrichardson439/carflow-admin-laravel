@@ -15,5 +15,5 @@
 *   @OA\Property(property="step", type="integer", enum={1, 2, 3}),
 *   @OA\Property(property="status", type="string", enum={"rejected", "pending", "approved"}),
 *   @OA\Property(property="uber_approved", format="phone", type="boolean"),
-* ) 
+* )
 */
