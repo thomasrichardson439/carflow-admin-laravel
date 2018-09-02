@@ -75,9 +75,9 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        if (!$user = User::find($id)) {
+        if ($user = User::find($id)) {
             $user->delete();
-            return response()->json($user, 200);
+            return response()->json($user);
         }
 
         return $this->errorResponse(404);
