@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['namespace' => 'Auth'], function () {
-    Route::post('/password/email', 'ResetPasswordController@sendResetLinkEmail');
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'ResetPasswordController@reset');
     Route::post('/password/change', 'ResetPasswordController@change')->middleware('auth:api');
 });
