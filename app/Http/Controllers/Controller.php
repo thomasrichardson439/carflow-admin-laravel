@@ -11,12 +11,18 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 * @OA\Info(title="Car Flow", version="0.1")
 *
 * @OA\Tag(
+*   name="auth",
+*   description="Auth",
+* )
+*
+* @OA\Tag(
 *   name="user",
 *   description="User resource",
-*   @OA\ExternalDocumentation(
-*     description="Find out more",
-*     url="http://swagger.io"
-*   )
+* )
+*
+* @OA\Tag(
+*   name="password",
+*   description="Password",
 * )
 *
 * @OA\SecurityScheme(

@@ -18,7 +18,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 *   @OA\Property(property="zip_code", format="string", type="string"),
 *   @OA\Property(property="state", format="state", type="string"),
 *   @OA\Property(property="phone", format="phone", type="string"),
-*
+*   @OA\Property(property="step", type="integer", enum={1, 2, 3}),
+*   @OA\Property(property="status", type="string", enum={"rejected", "pending", "approved"}),
+*   @OA\Property(property="uber_approved", format="phone", type="boolean"),
 * )
 */
 class User extends Authenticatable

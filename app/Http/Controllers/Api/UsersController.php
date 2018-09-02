@@ -156,19 +156,14 @@ class UsersController extends Controller
      *       response="422",
      *       description="Validation failed",
      *       @OA\JsonContent(
-     *           @OA\Property(property="message", example="The given data was invalid.", type="string"),
      *           @OA\Property(property="errors",
      *               type="array",
      *               @OA\Items(
      *                   @OA\Property(
-     *                       property="street",
-     *                       example="Street must be at least 5 characters.",
-     *                       type="string"
-     *                   ),
-     *                   @OA\Property(property="city", example="City must be at least 5 characters.", type="string"),
-     *                   @OA\Property(property="zip_code", example="Zip must be at least 5 characters.", type="string"),
-     *                   @OA\Property(property="state", example="State must be at least 5 characters.", type="string"),
-     *                   @OA\Property(property="phone", example="Phone must be at least 5 characters.", type="string"),
+     *                       property="city",
+     *                       type="array",
+     *                       @OA\Items(type="string", example="Zip must be at least 5 characters.")
+     *                   )
      *               )
      *           ),
      *       )
