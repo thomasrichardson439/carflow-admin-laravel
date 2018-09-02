@@ -57,10 +57,7 @@ class ResetPasswordController extends Controller
         if (\Hash::check($request->token, $record->first()->token)) {
             $record->delete();
             $user = User::where('email', $request->email)->first();
-            $user->tokens()->delete();
-            $user->password = bcrypt($request->password);
-            $user->save();
-            $user->createToken('Car Flow');
+            $this->updatePassword($user, $request->password);
 
             return redirect($this->redirectTo);
         }
@@ -85,16 +82,14 @@ class ResetPasswordController extends Controller
 
         if (\Hash::check($request->password, auth()->user()->password)) {
             $user = auth()->user();
-            $user->tokens()->delete();
-            $user->password = bcrypt($request->new_password);
-            $user->save();
-            $auth_token = $user->createToken('Car Flow')->accessToken;
+            $auth_token =  $this->updatePassword($user, $request->new_password);
 
             return response()->json(['auth_token' => $auth_token]);
         }
 
         return response()->json(['message' => 'Invalid user password']);
     }
+
     /**
      * Show message on success password reset
      *
@@ -104,5 +99,19 @@ class ResetPasswordController extends Controller
     {
         auth()->logout();
         return view('auth.passwords.reset-success');
+    }
+
+    /**
+     * Update user password
+     * @param  \App\Models\User $user
+     * @param  string $password
+     * @return string
+     */
+    private function updatePassword($user, $password)
+    {
+        $user->tokens()->delete();
+        $user->password = bcrypt($password);
+        $user->save();
+        return $user->createToken('Car Flow')->accessToken;
     }
 }
