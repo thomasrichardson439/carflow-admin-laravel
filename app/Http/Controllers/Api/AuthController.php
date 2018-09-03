@@ -101,7 +101,7 @@ class AuthController extends Controller
 
         foreach ($request->documents as $document) {
             $path = $document->storeAs(
-                'documents/' . auth()->id(),
+                'user/documents/' . auth()->id(),
                 $document->getCLientOriginalName()
             );
             auth()->user()->documents()->save(

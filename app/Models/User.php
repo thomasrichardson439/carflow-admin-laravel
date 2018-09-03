@@ -9,7 +9,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -17,7 +16,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'full_name', 'email', 'password', 'street', 'city', 'zip_code',
-        'phone', 'step', 'state', 'status', 'uber_approved'
+        'phone', 'step', 'state', 'status', 'uber_approved', 'photo'
     ];
 
     /**

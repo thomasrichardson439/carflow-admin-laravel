@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Storage;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -49,20 +50,29 @@ class UsersController extends Controller
            'city' => 'min:2|max:100',
            'zip_code' => 'min:5|max:10',
            'state' => 'min:2|max:15',
-           'phone' => 'min:9|max:19'
+           'phone' => 'min:9|max:19',
+           'photo' => 'image|max:2048'
         ]);
 
         if (!$user = User::find($id)) {
             return $this->errorResponse(404);
         }
 
-        $user->update($request->only([
+        $data = $request->only([
             'street',
             'city',
             'zip_code',
             'state',
             'phone'
-        ]));
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = Storage::url(
+                $request->photo->store('user/images/' . $user->id)
+            );
+        }
+
+        $user->update($data);
 
         return response()->json($user, 200);
     }

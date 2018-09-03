@@ -76,7 +76,7 @@
 */
 
 /**
-*@OA\Patch(
+*@OA\Post(
 *  tags={"user"},
 *  path="/api/users/{id}",
 *  summary="Update user",
@@ -96,13 +96,15 @@
 *    required=true,
 *    description="Updated user object",
 *    @OA\MediaType(
-*      mediaType="application/x-www-form-urlencoded",
+*      mediaType="multipart/form-data",
 *      @OA\Schema(
 *        @OA\Property(property="street", format="string", type="string"),
 *        @OA\Property(property="city", format="string", type="string"),
 *        @OA\Property(property="state", format="string", type="string"),
 *        @OA\Property(property="zip_code", format="string", type="string"),
 *        @OA\Property(property="phone", format="string", type="string"),
+*        @OA\Property(property="photo", format="image", type="file"),
+*        @OA\Property(property="_method", type="string", example="PATCH"),
 *      ),
 *    )
 *  ),

@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('zip_code')->nullable();
             $table->string('state')->nullable();
             $table->string('phone')->nullable();
+            $table->string('photo')->nullable();
             $table->enum('step', [1, 2, 3])->default(1);
             $table->enum('status', ['rejected', 'pending', 'approved'])
                   ->default('pending');
