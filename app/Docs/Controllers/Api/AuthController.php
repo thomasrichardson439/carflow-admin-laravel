@@ -103,12 +103,12 @@
 *    @OA\MediaType(
 *      mediaType="multipart/form-data",
 *      @OA\Schema(
-*        @OA\Property(property="full_name", format="string", type="string", required={"true"}),
-*        @OA\Property(property="street", format="string", type="string", required={"true"}),
-*        @OA\Property(property="city", format="string", type="string", required={"true"}),
-*        @OA\Property(property="zip_code", format="string", type="string", required={"true"}),
-*        @OA\Property(property="state", format="string", type="string", required={"true"}),
-*        @OA\Property(property="phone", format="string", type="string", required={"true"}),
+*        @OA\Property(property="full_name", example="John Dane", format="string", type="string", required={"true"}),
+*        @OA\Property(property="street", example="Park Avenue", format="string", type="string", required={"true"}),
+*        @OA\Property(property="city", example="New York", format="string", type="string", required={"true"}),
+*        @OA\Property(property="zip_code", example="100001", format="string", type="string", required={"true"}),
+*        @OA\Property(property="state", example="New York", format="string", type="string", required={"true"}),
+*        @OA\Property(property="phone", example="411 555 1234", format="string", type="string", required={"true"}),
 *      ),
 *    )
 *  ),

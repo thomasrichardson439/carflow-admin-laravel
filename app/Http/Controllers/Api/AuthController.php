@@ -76,8 +76,13 @@ class AuthController extends Controller
     */
     public function registerStep3(Request $request)
     {
-        $this->validate($request, $this->rules(3));
-        $this->storeDocuments($request);
+        $this->validate($request, ['uber_approved' => 'required|boolean']);
+
+        if ($request->uber_approved) {
+            $this->validate($request, $this->rules(3));
+            $this->storeDocuments($request);
+        }
+
         $request->merge([
              'status' => $request->uber_approved ? 'pending' : 'approved',
              'step' => 3
@@ -95,10 +100,6 @@ class AuthController extends Controller
     */
     private function storeDocuments($request)
     {
-        if (!$request->uber_approved) {
-            return ;
-        }
-
         foreach ($request->documents as $document) {
             $path = $document->storeAs(
                 'user/documents/' . auth()->id(),
@@ -134,9 +135,8 @@ class AuthController extends Controller
                 ];
             case 3:
                 return [
-                    'uber_approved' => 'required|boolean',
                     'documents' => 'required_if:uber_approved,1|size:3',
-                    'documents.*' => 'image|max:5000'
+                    'documents.*' => 'required_if:uber_approved,1|image|max:5000'
                 ];
         }
     }
