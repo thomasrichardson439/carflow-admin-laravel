@@ -14,7 +14,7 @@
 *    @OA\MediaType(
 *      mediaType="multipart/form-data",
 *      @OA\Schema(
-*        @OA\Property(property="password", format="email", type="string", required={"true"}),
+*        @OA\Property(property="password", format="password", type="string", required={"true"}),
 *        @OA\Property(property="new_password", format="password", type="string", required={"true"}),
 *        @OA\Property(property="new_password_confirmation", format="password", type="string", required={"true"}),
 *      ),
