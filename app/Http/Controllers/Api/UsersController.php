@@ -93,6 +93,12 @@ class UsersController extends Controller
         return $this->errorResponse(404);
     }
 
+    /**
+     * Return error response for specified code
+     *
+     * @param  int  $code
+     * @return \Illuminate\Http\Response
+     */
     private function errorResponse($code)
     {
         switch ($code) {
