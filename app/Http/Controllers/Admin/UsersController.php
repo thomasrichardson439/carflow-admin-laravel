@@ -96,4 +96,35 @@ class UsersController extends Controller
     {
         //
     }
+    /**
+     * Reject user documents
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function rejectDocuments($id)
+    {
+         $user = User::findOrFail($id);
+         $user->status = 'rejected';
+         $user->step = 2;
+         $user->uber_approved = 0;
+         $user->save();
+         
+         return redirect()->route('admin.users.index');
+    }
+
+     /**
+      * Approve user documents
+      *
+      * @param  int  $id
+      * @return \Illuminate\Http\Response
+      */
+    public function approveDocuments($id)
+    {
+        $user = User::findOrFail($id);
+        $user->status = 'approved';
+        $user->save();
+
+        return redirect()->route('admin.users.index');
+    }
 }

@@ -23,6 +23,10 @@ Route::group([
     Route::resource('users', 'UsersController');
     Route::get('/users-data', 'UsersController@usersData')
          ->name('users.usersData');
+
+     Route::post('/approve/{id}', 'UsersController@approveDocuments');
+     Route::post('/reject/{id}', 'UsersController@rejectDocuments');
+
 });
 
 Auth::routes();

@@ -7,7 +7,6 @@
     <div class="bgc-white p-20 bd">
       <h6 class="c-grey-900">Update user state</h6>
       <div class="mT-30">
-        <form>
           <div class="form-row">
               <div class="">
                   @foreach ($user->documents->take(3) as $document)
@@ -16,9 +15,18 @@
               </div>
           </div>
 
-          <button type="submit" class="btn btn-danger">Reject</button>
-          <button type="submit" class="btn btn-success">Approve</button>
-        </form>
+          <div class="form-row">
+              <form class="" action="/admin/reject/{{$user->id}}" method="post">
+                  @csrf
+                  <button type="submit" class="btn btn-danger">Reject</button>
+              </form>
+
+              <form class="" action="/admin/approve/{{$user->id}}" method="post">
+                  @csrf
+                  <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+            </form>
+          </div>
       </div>
     </div>
   </div>
