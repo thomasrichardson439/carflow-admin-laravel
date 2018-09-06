@@ -4,3 +4,9 @@
 @import 'spec/index';
 @import 'vendor/index';
 
+.preview-img {
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    object-fit: cover;
+}

@@ -39,7 +39,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class='sidebar-link' href="#">
+            <a class='sidebar-link' href="{{ route('admin.users.index') }}">
               <span class="icon-holder">
                   <i class="c-teal-500 ti-view-list-alt"></i>
               </span>

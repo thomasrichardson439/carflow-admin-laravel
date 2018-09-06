@@ -8,3 +8,6 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import * as $ from 'jquery';
+import 'datatables';
+import Viewer from 'viewerjs';

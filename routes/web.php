@@ -11,11 +11,18 @@
 |
 */
 
+Route::get('/', 'Admin\DashboardController@index');
+
 Route::group([
     'namespace' => 'Admin',
-    'middleware' => 'auth.admin'
+    'middleware' => 'auth.admin',
+    'prefix' => 'admin',
+    'as' => 'admin.'
 ], function () {
     Route::get('/', 'DashboardController@index')->name('home');
+    Route::resource('users', 'UsersController');
+    Route::get('/users-data', 'UsersController@usersData')
+         ->name('users.usersData');
 });
 
 Auth::routes();

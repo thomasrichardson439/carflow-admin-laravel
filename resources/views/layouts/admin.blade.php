@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@stack('title', 'Car Flow')</title>
     <link rel="stylesheet" href="{{ asset('/css/admin.css') }}">
+    @stack('styles')
     <style>
       #loader {
         transition: all 0.3s ease-in-out;
@@ -69,9 +70,26 @@
         }, 300);
       });
     </script>
+    <div>
+        @include('_partials.sidebar')
 
-    @yield('content')
+      <div class="page-container">
 
+        @include('_partials.topbar')
+
+        <main class='main-content bgc-grey-100'>
+          <div id='mainContent'>
+
+              @yield('content')
+
+          </div>
+        </main>
+
+        <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
+          <span>Copyright © 2018 Car Flow. All rights reserved.</span>
+        </footer>
+      </div>
+    </div>
     <script type="text/javascript" src="/js/admin.js"></script>
     @stack('scripts')
   </body>
