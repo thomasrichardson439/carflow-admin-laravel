@@ -46,10 +46,14 @@ $(function() {
             { data: 'status', name: 'status' },
             { data: 'id',
               name: 'id',
-              "render": function(data, type, row, meta){
-                  return '<a href="/admin/users/'+ data + '">' +  'View' + '</a>';
+              "render": function(data, type, row, meta) {
+                  if (row.status == 'pending') {
+                      return '<a href="/admin/users/'+ data + '">' +  'Approve' + '</a>';
+                  } else {
+                      return '';
+                  }
                } }
-        ]
+        ],
     });
 });
 </script>
