@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'Admin\DashboardController@index');
+Route::get('/', 'Admin\DashboardController@index')->middleware('auth.admin');
 
 Route::group([
     'namespace' => 'Admin',
@@ -26,7 +26,6 @@ Route::group([
 
      Route::post('/approve/{id}', 'UsersController@approveDocuments');
      Route::post('/reject/{id}', 'UsersController@rejectDocuments');
-
 });
 
 Auth::routes();

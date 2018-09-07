@@ -71,24 +71,31 @@
       });
     </script>
     <div>
-        @include('_partials.sidebar')
+        @guest
 
-      <div class="page-container">
+            @yield('content')
+            
+        @else
 
-        @include('_partials.topbar')
+            @include('_partials.sidebar')
 
-        <main class='main-content bgc-grey-100'>
-          <div id='mainContent'>
+              <div class="page-container">
 
-              @yield('content')
+                @include('_partials.topbar')
 
-          </div>
-        </main>
+                <main class='main-content bgc-grey-100'>
+                  <div id='mainContent'>
 
-        <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
-          <span>Copyright © 2018 Car Flow. All rights reserved.</span>
-        </footer>
-      </div>
+                      @yield('content')
+
+                  </div>
+                </main>
+
+                <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
+                  <span>Copyright © 2018 Car Flow. All rights reserved.</span>
+                </footer>
+              </div>
+         @endguest
     </div>
     <script type="text/javascript" src="/js/admin.js"></script>
     @stack('scripts')
