@@ -10,7 +10,7 @@
           <div class="form-row">
               <div class="">
                   @foreach ($user->documents->take(3) as $document)
-                      <img src="/{{$document->path}}" data-high-res-src="https://us-east-1.tchyn.io/snopes-production/uploads/2017/09/maya-the-bee.jpg"class="img-thumbnail preview-img gallery-items" alt="">
+                      <img src="{{$document->path}}" data-high-res-src="https://us-east-1.tchyn.io/snopes-production/uploads/2017/09/maya-the-bee.jpg"class="img-thumbnail preview-img gallery-items" alt="">
                   @endforeach
               </div>
           </div>

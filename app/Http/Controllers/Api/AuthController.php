@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Storage;
 use Validator;
 use App\Models\User;
 use App\Models\Document;
@@ -106,7 +107,7 @@ class AuthController extends Controller
                 $document->getCLientOriginalName()
             );
             auth()->user()->documents()->save(
-                new Document(['path' => 'storage/'.$path])
+                new Document(['path' => Storage::url($path)])
             );
         }
     }
