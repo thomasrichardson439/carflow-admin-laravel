@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Mail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
+use App\Mail\DocumentsReviewNotification;
 
 class UsersController extends Controller
 {
@@ -109,7 +111,9 @@ class UsersController extends Controller
          $user->step = 2;
          $user->uber_approved = 0;
          $user->save();
-         
+
+         Mail::to($user->email)->send(new DocumentsReviewNotification(0));
+
          return redirect()->route('admin.users.index');
     }
 
@@ -124,6 +128,8 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $user->status = 'approved';
         $user->save();
+
+        Mail::to($user->email)->send(new DocumentsReviewNotification(1));
 
         return redirect()->route('admin.users.index');
     }

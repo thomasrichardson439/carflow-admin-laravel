@@ -80691,3 +80691,15 @@ table.dataTable.no-footer {
      object-fit: cover;
 }
 
+.logo {
+  padding: 10px;
+}
+
+.logo img {
+  max-width: 100%;
+}
+
+.site-logo {
+  max-width: 100%;
+}
+

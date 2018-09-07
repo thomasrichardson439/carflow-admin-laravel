@@ -9,7 +9,7 @@
                 <div class="peers ai-c fxw-nw">
                   <div class="peer">
                     <div class="logo">
-                      <img src="/images/logo.png" alt="">
+                      <img src="/images/main_logo.png" alt="">
                     </div>
                   </div>
                   <div class="peer peer-greed">
@@ -31,7 +31,7 @@
         <!-- ### $Sidebar Menu ### -->
         <ul class="sidebar-menu scrollable pos-r">
           <li class="nav-item mT-30 active">
-            <a class="sidebar-link" href="#">
+            <a class="sidebar-link" href="/admin">
               <span class="icon-holder">
                 <i class="c-blue-500 ti-home"></i>
               </span>

@@ -16,16 +16,15 @@
           </div>
 
           <div class="form-row">
+              <form class="mr-2" action="/admin/approve/{{$user->id}}" method="post">
+                  @csrf
+                  <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+
               <form class="" action="/admin/reject/{{$user->id}}" method="post">
                   @csrf
                   <button type="submit" class="btn btn-danger">Reject</button>
               </form>
-
-              <form class="" action="/admin/approve/{{$user->id}}" method="post">
-                  @csrf
-                  <button type="submit" class="btn btn-success">Approve</button>
-              </form>
-            </form>
           </div>
       </div>
     </div>
