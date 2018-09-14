@@ -11,6 +11,11 @@
               <tr>
                 <th>Full Name</th>
                 <th>Email </th>
+                <th>State </th>
+                <th>City </th>
+                <th>Street </th>
+                <th>Zip Code </th>
+                <th>Phone</th>
                 <th>Ridesharing apps</th>
                 <th>Documents</th>
                 <th>Status</th>
@@ -34,6 +39,11 @@ $(function() {
         columns: [
             { data: 'full_name', name: 'full_name' },
             { data: 'email', name: 'email' },
+            { data: 'state', name: 'state' },
+            { data: 'city', name: 'city' },
+            { data: 'street', name: 'street' },
+            { data: 'zip_code', name: 'zip_code' },
+            { data: 'phone', name: 'phone' },
             { data: 'ridesharing_apps', name: 'ridesharing_apps' },
             { data: 'documents_uploaded', name: 'documents_uploaded' },
             { data: 'status', name: 'status' },
