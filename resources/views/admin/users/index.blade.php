@@ -9,7 +9,7 @@
         <table id="usersTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th></th>
+                <th>No</th>
                 <th>Full Name</th>
                 <th>Email </th>
                 <th>State </th>
