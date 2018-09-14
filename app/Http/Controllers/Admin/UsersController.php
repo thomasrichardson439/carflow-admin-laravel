@@ -28,7 +28,7 @@ class UsersController extends Controller
      */
     public function usersData()
     {
-        return Datatables::of(User::query())->make(true);
+        return Datatables::of(User::where('admin', 0))->make(true);
     }
 
     /**
@@ -108,11 +108,10 @@ class UsersController extends Controller
     {
          $user = User::findOrFail($id);
          $user->status = 'rejected';
-         $user->step = 2;
-         $user->uber_approved = 0;
+         $user->documents_uploaded = 0;
          $user->save();
 
-         Mail::to($user->email)->send(new DocumentsReviewNotification(0));
+         // Mail::to($user->email)->send(new DocumentsReviewNotification(0));
 
          return redirect()->route('admin.users.index');
     }
@@ -127,9 +126,10 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
         $user->status = 'approved';
+        $user->documents_uploaded = 1;
         $user->save();
 
-        Mail::to($user->email)->send(new DocumentsReviewNotification(1));
+        // Mail::to($user->email)->send(new DocumentsReviewNotification(1));
 
         return redirect()->route('admin.users.index');
     }

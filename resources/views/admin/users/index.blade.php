@@ -11,11 +11,8 @@
               <tr>
                 <th>Full Name</th>
                 <th>Email </th>
-                <th>Street</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip code</th>
-                <th>Phone</th>
+                <th>Ridesharing apps</th>
+                <th>Documents</th>
                 <th>Status</th>
                 <th>View</th>
               </tr>
@@ -37,21 +34,18 @@ $(function() {
         columns: [
             { data: 'full_name', name: 'full_name' },
             { data: 'email', name: 'email' },
-            { data: 'street', name: 'street' },
-            { data: 'city', name: 'city' },
-            { data: 'state', name: 'state' },
-            { data: 'zip_code', name: 'zip_code' },
-            { data: 'phone', name: 'phone' },
+            { data: 'ridesharing_apps', name: 'ridesharing_apps' },
+            { data: 'documents_uploaded', name: 'documents_uploaded' },
             { data: 'status', name: 'status' },
             { data: 'id',
               name: 'id',
               "render": function(data, type, row, meta) {
-                  if (row.status == 'pending') {
-                      return '<a href="/admin/users/'+ data + '">' +  'Approve' + '</a>';
-                  } else {
-                      return '';
+                  var title = 'Review';
+                  if (row.status == 'approved') {
+                    title = 'Unapprove';
                   }
-               } }
+                  return '<a href="/admin/users/'+ data + '">' +  title + '</a>';
+               } },
         ],
     });
 });
