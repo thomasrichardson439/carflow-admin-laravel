@@ -28,7 +28,7 @@ Route::group(['namespace' => 'Api'], function () {
 
 
     Route::group(['prefix' => 'register'], function () {
-        Route::post('/', 'AuthController@register');
+        Route::post('/create', 'AuthController@register');
 
         Route::group(['middleware' => 'auth:api'], function () {
             Route::post('/upload-documents', 'AuthController@uploadDocuments');

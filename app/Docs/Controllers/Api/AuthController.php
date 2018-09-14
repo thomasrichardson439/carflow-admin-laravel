@@ -41,7 +41,7 @@
 /**
 *@OA\Post(
 *  tags={"auth"},
-*  path="/api/register/",
+*  path="/api/register/create",
 *  summary="Create user",
 *  security={
 *    {"api_key": {}}
