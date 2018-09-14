@@ -71,8 +71,8 @@ class AuthController extends Controller
               'errors' => ['documents' => ['Documents not uploaded']]
             ], 422);
         }
-        
-        auth()->user()->update($request->merge(['step' => 2])->all());
+
+        auth()->user()->update($request->all());
 
         return response()->json(auth()->user());
     }
@@ -91,14 +91,16 @@ class AuthController extends Controller
           'driving_license_back' => 'required|image',
           'tlc_license_front' => 'required|image',
           'tlc_license_back' => 'required|image',
+          'ridesharing_apps' => 'string',
         ]);
 
         $user = auth()->user();
         $this->storeDocuments($request, $user);
+        $user->ridesharing_apps = $request->ridesharing_apps;
         $user->ridesharing_approved = $request->ridesharing_approved;
         $user->save();
 
-        return response()->json(auth()->user());
+        return response()->json($user);
     }
 
     /**
@@ -112,20 +114,23 @@ class AuthController extends Controller
         $storage_folder = 'user/documents/' . auth()->id();
 
         $drivingLicense = new DrivingLicense;
-        $drivingLicense->front =
-            $request->driving_license_front->store($storage_folder);
-        $drivingLicense->back =
-            $request->driving_license_back->store($storage_folder);
-        $user->tlc_license_front =
+        $drivingLicense->front = Storage::url(
+            $request->driving_license_front->store($storage_folder)
+        );
+        $drivingLicense->back = Storage::url(
+            $request->driving_license_back->store($storage_folder)
+        );
 
-        $TLCLicense = new TLCLicense;
-        $TLCLicense->front =
-            $request->tlc_license_front->store($storage_folder);
-        $TLCLicense->back =
-            $request->tlc_license_back->store($storage_folder);
-
-        $user()->drivingLicence()->save($drivingLicense);
-        $user()->TLCLicense()->save($TLCLicense);
+        $tlcLicense = new TLCLicense;
+        $tlcLicense->front = Storage::url(
+            $request->tlc_license_front->store($storage_folder)
+        );
+        $tlcLicense->back = Storage::url(
+            $request->tlc_license_back->store($storage_folder)
+        );
+        $user->drivingLicense()->save($drivingLicense);
+        $user->tlcLicense()->save($tlcLicense);
+        $user->documents_uploaded = 1;
     }
 
     /**

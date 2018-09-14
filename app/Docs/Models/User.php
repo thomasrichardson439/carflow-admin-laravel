@@ -13,8 +13,21 @@
 *   @OA\Property(property="state", format="state", type="string"),
 *   @OA\Property(property="phone", format="phone", type="string"),
 *   @OA\Property(property="photo", format="url", type="string"),
-*   @OA\Property(property="step", type="integer", enum={1, 2, 3}),
 *   @OA\Property(property="status", type="string", enum={"rejected", "pending", "approved"}),
-*   @OA\Property(property="uber_approved", format="phone", type="boolean"),
+*   @OA\Property(property="ridesharing_approved", format="integer", type="boolean"),
+*   @OA\Property(property="documents_uploaded", format="integer", type="boolean"),
+*   @OA\Property(property="ridesharing_apps", format="string", example="uber, lyft", type="string"),
+*      @OA\Property(
+*        property="tlcLicense",
+*        type="object",
+*        @OA\Property(property="front", format="url", type="string"),
+*        @OA\Property(property="back", format="url", type="string"),
+*      ),
+*      @OA\Property(
+*        property="drivingLicense",
+*        type="object",
+*        @OA\Property(property="front", format="url", type="string"),
+*        @OA\Property(property="back", format="url", type="string"),
+*      ),
 * )
 */

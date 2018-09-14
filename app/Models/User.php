@@ -28,13 +28,25 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function drivingLicence()
+    protected $with = ['tlcLicense', 'drivingLicense'];
+
+    public function drivingLicense()
     {
         return $this->hasOne(DrivingLicense::class);
     }
 
-    public function TLCLicense()
+    public function tlcLicense()
     {
         return $this->hasOne(TLCLicense::class);
     }
+
+    // public function getDrivingLicenseAttribute()
+    // {
+    //     return $this->drivingLicense();
+    // }
+    //
+    // public function getTlcLicenseAttribute()
+    // {
+    //     return $this->drivingLicense();
+    // }
 }
