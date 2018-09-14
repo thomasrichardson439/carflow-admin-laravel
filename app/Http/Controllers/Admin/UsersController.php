@@ -111,7 +111,7 @@ class UsersController extends Controller
          $user->documents_uploaded = 0;
          $user->save();
 
-         // Mail::to($user->email)->send(new DocumentsReviewNotification(0));
+         Mail::to($user->email)->send(new DocumentsReviewNotification(0));
 
          return redirect()->route('admin.users.index');
     }
@@ -129,7 +129,7 @@ class UsersController extends Controller
         $user->documents_uploaded = 1;
         $user->save();
 
-        // Mail::to($user->email)->send(new DocumentsReviewNotification(1));
+        Mail::to($user->email)->send(new DocumentsReviewNotification(1));
 
         return redirect()->route('admin.users.index');
     }
