@@ -28,11 +28,11 @@ Route::group(['namespace' => 'Api'], function () {
 
 
     Route::group(['prefix' => 'register'], function () {
-        Route::post('/step-1', 'AuthController@registerStep1');
+        Route::post('/', 'AuthController@register');
 
         Route::group(['middleware' => 'auth:api'], function () {
-            Route::post('/step-2', 'AuthController@registerStep2');
-            Route::post('/step-3', 'AuthController@registerStep3');
+            Route::post('/upload-documents', 'AuthController@uploadDocuments');
+            Route::post('/profile-info', 'AuthController@profileInfo');
         });
     });
 });

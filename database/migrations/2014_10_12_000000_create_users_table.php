@@ -25,13 +25,11 @@ class CreateUsersTable extends Migration
             $table->string('state')->nullable();
             $table->string('phone')->nullable();
             $table->string('photo')->nullable();
-            $table->boolean('is_tlc_license')->default(false);
-            $table->boolean('is_photo_id')->default(false);
             $table->text('ridesharing_apps')->nullable();
-            $table->enum('step', [1, 2, 3])->default(1);
             $table->enum('status', ['rejected', 'pending', 'approved'])
                   ->default('pending');
-            $table->boolean('uber_approved')->default(false);
+            $table->boolean('documents_uploaded')->default(false);
+            $table->boolean('ridesharing_approved')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

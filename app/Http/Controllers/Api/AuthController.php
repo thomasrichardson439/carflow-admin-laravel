@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use Storage;
 use Validator;
 use App\Models\User;
-use App\Models\Document;
+use App\Models\TLCLicense;
+use App\Models\DrivingLicense;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -40,7 +41,7 @@ class AuthController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\JsonResponse
     */
-    public function registerStep1(Request $request)
+    public function register(Request $request)
     {
         $this->validate($request, $this->rules(1));
         $user = User::create([
@@ -61,9 +62,16 @@ class AuthController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\JsonResponse
     */
-    public function registerStep2(Request $request)
+    public function profileInfo(Request $request)
     {
         $this->validate($request, $this->rules(2));
+
+        if (!auth()->user()->documents_uploaded) {
+            return response()->json([
+              'errors' => ['documents' => ['Documents not uploaded']]
+            ], 422);
+        }
+        
         auth()->user()->update($request->merge(['step' => 2])->all());
 
         return response()->json(auth()->user());
@@ -75,20 +83,20 @@ class AuthController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\JsonResponse
     */
-    public function registerStep3(Request $request)
+    public function uploadDocuments(Request $request)
     {
-        $this->validate($request, ['uber_approved' => 'required|boolean']);
-
-        if ($request->uber_approved) {
-            $this->validate($request, $this->rules(3));
-            $this->storeDocuments($request);
-        }
-
-        $request->merge([
-             'status' => $request->uber_approved ? 'pending' : 'approved',
-             'step' => 3
+        $this->validate($request, [
+          'ridesharing_approved' => 'required|boolean',
+          'driving_license_front' => 'required|image',
+          'driving_license_back' => 'required|image',
+          'tlc_license_front' => 'required|image',
+          'tlc_license_back' => 'required|image',
         ]);
-        auth()->user()->update($request->all());
+
+        $user = auth()->user();
+        $this->storeDocuments($request, $user);
+        $user->ridesharing_approved = $request->ridesharing_approved;
+        $user->save();
 
         return response()->json(auth()->user());
     }
@@ -99,17 +107,25 @@ class AuthController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return void
     */
-    private function storeDocuments($request)
+    private function storeDocuments($request, $user)
     {
-        foreach ($request->documents as $document) {
-            $path = $document->storeAs(
-                'user/documents/' . auth()->id(),
-                $document->getCLientOriginalName()
-            );
-            auth()->user()->documents()->save(
-                new Document(['path' => Storage::url($path)])
-            );
-        }
+        $storage_folder = 'user/documents/' . auth()->id();
+
+        $drivingLicense = new DrivingLicense;
+        $drivingLicense->front =
+            $request->driving_license_front->store($storage_folder);
+        $drivingLicense->back =
+            $request->driving_license_back->store($storage_folder);
+        $user->tlc_license_front =
+
+        $TLCLicense = new TLCLicense;
+        $TLCLicense->front =
+            $request->tlc_license_front->store($storage_folder);
+        $TLCLicense->back =
+            $request->tlc_license_back->store($storage_folder);
+
+        $user()->drivingLicence()->save($drivingLicense);
+        $user()->TLCLicense()->save($TLCLicense);
     }
 
     /**

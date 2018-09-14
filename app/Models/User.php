@@ -28,8 +28,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function documents()
+    public function drivingLicence()
     {
-        return $this->hasMany(Document::class);
+        return $this->hasOne(DrivingLicense::class);
+    }
+
+    public function TLCLicense()
+    {
+        return $this->hasOne(TLCLicense::class);
     }
 }
