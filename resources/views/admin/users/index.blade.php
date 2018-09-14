@@ -9,6 +9,7 @@
         <table id="usersTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
+                <th></th>
                 <th>Full Name</th>
                 <th>Email </th>
                 <th>State </th>
@@ -37,6 +38,11 @@ $(function() {
         serverSide: true,
         ajax: '{!! route('admin.users.usersData') !!}',
         columns: [
+            {"data": "id",
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
             { data: 'full_name', name: 'full_name' },
             { data: 'email', name: 'email' },
             { data: 'state', name: 'state' },
@@ -45,7 +51,11 @@ $(function() {
             { data: 'zip_code', name: 'zip_code' },
             { data: 'phone', name: 'phone' },
             { data: 'ridesharing_apps', name: 'ridesharing_apps' },
-            { data: 'documents_uploaded', name: 'documents_uploaded' },
+            { data: 'documents_uploaded', name: 'documents_uploaded',
+              "render": function(data, type, row, meta) {
+                return row.documents_uploaded == 0 ? 'Not Uploaded' : 'Uploaded';
+              }
+            },
             { data: 'status', name: 'status' },
             { data: 'id',
               name: 'id',
@@ -57,6 +67,7 @@ $(function() {
                   return '<a href="/admin/users/'+ data + '">' +  title + '</a>';
                } },
         ],
+        "order": [[ 1, 'asc' ]]
     });
 });
 </script>
