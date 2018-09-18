@@ -42,7 +42,7 @@ class AuthController extends Controller
     public function validateUser(Request $request)
     {
         $this->validate($request, [
-          'email' => 'required|unique:users,email'
+          'email' => 'required|email|unique:users,email'
         ]);
 
         return response()->json([], 204);
