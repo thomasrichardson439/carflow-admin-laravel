@@ -27,5 +27,5 @@ Route::group(['namespace' => 'Api'], function () {
     });
 
     Route::post('/validate-user', 'AuthController@validateUser');
-    Route::post('/register', 'AuthController@register');
+    Route::post('/register/create', 'AuthController@register');
 });
