@@ -26,13 +26,6 @@ Route::group(['namespace' => 'Api'], function () {
         Route::apiResource('users', 'UsersController');
     });
 
-
-    Route::group(['prefix' => 'register'], function () {
-        Route::post('/create', 'AuthController@register');
-
-        Route::group(['middleware' => 'auth:api'], function () {
-            Route::post('/upload-documents', 'AuthController@uploadDocuments');
-            Route::post('/profile-info', 'AuthController@profileInfo');
-        });
-    });
+    Route::post('/validate-user', 'AuthController@validateUser');
+    Route::post('/register', 'AuthController@register');
 });

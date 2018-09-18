@@ -34,6 +34,19 @@ class AuthController extends Controller
         ], 401);
     }
 
+    /**
+     * Validate user credintals
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function validateUser(Request $request)
+    {
+        $this->validate($request, [
+          'email' => 'required|unique:users,email'
+        ]);
+
+        return response()->json([], 204);
+    }
 
     /**
     * Store user in database
@@ -43,64 +56,26 @@ class AuthController extends Controller
     */
     public function register(Request $request)
     {
-        $this->validate($request, $this->rules(1));
-        $user = User::create([
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+        $this->validate($request, $this->rules());
+
+        $user = new User;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->full_name = $request->full_name;
+        $user->street = $request->street;
+        $user->city = $request->city;
+        $user->zip_code = $request->zip_code;
+        $user->state = $request->state;
+        $user->phone = $request->phone;
+        $user->save();
+
+        $this->storeDocuments($request, $user);
         $auth_token = $user->createToken('Car Flow')->accessToken;
 
         return response()->json([
             'user' => $user,
             'auth_token' => $auth_token
         ], 201);
-    }
-
-    /**
-    * Storing used additional details
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\JsonResponse
-    */
-    public function profileInfo(Request $request)
-    {
-        $this->validate($request, $this->rules(2));
-
-        if (!auth()->user()->documents_uploaded) {
-            return response()->json([
-              'errors' => ['documents' => ['Documents not uploaded']]
-            ], 422);
-        }
-
-        auth()->user()->update($request->all());
-
-        return response()->json(auth()->user());
-    }
-
-    /**
-    * Store user driving details
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\JsonResponse
-    */
-    public function uploadDocuments(Request $request)
-    {
-        $this->validate($request, [
-          'ridesharing_approved' => 'required|boolean',
-          'driving_license_front' => 'required|image',
-          'driving_license_back' => 'required|image',
-          'tlc_license_front' => 'required|image',
-          'tlc_license_back' => 'required|image',
-          'ridesharing_apps' => 'string',
-        ]);
-
-        $user = auth()->user();
-        $this->storeDocuments($request, $user);
-        $user->ridesharing_apps = $request->ridesharing_apps;
-        $user->ridesharing_approved = $request->ridesharing_approved;
-        $user->save();
-
-        return response()->json($user);
     }
 
     /**
@@ -131,6 +106,9 @@ class AuthController extends Controller
         $user->drivingLicense()->save($drivingLicense);
         $user->tlcLicense()->save($tlcLicense);
         $user->documents_uploaded = 1;
+        $user->ridesharing_apps = $request->ridesharing_apps;
+        $user->ridesharing_approved = $request->ridesharing_approved;
+        $user->save();
     }
 
     /**
@@ -138,28 +116,23 @@ class AuthController extends Controller
      *
      * @return array
      */
-    protected function rules($step)
+    protected function rules()
     {
-        switch ($step) {
-            case 1:
-                return [
-                    'email' => 'required|email|unique:users,email',
-                    'password' => 'required|confirmed|min:6'
-                ];
-            case 2:
-                return [
-                    'full_name' => 'required|min:2|max:100',
-                    'street' => 'required|min:2|max:100',
-                    'city' => 'required|min:2|max:100',
-                    'zip_code' => 'required|min:5|max:10',
-                    'state' => 'required|min:2|max:15',
-                    'phone' => 'required|min:9|max:19'
-                ];
-            case 3:
-                return [
-                    'documents' => 'required_if:uber_approved,1|size:3',
-                    'documents.*' => 'required_if:uber_approved,1|image|max:5000'
-                ];
-        }
+        return [
+          'email' => 'required|email|unique:users,email',
+          'password' => 'required|confirmed|min:6',
+          'full_name' => 'required|min:2|max:100',
+          'street' => 'required|min:2|max:100',
+          'city' => 'required|min:2|max:100',
+          'zip_code' => 'required|min:5|max:10',
+          'state' => 'required|min:2|max:15',
+          'phone' => 'required|min:9|max:19',
+          'ridesharing_approved' => 'required|boolean',
+          'driving_license_front' => 'required|image',
+          'driving_license_back' => 'required|image',
+          'tlc_license_front' => 'required|image',
+          'tlc_license_back' => 'required|image',
+          'ridesharing_apps' => 'string',
+        ];
     }
 }
