@@ -26,7 +26,7 @@ class AuthController extends Controller
         ])) {
             $token = auth()->user()->createToken('Car Flow')->accessToken;
 
-            return response()->json(['auth_token' => $token]);
+            return response()->json(['auth_token' => $token, 'user' => auth()->user()]);
         }
 
         return response()->json([

@@ -19,10 +19,8 @@
 *    response=200,
 *    description="successfully login",
 *    @OA\JsonContent(
-*      @OA\Property(
-*        property="auth_token",
-*        type="string"
-*      )
+*      @OA\Property(property="auth_token",type="string"),
+*      @OA\Property(property="user", ref="#/components/schemas/User"),
 *    )
 *  ),
 *  @OA\Response(
