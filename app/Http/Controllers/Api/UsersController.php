@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use Storage;
+use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Storage;
+use App\Http\Controllers\Controller;
 
 /**
  * Class UsersController
@@ -27,7 +28,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -42,17 +43,13 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'street' => 'min:2|max:100',
-            'city' => 'min:2|max:100',
-            'zip_code' => 'min:5|max:10',
-            'state' => 'min:2|max:15',
             'address' => 'min:2|max:255',
             'phone' => 'min:9|max:19',
             'photo' => 'image|max:2048'
@@ -63,10 +60,7 @@ class UsersController extends Controller
         }
 
         $data = $request->only([
-            'street',
-            'city',
-            'zip_code',
-            'state',
+            'address',
             'phone'
         ]);
 
@@ -84,7 +78,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -100,7 +94,7 @@ class UsersController extends Controller
     /**
      * Return error response for specified code
      *
-     * @param  int $code
+     * @param  int  $code
      * @return \Illuminate\Http\Response
      */
     private function errorResponse($code)
@@ -121,6 +115,7 @@ class UsersController extends Controller
         if (empty($user)) {
             return response()->json(['message' => 'User not found'], 404);
         }
+
         return response()->json([
             'advanced_message' => $this->getAdvancedMessage($user->status),
             'message' => 'User status is ' . $user->status,
@@ -128,21 +123,21 @@ class UsersController extends Controller
         ], 201);
     }
 
-    /**
-     * @param $status
-     * @return string
-     */
     public function getAdvancedMessage($status)
     {
         if ($status == \ConstUserStatus::PENDING) {
             return 'Pending approval';
         }
+
         if ($status == \ConstUserStatus::APPROVED) {
             return 'Approved';
         }
-        if ($status == \ConstUserStatus::REJECTED) {
+
+//        if ($status == \ConstUserStatus::REJECTED) {
+        if ($status == 'rejected') {
             return 'Not approved/Regular';
         }
+
         return '@TODO';
     }
 }

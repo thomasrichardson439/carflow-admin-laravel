@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * App\Models\User
@@ -25,27 +25,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'full_name',
-        'email',
-        'password',
-        'street',
-        'city',
-        'zip_code',
-        'phone',
-        'step',
-        'state',
-        'status',
-        'uber_approved',
-        'photo',
-        'full_name',
-        'email',
-        'password',
-        'address',
-        'phone',
-        'step',
-        'status',
-        'uber_approved',
-        'photo'
+        'full_name', 'email', 'password', 'address',
+        'phone', 'step', 'status', 'uber_approved', 'photo'
     ];
 
     /**
@@ -54,8 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token',
     ];
 
     protected $with = ['tlcLicense', 'drivingLicense'];

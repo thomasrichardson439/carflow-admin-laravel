@@ -110,27 +110,26 @@ class UsersController extends Controller
      */
     public function rejectDocuments($id)
     {
-         $user = User::findOrFail($id);
-         $user->status = 'rejected';
-         $user->documents_uploaded = 0;
-         $user->save();
+        $user = User::findOrFail($id);
+        $user->status = 'rejected';
+        $user->documents_uploaded = 0;
+        $user->save();
 
-         Mail::to($user->email)->send(new DocumentsReviewNotification(0));
+        Mail::to($user->email)->send(new DocumentsReviewNotification(0));
 
-         return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index');
     }
 
-     /**
-      * Approve user documents
-      *
-      * @param  int  $id
-      * @return \Illuminate\Http\Response
-      */
+    /**
+     * Approve user documents
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function approveDocuments($id)
     {
         $user = User::findOrFail($id);
         $user->status = 'approved';
-        $user->state = \ConstUserStatus::REGULAR;
         $user->documents_uploaded = 1;
         $user->save();
 

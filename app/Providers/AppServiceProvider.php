@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require __DIR__ . './../Additional/methods.php';
-        require __DIR__ . './../Additional/constants.php';
+        require __DIR__ . '.' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Additional' . DIRECTORY_SEPARATOR . 'methods.php';
+        require __DIR__ . '.' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Additional' . DIRECTORY_SEPARATOR . 'constants.php';
     }
 }

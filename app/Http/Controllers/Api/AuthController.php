@@ -61,11 +61,9 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->full_name = $request->full_name;
-        $user->street = $request->street;
-        $user->city = $request->city;
-        $user->zip_code = $request->zip_code;
-        $user->state = $request->state;
+        $user->address = $request->address;
         $user->phone = $request->phone;
+        $user->status = \ConstUserStatus::PENDING;
         $user->save();
 
         $this->storeDocuments($request, $user);
@@ -121,16 +119,13 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:6',
             'full_name' => 'required|min:2|max:100',
-            'street' => 'required|min:2|max:100',
-            'city' => 'required|min:2|max:100',
-            'zip_code' => 'required|min:5|max:10',
-            'state' => 'required|min:2|max:15',
+            'address' => 'required|min:2|max:255',
             'phone' => 'required|min:9|max:19',
             'ridesharing_approved' => 'required|boolean',
-            'driving_license_front' => 'required|image',
-            'driving_license_back' => 'required|image',
-            'tlc_license_front' => 'required|image',
-            'tlc_license_back' => 'required|image',
+            'driving_license_front' => 'string',
+            'driving_license_back' => 'string',
+            'tlc_license_front' => 'string',
+            'tlc_license_back' => 'string',
             'ridesharing_apps' => 'string',
         ];
     }
