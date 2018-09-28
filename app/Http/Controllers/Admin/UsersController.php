@@ -130,6 +130,7 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
         $user->status = 'approved';
+        $user->state = \ConstUserStatus::REGULAR;
         $user->documents_uploaded = 1;
         $user->save();
 

@@ -53,6 +53,7 @@ class UsersController extends Controller
             'city' => 'min:2|max:100',
             'zip_code' => 'min:5|max:10',
             'state' => 'min:2|max:15',
+            'address' => 'min:2|max:255',
             'phone' => 'min:9|max:19',
             'photo' => 'image|max:2048'
         ]);
