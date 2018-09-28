@@ -9,6 +9,10 @@ use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\Mail\DocumentsReviewNotification;
 
+/**
+ * Class UsersController
+ * @package App\Http\Controllers\Admin
+ */
 class UsersController extends Controller
 {
     /**

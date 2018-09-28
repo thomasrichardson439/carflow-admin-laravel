@@ -6,7 +6,8 @@ declare(strict_types=1);
  */
 class ConstUserStatus
 {
-    public const ACTIVE = 1;
-    public const INACTIVE = 2;
-    public const PENDING = 3;
+    public const REGULAR = 1;
+    public const PENDING = 2;
+    public const APPROVED = 3;
+    public const NOT_APPROVED = 4;
 }
