@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * App\Models\User
@@ -55,8 +55,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'full_name', 'email', 'password', 'address',
-        'phone', 'step', 'status', 'uber_approved', 'photo'
+        'full_name',
+        'email',
+        'password',
+        'address',
+        'phone',
+        'step',
+        'status',
+        'uber_approved',
+        'photo'
     ];
 
     /**
@@ -65,16 +72,34 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
+    /**
+     * @var array
+     */
+    protected $relations = [
+        'drivingLicense',
+        'tlcLicense'
+    ];
+
+    /**
+     * @var array
+     */
     protected $with = ['tlcLicense', 'drivingLicense'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function drivingLicense()
     {
         return $this->hasOne(DrivingLicense::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function tlcLicense()
     {
         return $this->hasOne(TLCLicense::class);

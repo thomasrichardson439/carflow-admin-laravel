@@ -22,9 +22,11 @@ Route::post('register/create', 'Api\AuthController@registers');
 
 Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', 'AuthController@login');
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('users', 'UsersController');
     });
+
     Route::post('validate-email', 'AuthController@validateUser');
     Route::post('users/check-status', 'UsersController@checkUserStatus');
 });

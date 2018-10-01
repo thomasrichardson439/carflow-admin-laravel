@@ -7,6 +7,7 @@ use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Storage;
 
 /**
@@ -93,27 +94,29 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return void
      */
-    private function storeDocuments($request, $user)
+    public function storeDocuments($request, $user)
     {
+        Storage::disk('s3')->makeDirectory('user/documents/');
+
         $storage_folder = 'user/documents/' . auth()->id();
 
         $drivingLicense = new DrivingLicense;
 
         $drivingLicense->front = Storage::url(
-            $request->get('driving_license_front')->store($storage_folder)
+            $request->driving_license_front->store($storage_folder)
         );
 
         $drivingLicense->back = Storage::url(
-            $request->get('driving_license_bac')->store($storage_folder)
+            $request->driving_license_back->store($storage_folder)
         );
 
         $tlcLicense = new TLCLicense;
         $tlcLicense->front = Storage::url(
-            $request->get('tlc_license_front')->store($storage_folder)
+            $request->tlc_license_front->store($storage_folder)
         );
 
         $tlcLicense->back = Storage::url(
-            $request->get('tlc_license_back')->store($storage_folder)
+            $request->tlc_license_back->store($storage_folder)
         );
 
         $user->drivingLicense()->save($drivingLicense);
