@@ -106,12 +106,12 @@ class UsersController extends Controller
     }
 
     /**
-     * @param Request $request userID
+     * @param int $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkUserStatus(Request $request)
+    public function checkUserStatus(int $userId)
     {
-        $user = User::find($request->get('userId'), ['status']);
+        $user = User::find($userId, ['status']);
 
         if (empty($user)) {
             return response()->json(['message' => 'User not found'], 404);
