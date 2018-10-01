@@ -106,12 +106,13 @@ class UsersController extends Controller
     }
 
     /**
-     * @param $id
+     * @param Request $request userID
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkUserStatus($id)
+    public function checkUserStatus(Request $request)
     {
-        $user = User::find($id, ['status']);
+        $user = User::find($request->get('userId'), ['status']);
+
         if (empty($user)) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -137,8 +138,7 @@ class UsersController extends Controller
             return 'Approved';
         }
 
-//        if ($status == \ConstUserStatus::REJECTED) {
-        if ($status == 'rejected') {
+        if ($status == \ConstUserStatus::REJECTED) {
             return 'Not approved/Regular';
         }
 
