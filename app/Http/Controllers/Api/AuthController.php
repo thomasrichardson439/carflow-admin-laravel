@@ -98,20 +98,24 @@ class AuthController extends Controller
         $storage_folder = 'user/documents/' . auth()->id();
 
         $drivingLicense = new DrivingLicense;
+
         $drivingLicense->front = Storage::url(
-            $request->driving_license_front->store($storage_folder)
+            $request->get('driving_license_front')->store($storage_folder)
         );
+
         $drivingLicense->back = Storage::url(
-            $request->driving_license_back->store($storage_folder)
+            $request->get('driving_license_bac')->store($storage_folder)
         );
 
         $tlcLicense = new TLCLicense;
         $tlcLicense->front = Storage::url(
-            $request->tlc_license_front->store($storage_folder)
+            $request->get('tlc_license_front')->store($storage_folder)
         );
+
         $tlcLicense->back = Storage::url(
-            $request->tlc_license_back->store($storage_folder)
+            $request->get('tlc_license_back')->store($storage_folder)
         );
+
         $user->drivingLicense()->save($drivingLicense);
         $user->tlcLicense()->save($tlcLicense);
         $user->documents_uploaded = 1;
@@ -129,7 +133,7 @@ class AuthController extends Controller
     {
         return [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'password' => 'required|confirmed|min:6',
             'full_name' => 'required|min:2|max:100',
             'address' => 'required|min:2|max:255',
             'phone' => 'required|min:9|max:19',
@@ -141,5 +145,11 @@ class AuthController extends Controller
             'tlc_license_back' => 'string',
             'ridesharing_apps' => 'string',
         ];
+    }
+
+    protected function chackCreateDir($dir, $value = '')
+    {
+        if ($dir) {
+        }
     }
 }
