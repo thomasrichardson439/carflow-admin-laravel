@@ -152,6 +152,72 @@
  *)
  */
 
+
+/**
+ *@OA\Post(
+ *  tags={"user"},
+ *  path="users/check-status",
+ *  summary="Check user status",
+ *  security={
+ *    {"api_key": {}}
+ *  },
+ *  @OA\RequestBody(
+ *    required=true,
+ *    description="Check user status",
+ *    @OA\MediaType(
+ *      mediaType="multipart/form-data",
+ *      @OA\Schema(
+ *        @OA\Property(property="userId", example="1", format="integer", type="int"),
+ *      ),
+ *    )
+ *  ),
+ *  @OA\Response(
+ *    response=201,
+ *    description="returns user current status",
+ *    @OA\JsonContent(ref="#/components/schemas/User")
+ *  ),
+ *  @OA\Response(
+ *    response="401",
+ *    description="Unauthorized",
+ *    @OA\JsonContent(
+ *      @OA\Property(
+ *        property="message",
+ *        example="Unauthorized.",
+ *        type="string"
+ *      )
+ *    )
+ *  ),
+ *  @OA\Response(
+ *    response="404",
+ *    description="Not found",
+ *    @OA\JsonContent(
+ *      @OA\Property(property="message", example="User not found", type="string")
+ *    )
+ *  ),
+ *  @OA\Response(
+ *    response="422",
+ *    description="Validation failed",
+ *    @OA\JsonContent(
+ *      @OA\Property(
+ *        property="errors",
+ *        type="array",
+ *        @OA\Items(
+ *          @OA\Property(
+ *            property="city",
+ *            type="array",
+ *            @OA\Items(type="string", example="Invalid type.")
+ *          )
+ *        )
+ *      ),
+ *    )
+ *  ),
+ *  @OA\Response(
+ *    response="500",
+ *    description="Server error"
+ *  )
+ *)
+ */
+
 /**
  *@OA\Delete(
  *  tags={"user"},

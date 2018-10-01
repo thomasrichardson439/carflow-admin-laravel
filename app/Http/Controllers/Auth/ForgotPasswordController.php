@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
@@ -35,7 +35,7 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function sendResetLinkEmail(Request $request)
@@ -51,7 +51,7 @@ class ForgotPasswordController extends Controller
         );
 
         return $response == Password::RESET_LINK_SENT
-                        ? response()->json(['message' => 'Reset link was sent'])
-                        : response()->json(['message' => 'User with email not found'], 404);
+            ? response()->json(['message' => 'Reset link was sent'])
+            : response()->json(['message' => 'User with email not found'], 404);
     }
 }
