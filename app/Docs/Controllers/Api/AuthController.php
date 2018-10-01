@@ -96,8 +96,8 @@
 /**
  * @OA\Post(
  *  tags={"auth"},
- *  path="/api/validate-user",
- *  summary="Storing user driving information",
+ *  path="/api/validate-email",
+ *  summary="Validates if email is taken",
  *  security={
  *    {"api_key": {}}
  *  },
