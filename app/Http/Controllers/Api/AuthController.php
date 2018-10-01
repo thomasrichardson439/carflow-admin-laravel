@@ -9,8 +9,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Storage;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers\Api
+ */
 class AuthController extends Controller
 {
+
+    /**
+     * AuthController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('api')->except('validateUser');
+    }
 
     /**
      * Login user
