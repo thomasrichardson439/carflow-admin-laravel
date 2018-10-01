@@ -14,6 +14,7 @@ Route::group(['namespace' => 'Auth'], function () {
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'ResetPasswordController@reset');
     Route::post('/password/change', 'ResetPasswordController@change')->middleware('auth:api');
+    Route::post('users/check-status', 'Auth\ForgotPasswordController@accessPassword');
 });
 
 Route::group(['namespace' => 'Api'], function () {
@@ -21,7 +22,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('users', 'UsersController');
     });
-    Route::post('validate-user', 'AuthController@validateUser');
+    Route::post('validate-email', 'AuthController@validateUser');
     Route::post('register/create', 'AuthController@register');
     Route::post('users/check-status', 'UsersController@checkUserStatus');
 });

@@ -54,4 +54,9 @@ class ForgotPasswordController extends Controller
             ? response()->json(['message' => 'Reset link was sent'])
             : response()->json(['message' => 'User with email not found'], 404);
     }
+
+    public function accessPassword(Request $request)
+    {
+
+    }
 }
