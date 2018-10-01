@@ -141,18 +141,12 @@ class AuthController extends Controller
             'address' => 'required|min:2|max:255',
             'phone' => 'required|min:9|max:19',
             'ridesharing_approved' => 'required|boolean',
-
-            'driving_license_front' => 'string',
-            'driving_license_back' => 'string',
-            'tlc_license_front' => 'string',
-            'tlc_license_back' => 'string',
             'ridesharing_apps' => 'string',
-        ];
-    }
 
-    protected function chackCreateDir($dir, $value = '')
-    {
-        if ($dir) {
-        }
+            'driving_license_front' => 'file',
+            'driving_license_back' => 'file',
+            'tlc_license_front' => 'file',
+            'tlc_license_back' => 'file',
+        ];
     }
 }
