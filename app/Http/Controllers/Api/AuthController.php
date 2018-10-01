@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use Storage;
@@ -70,17 +71,22 @@ class AuthController extends Controller
     {
         $this->validate($request, $this->rules());
 
-        $user = new User;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->full_name = $request->full_name;
-        $user->address = $request->address;
-        $user->phone = $request->phone;
-        $user->status = \ConstUserStatus::PENDING;
-        $user->save();
+        $user = null;
+        $auth_token = null;
 
-        $this->storeDocuments($request, $user);
-        $auth_token = $user->createToken('Car Flow')->accessToken;
+        DB::transaction(function () use ($request, &$user, &$auth_token) {
+            $user = new User;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->full_name = $request->full_name;
+            $user->address = $request->address;
+            $user->phone = $request->phone;
+            $user->status = \ConstUserStatus::PENDING;
+            $user->save();
+
+            $this->storeDocuments($request, $user);
+            $auth_token = $user->createToken('Car Flow')->accessToken;
+        });
 
         return response()->json([
             'user' => $user,
@@ -96,31 +102,18 @@ class AuthController extends Controller
      */
     public function storeDocuments($request, $user)
     {
-        Storage::disk('s3')->makeDirectory('user/documents/');
-
-        $storage_folder = 'user/documents/' . auth()->id();
-
         $drivingLicense = new DrivingLicense;
 
-        $drivingLicense->front = Storage::url(
-            $request->driving_license_front->store($storage_folder)
-        );
-
-        $drivingLicense->back = Storage::url(
-            $request->driving_license_back->store($storage_folder)
-        );
+        $drivingLicense->front = $request->get('driving_license_front');
+        $drivingLicense->back = $request->get('driving_license_back');
 
         $tlcLicense = new TLCLicense;
-        $tlcLicense->front = Storage::url(
-            $request->tlc_license_front->store($storage_folder)
-        );
-
-        $tlcLicense->back = Storage::url(
-            $request->tlc_license_back->store($storage_folder)
-        );
+        $tlcLicense->front = $request->get('tlc_license_front');
+        $tlcLicense->back = $request->get('tlc_license_back');
 
         $user->drivingLicense()->save($drivingLicense);
         $user->tlcLicense()->save($tlcLicense);
+
         $user->documents_uploaded = 1;
         $user->ridesharing_apps = $request->ridesharing_apps;
         $user->ridesharing_approved = $request->ridesharing_approved;
@@ -141,12 +134,12 @@ class AuthController extends Controller
             'address' => 'required|min:2|max:255',
             'phone' => 'required|min:9|max:19',
             'ridesharing_approved' => 'required|boolean',
-            'ridesharing_apps' => 'string',
+            'ridesharing_apps' => 'required|string',
 
-            'driving_license_front' => 'file',
-            'driving_license_back' => 'file',
-            'tlc_license_front' => 'file',
-            'tlc_license_back' => 'file',
+            'driving_license_front' => 'required|string',
+            'driving_license_back' => 'required|string',
+            'tlc_license_front' => 'required|string',
+            'tlc_license_back' => 'required|string',
         ];
     }
 }
