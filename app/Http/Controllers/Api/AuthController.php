@@ -65,7 +65,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request)
+    public function registers(Request $request)
     {
         $this->validate($request, $this->rules());
 

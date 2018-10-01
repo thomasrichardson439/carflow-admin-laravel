@@ -10,19 +10,21 @@ declare(strict_types=1);
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['namespace' => 'Auth'], function () {
+Route::group(['namespace' => 'Auth', 'middleware' => ['api']], function () {
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'ResetPasswordController@reset');
     Route::post('/password/change', 'ResetPasswordController@change')->middleware('auth:api');
     Route::post('users/check-status', 'Auth\ForgotPasswordController@accessPassword');
 });
 
-Route::group(['namespace' => 'Api'], function () {
+
+Route::post('register/create', 'Api\AuthController@registers');
+
+Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', 'AuthController@login');
     Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('users', 'UsersController');
     });
     Route::post('validate-email', 'AuthController@validateUser');
-    Route::post('register/create', 'AuthController@register');
     Route::post('users/check-status', 'UsersController@checkUserStatus');
 });

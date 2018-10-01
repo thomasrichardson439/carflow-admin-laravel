@@ -1,6 +1,6 @@
 <?php
 /**
- *@OA\Post(
+ * @OA\Post(
  *  tags={"auth"},
  *  path="/api/login",
  *  summary="Login user",
@@ -37,7 +37,7 @@
 
 
 /**
- *@OA\Post(
+ * @OA\Post(
  *  tags={"auth"},
  *  path="/api/register/create",
  *  summary="Create user",
@@ -94,7 +94,7 @@
  */
 
 /**
- *@OA\Post(
+ * @OA\Post(
  *  tags={"auth"},
  *  path="/api/validate-user",
  *  summary="Storing user driving information",

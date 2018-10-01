@@ -1,7 +1,7 @@
 <?php
 
 /**
- *@OA\Get(
+ * @OA\Get(
  *  tags={"user"},
  *  path="/api/users",
  *  summary="All users",
@@ -29,7 +29,7 @@
  */
 
 /**
- *@OA\Get(
+ * @OA\Get(
  *  tags={"user"},
  *  path="/api/users/{id}",
  *  summary="User details",
@@ -76,7 +76,7 @@
  */
 
 /**
- *@OA\Post(
+ * @OA\Post(
  *  tags={"user"},
  *  path="/api/users/{id}",
  *  summary="Update user",
@@ -154,7 +154,7 @@
 
 
 /**
- *@OA\Post(
+ * @OA\Post(
  *  tags={"user"},
  *  path="users/check-status",
  *  summary="Check user status",
@@ -219,7 +219,7 @@
  */
 
 /**
- *@OA\Delete(
+ * @OA\Delete(
  *  tags={"user"},
  *  path="/api/users/{id}",
  *  summary="Delete user",
