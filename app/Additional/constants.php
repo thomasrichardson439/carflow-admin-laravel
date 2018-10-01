@@ -6,7 +6,7 @@ declare(strict_types=1);
  */
 class ConstUserStatus
 {
-    public const REGULAR = 'rejected';
+    public const REJECTED = 'rejected';
     public const PENDING = 'pending';
     public const APPROVED = 'approved';
 }

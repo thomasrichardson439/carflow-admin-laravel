@@ -1,12 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use Storage;
-use Validator;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Storage;
 
 /**
  * Class UsersController
@@ -28,7 +28,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -43,8 +43,8 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -78,7 +78,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -94,7 +94,7 @@ class UsersController extends Controller
     /**
      * Return error response for specified code
      *
-     * @param  int  $code
+     * @param  int $code
      * @return \Illuminate\Http\Response
      */
     private function errorResponse($code)
@@ -123,6 +123,10 @@ class UsersController extends Controller
         ], 201);
     }
 
+    /**
+     * @param $status
+     * @return string
+     */
     public function getAdvancedMessage($status)
     {
         if ($status == \ConstUserStatus::PENDING) {

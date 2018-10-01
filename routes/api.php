@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +21,6 @@ Route::group(['namespace' => 'Api'], function () {
         Route::apiResource('users', 'UsersController');
     });
     Route::post('/validate-user', 'AuthController@validateUser');
-    Route::get('/register/create', 'AuthController@register');
+    Route::post('/register/create', 'AuthController@register');
     Route::get('users/{id}/check-status', 'UsersController@checkUserStatus');
 });
