@@ -129,11 +129,12 @@ class AuthController extends Controller
     {
         return [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|min:6',
             'full_name' => 'required|min:2|max:100',
             'address' => 'required|min:2|max:255',
             'phone' => 'required|min:9|max:19',
             'ridesharing_approved' => 'required|boolean',
+
             'driving_license_front' => 'string',
             'driving_license_back' => 'string',
             'tlc_license_front' => 'string',
