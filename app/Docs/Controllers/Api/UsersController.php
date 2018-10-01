@@ -156,19 +156,18 @@
 /**
  * @OA\Post(
  *  tags={"user"},
- *  path="users/check-status",
+ *  path="users/check-status/{id}",
  *  summary="Check user status",
  *  security={
  *    {"api_key": {}}
  *  },
- *  @OA\RequestBody(
+ *  @OA\Parameter(
+ *    name="id",
  *    required=true,
- *    description="Check user status",
- *    @OA\MediaType(
- *      mediaType="multipart/form-data",
- *      @OA\Schema(
- *        @OA\Property(property="userId", example="1", format="integer", type="int"),
- *      ),
+ *    in="path",
+ *    description="The user id",
+ *    @OA\Schema(
+ *      type="int"
  *    )
  *  ),
  *  @OA\Response(

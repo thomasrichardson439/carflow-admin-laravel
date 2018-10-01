@@ -28,5 +28,5 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     });
 
     Route::post('validate-email', 'AuthController@validateUser');
-    Route::post('users/check-status', 'UsersController@checkUserStatus');
+    Route::post('users/check-status/{id}', 'UsersController@checkUserStatus')->where('id', '[0-9]+');
 });
