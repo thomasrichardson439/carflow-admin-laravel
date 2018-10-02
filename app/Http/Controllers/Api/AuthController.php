@@ -73,11 +73,25 @@ class AuthController extends Controller
     {
         $this->validate($request, $this->rules());
 
-        $user = null;
+        $user = User::where(['email' => $request->email])->first();
+
+        if ($user && $user->status != \ConstUserStatus::REJECTED) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => [
+                    'email' => [
+                        'This email is already taken',
+                    ],
+                ],
+            ], 422);
+
+        } elseif (!$user) {
+            $user = new User;
+        }
+
         $auth_token = null;
 
         DB::transaction(function () use ($request, &$user, &$auth_token) {
-            $user = new User;
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->full_name = $request->full_name;
@@ -86,7 +100,23 @@ class AuthController extends Controller
             $user->status = \ConstUserStatus::PENDING;
             $user->save();
 
-            $this->storeDocuments($request, $user);
+            $drivingLicense = new DrivingLicense;
+
+            $drivingLicense->front = $request->get('driving_license_front');
+            $drivingLicense->back = $request->get('driving_license_back');
+
+            $tlcLicense = new TLCLicense;
+            $tlcLicense->front = $request->get('tlc_license_front');
+            $tlcLicense->back = $request->get('tlc_license_back');
+
+            $user->drivingLicense()->save($drivingLicense);
+            $user->tlcLicense()->save($tlcLicense);
+
+            $user->documents_uploaded = 1;
+            $user->ridesharing_apps = $request->ridesharing_apps;
+            $user->ridesharing_approved = $request->ridesharing_approved;
+            $user->save();
+
             $auth_token = $user->createToken('Car Flow')->accessToken;
         });
 
@@ -97,32 +127,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Store user documents if user approved for uber
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return void
-     */
-    public function storeDocuments($request, $user)
-    {
-        $drivingLicense = new DrivingLicense;
-
-        $drivingLicense->front = $request->get('driving_license_front');
-        $drivingLicense->back = $request->get('driving_license_back');
-
-        $tlcLicense = new TLCLicense;
-        $tlcLicense->front = $request->get('tlc_license_front');
-        $tlcLicense->back = $request->get('tlc_license_back');
-
-        $user->drivingLicense()->save($drivingLicense);
-        $user->tlcLicense()->save($tlcLicense);
-
-        $user->documents_uploaded = 1;
-        $user->ridesharing_apps = $request->ridesharing_apps;
-        $user->ridesharing_approved = $request->ridesharing_approved;
-        $user->save();
-    }
-
-    /**
      * Get rules for register step
      *
      * @return array
@@ -130,7 +134,7 @@ class AuthController extends Controller
     protected function rules()
     {
         return [
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'password' => 'required|confirmed|min:6',
             'full_name' => 'required|min:2|max:100',
             'address' => 'required|min:2|max:255',
