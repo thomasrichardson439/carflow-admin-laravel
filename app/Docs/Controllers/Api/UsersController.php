@@ -156,7 +156,7 @@
 /**
  * @OA\Post(
  *  tags={"user"},
- *  path="users/check-status/{id}",
+ *  path="/api/users/{id}/check-status",
  *  summary="Check user status",
  *  security={
  *    {"api_key": {}}
@@ -191,23 +191,6 @@
  *    description="Not found",
  *    @OA\JsonContent(
  *      @OA\Property(property="message", example="User not found", type="string")
- *    )
- *  ),
- *  @OA\Response(
- *    response="422",
- *    description="Validation failed",
- *    @OA\JsonContent(
- *      @OA\Property(
- *        property="errors",
- *        type="array",
- *        @OA\Items(
- *          @OA\Property(
- *            property="city",
- *            type="array",
- *            @OA\Items(type="string", example="Invalid type.")
- *          )
- *        )
- *      ),
  *    )
  *  ),
  *  @OA\Response(

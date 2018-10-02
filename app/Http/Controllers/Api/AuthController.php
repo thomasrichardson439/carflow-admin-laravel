@@ -23,7 +23,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('api')->except('validateUser');
+        $this->middleware('api')->except('validateEmail');
     }
 
     /**
@@ -48,17 +48,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Validate user credintals
+     * Allows to check if email is already taken
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function validateUser(Request $request)
+    public function validateEmail(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email|unique:users,email'
+            'email' => 'required|email',
         ]);
 
-        return response()->json([], 204);
+        $exists = User::where(['email' => $request->get('email')])->exists();
+
+        return response()->json(['email' => $exists ? 'taken' : 'free'], $exists ? 406 : 200);
     }
 
     /**

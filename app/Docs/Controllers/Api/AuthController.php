@@ -98,14 +98,11 @@
  *  tags={"auth"},
  *  path="/api/validate-email",
  *  summary="Validates if email is taken",
- *  security={
- *    {"api_key": {}}
- *  },
  *  @OA\RequestBody(
  *    required=true,
  *    description="Updated user object",
  *    @OA\MediaType(
- *      mediaType="multipart/form-data",
+ *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
  *        @OA\Property(property="email", format="email", type="string", required={"true"}),
  *      )
@@ -113,14 +110,18 @@
  *  ),
  *
  *  @OA\Response(
- *    response=204,
- *    description="user valid",
- *    @OA\JsonContent()
+ *    response=200,
+ *    description="email is free to take",
+ *    @OA\JsonContent(
+ *      @OA\Property(property="email", example="free", type="string"),
+ *    )
  *  ),
  *  @OA\Response(
- *    response="401",
- *    description="Unauthorized",
- *    @OA\JsonContent(@OA\Property(property="message", example="Unauthorized.", type="string"))
+ *    response=406,
+ *    description="email is already taken",
+ *    @OA\JsonContent(
+ *      @OA\Property(property="email", example="taken", type="string"),
+ *    )
  *  ),
  *  @OA\Response(
  *    response="422",
@@ -131,9 +132,9 @@
  *        property="errors",
  *        type="object",
  *        @OA\Property(
- *          property="uber_approved",
+ *          property="email",
  *          type="array",
- *       @OA\Items(type="string", example="Uber approved field is required.")
+ *          @OA\Items(type="string", example="Email field is required.")
  *        )
  *      ),
  *    )
