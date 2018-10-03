@@ -15,7 +15,7 @@ abstract class BaseRepository
      * @param array $data
      * @return \Eloquent
      */
-    public function create(array $data) : \Eloquent
+    public function create(array $data)
     {
         return $this->model->create($data);
     }
@@ -25,7 +25,7 @@ abstract class BaseRepository
      * @param $id
      * @return \Eloquent
      */
-    public function update(array $data, $id) : \Eloquent
+    public function update(array $data, $id)
     {
         $model = $this->model->findOrFail($id);
         $model->update($data);
