@@ -43,7 +43,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'message' => 'Invalid login or password'
+            'message' => 'Invalid email or password'
         ], 401);
     }
 
@@ -73,22 +73,7 @@ class AuthController extends Controller
     {
         $this->validate($request, $this->rules());
 
-        $user = User::where(['email' => $request->email])->first();
-
-        if ($user && $user->status != \ConstUserStatus::REJECTED) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'email' => [
-                        'This email is already taken',
-                    ],
-                ],
-            ], 422);
-
-        } elseif (!$user) {
-            $user = new User;
-        }
-
+        $user = new User;
         $auth_token = null;
 
         DB::transaction(function () use ($request, &$user, &$auth_token) {
@@ -134,7 +119,7 @@ class AuthController extends Controller
     protected function rules()
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:6',
             'full_name' => 'required|min:2|max:100',
             'address' => 'required|min:2|max:255',

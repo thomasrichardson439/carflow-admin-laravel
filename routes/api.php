@@ -19,6 +19,17 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::get('users/status', 'UsersController@status');
 
         Route::apiResource('users', 'UsersController');
+
+        Route::group(['prefix' => 'cars'], function() {
+            Route::get('available', 'CarsController@availableForBooking');
+            Route::get('{id}/book', 'CarsController@bookGet');
+            Route::post('{id}/book', 'CarsController@bookPost');
+        });
+
+        Route::group(['prefix' => 'bookings'], function() {
+            Route::get('upcoming', 'BookingsController@upcoming');
+            Route::get('history', 'BookingsController@history');
+        });
     });
 
     Route::post('validate-email', 'AuthController@validateEmail');
