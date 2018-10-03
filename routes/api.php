@@ -1,15 +1,7 @@
 <?php
+
 declare(strict_types=1);
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+
 Route::group(['namespace' => 'Auth', 'middleware' => ['api']], function () {
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'ResetPasswordController@reset');
@@ -17,16 +9,17 @@ Route::group(['namespace' => 'Auth', 'middleware' => ['api']], function () {
     Route::post('users/check-status', 'Auth\ForgotPasswordController@accessPassword');
 });
 
-
 Route::post('register/create', 'Api\AuthController@registers');
 
 Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', 'AuthController@login');
 
     Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('users/resubmit', 'UsersController@reSubmit');
+        Route::get('users/status', 'UsersController@status');
+
         Route::apiResource('users', 'UsersController');
     });
 
     Route::post('validate-email', 'AuthController@validateEmail');
-    Route::post('users/{id}/check-status', 'UsersController@checkUserStatus')->where('id', '[0-9]+');
 });

@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\DrivingLicense;
+use App\Models\TLCLicense;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -106,16 +109,11 @@ class UsersController extends Controller
     }
 
     /**
-     * @param int $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkUserStatus(int $userId)
+    public function status()
     {
-        $user = User::find($userId, ['status']);
-
-        if (empty($user)) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
+        $user = auth()->user();
 
         return response()->json([
             'advanced_message' => $this->getAdvancedMessage($user->status),
@@ -143,5 +141,63 @@ class UsersController extends Controller
         }
 
         return '@TODO';
+    }
+
+    public function reSubmit(Request $request)
+    {
+        if (auth()->user()->status != \ConstUserStatus::REJECTED) {
+            return response()->json(['error' => 'You are not allowed to do this action'], 403);
+        }
+
+        $this->validate($request, [
+            'full_name' => 'required|min:2|max:100',
+            'address' => 'required|min:2|max:255',
+            'phone' => 'required|min:9|max:19',
+            'ridesharing_approved' => 'required|boolean',
+            'ridesharing_apps' => 'required|string',
+
+            'driving_license_front' => 'required|string',
+            'driving_license_back' => 'required|string',
+            'tlc_license_front' => 'required|string',
+            'tlc_license_back' => 'required|string',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            /**
+             * @var $user User
+             */
+            $user = auth()->user();
+
+            $user->full_name = $request->full_name;
+            $user->address = $request->address;
+            $user->phone = $request->phone;
+            $user->status = \ConstUserStatus::PENDING;
+            $user->save();
+
+            $user->drivingLicense->delete();
+            $user->tlcLicense->delete();
+
+            $drivingLicense = new DrivingLicense;
+
+            $drivingLicense->front = $request->get('driving_license_front');
+            $drivingLicense->back = $request->get('driving_license_back');
+
+            $tlcLicense = new TLCLicense;
+            $tlcLicense->front = $request->get('tlc_license_front');
+            $tlcLicense->back = $request->get('tlc_license_back');
+
+            $user->drivingLicense()->save($drivingLicense);
+            $user->tlcLicense()->save($tlcLicense);
+
+            $user->documents_uploaded = 1;
+            $user->ridesharing_apps = $request->ridesharing_apps;
+            $user->ridesharing_approved = $request->ridesharing_approved;
+            $user->save();
+        });
+
+        return response()->json([
+            'user' => auth()->user(),
+        ]);
     }
 }
