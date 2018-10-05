@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -47,8 +49,51 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if (strpos($request->path(), 'api') !== false) {
-            $request->headers->set('Accept', 'application/json');
+
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'status' => 'failed',
+                    'error' => [
+                        'type' => 'validation',
+                        'message' => 'The given data was invalid.',
+                        'errors' => $exception->errors(),
+                    ],
+                ], $exception->status);
+
+            } elseif ($exception instanceof HttpException) {
+
+                $error = [
+                    'type' => 'http',
+                    'message' => $exception->getMessage(),
+                ];
+
+                if (getenv('APP_DEBUG')) {
+                    $error['trace'] = $exception->getTrace();
+                }
+
+                return response()->json([
+                    'status' => 'failed',
+                    'error' => $error,
+                ], $exception->getStatusCode());
+
+            } else {
+
+                $error = [
+                    'type' => 'critical',
+                    'message' => $exception->getMessage(),
+                ];
+
+                if (getenv('APP_DEBUG')) {
+                    $error['trace'] = $exception->getTrace();
+                }
+
+                return response()->json([
+                    'status' => 'failed',
+                    'error' => $error,
+                ], 500);
+            }
         }
+
         return parent::render($request, $exception);
     }
 }

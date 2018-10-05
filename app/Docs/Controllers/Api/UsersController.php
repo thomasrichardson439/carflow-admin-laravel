@@ -3,14 +3,14 @@
 /**
  * @OA\Get(
  *  tags={"user"},
- *  path="/api/users",
- *  summary="All users",
+ *  path="/api/users/me",
+ *  summary="Authenticated user info",
  *  security={
  *    {"api_key": {}}
  *  },
  *  @OA\Response(
  *    response=200,
- *    description="successfully get all users",
+ *    description="successfully get info",
  *    @OA\JsonContent(
  *      type="array",
  *      @OA\Items(ref="#/components/schemas/User")
@@ -29,79 +29,24 @@
  */
 
 /**
- * @OA\Get(
- *  tags={"user"},
- *  path="/api/users/{id}",
- *  summary="User details",
- *  security={
- *    {"api_key": {}}
- *  },
- *  @OA\Parameter(
- *    name="id",
- *    required=true,
- *    in="path",
- *    description="The user id",
- *    @OA\Schema(
- *      type="string"
- *    )
- *  ),
- *  @OA\Response(
- *    response=200,
- *    description="successfully find user",
- *    @OA\JsonContent(ref="#/components/schemas/User")
- *  ),
- *  @OA\Response(
- *    response="401",
- *    description="Unauthorized",
- *    @OA\JsonContent(
- *      @OA\Property(
- *        property="message",
- *        example="Unauthorized.",
- *        type="string"
- *      )
- *    )
- *  ),
- *  @OA\Response(
- *    response="404",
- *    description="Not found",
- *    @OA\JsonContent(
- *      @OA\Property(property="message", example="User not found", type="string")
- *    )
- *  ),
- *  @OA\Response(
- *    response="500",
- *    description="Server error"
- *  )
- *)
- */
-
-/**
  * @OA\Post(
  *  tags={"user"},
- *  path="/api/users/{id}",
- *  summary="Update user",
+ *  path="/api/users/update",
+ *  summary="Update authenticated user",
  *  security={
  *    {"api_key": {}}
  *  },
- *  @OA\Parameter(
- *    name="id",
- *    required=true,
- *    in="path",
- *    description="The user id",
- *    @OA\Schema(
- *      type="string"
- *    )
- *  ),
  *  @OA\RequestBody(
  *    required=true,
  *    description="Updated user object",
  *    @OA\MediaType(
  *      mediaType="multipart/form-data",
  *      @OA\Schema(
- *        @OA\Property(property="address", example="100001", format="string", type="string"),
+ *        @OA\Property(property="full_name", example="Albert Einstein", format="string", type="string"),
+ *        @OA\Property(property="email", example="albert@example.com", format="string", type="string"),
+ *        @OA\Property(property="address", example="Bronx", format="string", type="string"),
  *        @OA\Property(property="phone", example="411 555 1234", format="string", type="string"),
  *        @OA\Property(property="photo", format="image", type="file"),
- *        @OA\Property(property="_method", type="string", example="PATCH"),
  *      ),
  *    )
  *  ),
@@ -185,53 +130,6 @@
  */
 
 /**
- * @OA\Delete(
- *  tags={"user"},
- *  path="/api/users/{id}",
- *  summary="Delete user",
- *  security={
- *    {"api_key": {}}
- *  },
- *  @OA\Parameter(
- *    name="id",
- *    required=true,
- *    in="path",
- *    description="The user id",
- *    @OA\Schema(
- *      type="string"
- *    )
- *  ),
- *  @OA\Response(
- *    response=200,
- *    description="successfully deleted",
- *    @OA\JsonContent(ref="#/components/schemas/User")
- *  ),
- *  @OA\Response(
- *    response="401",
- *    description="Unauthorized",
- *    @OA\JsonContent(
- *      @OA\Property(
- *        property="message",
- *        example="Unauthorized.",
- *        type="string"
- *      )
- *    )
- *  ),
- *  @OA\Response(
- *    response="404",
- *    description="Not found",
- *    @OA\JsonContent(
- *      @OA\Property(property="message", example="User not found", type="string")
- *    )
- *  ),
- *  @OA\Response(
- *    response="500",
- *    description="Server error"
- *  )
- *)
- */
-
-/**
  * @OA\Post(
  *  tags={"user"},
  *  path="/api/users/resubmit",
@@ -261,7 +159,7 @@
  *    response=201,
  *    description="successfully resubmitted",
  *    @OA\JsonContent(
- *      @OA\Property(property="user", ref="#/components/schemas/User"),
+ *      @OA\Property(ref="#/components/schemas/User"),
  *    )
  *  ),
  *  @OA\Response(

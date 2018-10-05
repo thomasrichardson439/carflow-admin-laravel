@@ -23,5 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TLCLicense extends Model
 {
-    //
+    protected $table = 't_l_c_licenses';
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class BookingsController extends Controller
+class BookingsController extends BaseApiController
 {
     /**
      * @var CarsRepository
@@ -35,10 +36,12 @@ class BookingsController extends Controller
         $result = [];
 
         foreach ($bookings as $booking) {
-            $result[] = $this->carsRepository->show($booking['car_id']);
+            $result[] = $this->carsRepository->show(
+                Car::query()->find($booking['car_id'])->first()
+            );
         }
 
-        return response()->json($result);
+        return $this->success($result);
     }
 
     /**
@@ -53,7 +56,10 @@ class BookingsController extends Controller
         $now = now();
 
         foreach ($bookings as $booking) {
-            $car = $this->carsRepository->show($booking['car_id']);
+            $car = $this->carsRepository->show(
+                Car::query()->find($booking['car_id'])->first()
+            );
+
             $result[] = $car + [
                 'user_booking_starting_at' => [
                     'object' => $booking['booking_starting_at'],
@@ -62,6 +68,6 @@ class BookingsController extends Controller
             ];
         }
 
-        return response()->json($result);
+        return $this->success($result);
     }
 }

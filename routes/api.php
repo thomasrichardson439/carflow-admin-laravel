@@ -15,10 +15,13 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', 'AuthController@login');
 
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('users/resubmit', 'UsersController@reSubmit');
-        Route::get('users/status', 'UsersController@status');
 
-        Route::apiResource('users', 'UsersController');
+        Route::group(['prefix' => 'users'], function() {
+            Route::get('me', 'UsersController@me');
+            Route::post('update', 'UsersController@update');
+            Route::post('resubmit', 'UsersController@reSubmit');
+            Route::get('status', 'UsersController@status');
+        });
 
         Route::group(['prefix' => 'cars'], function() {
             Route::get('available', 'CarsController@availableForBooking');

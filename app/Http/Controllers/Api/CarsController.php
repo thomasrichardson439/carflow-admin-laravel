@@ -7,8 +7,10 @@ use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Validator;
 
-class CarsController extends Controller
+class CarsController extends BaseApiController
 {
     /**
      * @var CarsRepository
@@ -32,7 +34,7 @@ class CarsController extends Controller
      */
     public function availableForBooking()
     {
-        return response()->json($this->carsRepository->allAvailableForBooking());
+        return $this->success($this->carsRepository->allAvailableForBooking());
     }
 
     /**
@@ -47,7 +49,7 @@ class CarsController extends Controller
          */
         $model = Car::query()->findOrFail($id);
 
-        return response()->json(
+        return $this->success(
             $this->carsRepository->bookingPreview($model) +
             ['booked_slots' => $this->bookingsRepository->bookedSlots($model->id)]
         );
@@ -62,7 +64,7 @@ class CarsController extends Controller
     public function bookPost($id, Request $request)
     {
         if (auth()->user()->status != \ConstUserStatus::APPROVED) {
-            return response()->json(['error' => 'Your account is not approved'], 403);
+            return $this->error(403, 'Your account is not approved');
         }
 
         /**
@@ -82,12 +84,10 @@ class CarsController extends Controller
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
             $model->id, $request->slot_start_timestamp, $request->slot_end_timestamp
         )) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => [
-                    'slot_start_timestamp' => 'Picked slots are already booked',
-                ]
-            ], 422);
+
+            return $this->validationErrors([
+                'slot_start_timestamp' => 'Picked slots are already booked',
+            ]);
         }
 
         $booking = $this->bookingsRepository->create([
@@ -97,6 +97,6 @@ class CarsController extends Controller
             'booking_ending_at' => $request->slot_end_timestamp,
         ]);
 
-        return response()->json(['booking' => $booking]);
+        return $this->success(['booking' => $booking]);
     }
 }

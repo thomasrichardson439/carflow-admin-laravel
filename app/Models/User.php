@@ -49,6 +49,12 @@ use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *

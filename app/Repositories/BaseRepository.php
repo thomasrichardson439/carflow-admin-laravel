@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Eloquent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class BaseRepository
@@ -13,24 +14,22 @@ abstract class BaseRepository
 
     /**
      * @param array $data
-     * @return \Eloquent
+     * @return array
      */
-    public function create(array $data)
+    public function create(array $data) : array
     {
-        return $this->model->create($data);
+        return $this->show($this->model->create($data));
     }
 
     /**
+     * @param \Eloquent $model
      * @param array $data
-     * @param $id
-     * @return \Eloquent
+     * @return array
      */
-    public function update(array $data, $id)
+    public function update($model, array $data) : array
     {
-        $model = $this->model->findOrFail($id);
         $model->update($data);
-
-        return $model;
+        return $this->show($model);
     }
 
     /**
@@ -44,13 +43,11 @@ abstract class BaseRepository
 
     /**
      * Prepare entity for showing
-     * @param $id
+     * @param \Eloquent $model
      * @return array
      */
-    public function show($id) : array
+    public function show($model) : array
     {
-        $model = $this->model->find($id);
-
         if (!$model) {
             throw new NotFoundHttpException('Entity not found');
         }

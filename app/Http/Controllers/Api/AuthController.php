@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\User;
+use Aws\S3\S3Client;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
@@ -15,7 +16,7 @@ use Storage;
  * Class AuthController
  * @package App\Http\Controllers\Api
  */
-class AuthController extends Controller
+class AuthController extends BaseApiController
 {
 
     /**
@@ -42,9 +43,7 @@ class AuthController extends Controller
             return response()->json(['auth_token' => $token, 'user' => auth()->user()]);
         }
 
-        return response()->json([
-            'message' => 'Invalid email or password'
-        ], 401);
+        return $this->error(401, 'Invalid email or password');
     }
 
     /**
@@ -60,7 +59,9 @@ class AuthController extends Controller
 
         $exists = User::where(['email' => $request->get('email')])->exists();
 
-        return response()->json(['email' => $exists ? 'taken' : 'free'], $exists ? 406 : 200);
+        return $this->success([
+            'email' => $exists ? 'taken' : 'free'
+        ], $exists ? 406 : 200);
     }
 
     /**
@@ -87,12 +88,40 @@ class AuthController extends Controller
 
             $drivingLicense = new DrivingLicense;
 
-            $drivingLicense->front = $request->get('driving_license_front');
-            $drivingLicense->back = $request->get('driving_license_back');
+            /**
+             * @var $client S3Client
+             */
+            $client = \App::make('aws')->createClient('s3');
+
+            $licenseFront = $request->file('driving_license_front');
+            $drivingLicense->front = $client->putObject([
+                'Bucket'     => getenv('AWS_BUCKET'),
+                'Key'        => 'users/driving_license_front_' . getenv('APP_ENV') . $user->id . '.' . $licenseFront->extension(),
+                'SourceFile' => $licenseFront->getPathName(),
+            ])['ObjectURL'];
+
+            $licenseBack = $request->file('driving_license_back');
+            $drivingLicense->back = $client->putObject([
+                'Bucket'     => getenv('AWS_BUCKET'),
+                'Key'        => 'users/driving_license_back_' . getenv('APP_ENV') . $user->id . '.' . $licenseBack->extension(),
+                'SourceFile' => $licenseBack->getPathName(),
+            ])['ObjectURL'];
 
             $tlcLicense = new TLCLicense;
-            $tlcLicense->front = $request->get('tlc_license_front');
-            $tlcLicense->back = $request->get('tlc_license_back');
+
+            $licenseFront = $request->file('tlc_license_front');
+            $tlcLicense->front = $client->putObject([
+                'Bucket'     => getenv('AWS_BUCKET'),
+                'Key'        => 'users/tlc_license_front_' . getenv('APP_ENV') . $user->id . '.' . $licenseFront->extension(),
+                'SourceFile' => $licenseFront->getPathName(),
+            ])['ObjectURL'];
+
+            $licenseBack = $request->file('tlc_license_back');
+            $tlcLicense->back = $client->putObject([
+                'Bucket'     => getenv('AWS_BUCKET'),
+                'Key'        => 'users/tlc_license_back_' . getenv('APP_ENV') . $user->id . '.' . $licenseBack->extension(),
+                'SourceFile' => $licenseBack->getPathName(),
+            ])['ObjectURL'];
 
             $user->drivingLicense()->save($drivingLicense);
             $user->tlcLicense()->save($tlcLicense);
@@ -105,7 +134,7 @@ class AuthController extends Controller
             $auth_token = $user->createToken('Car Flow')->accessToken;
         });
 
-        return response()->json([
+        return $this->success([
             'user' => $user,
             'auth_token' => $auth_token
         ], 201);
@@ -127,10 +156,10 @@ class AuthController extends Controller
             'ridesharing_approved' => 'required|boolean',
             'ridesharing_apps' => 'required|string',
 
-            'driving_license_front' => 'required|string',
-            'driving_license_back' => 'required|string',
-            'tlc_license_front' => 'required|string',
-            'tlc_license_back' => 'required|string',
+            'driving_license_front' => 'required|image',
+            'driving_license_back' => 'required|image',
+            'tlc_license_front' => 'required|image',
+            'tlc_license_back' => 'required|image',
         ];
     }
 }

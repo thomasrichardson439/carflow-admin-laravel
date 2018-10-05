@@ -8,8 +8,12 @@ declare(strict_types=1);
  * @param string $format
  * @return array
  */
-function dateResponseFormat(\Carbon\Carbon $date, string $format)
+function dateResponseFormat(\Carbon\Carbon $date, string $format = '')
 {
+    if (empty($format)) {
+        $format = 'd m, Y h:i a';
+    }
+
     return [
         'object' => $date,
         'formatted' => $date->format($format),

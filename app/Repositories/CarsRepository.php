@@ -85,19 +85,8 @@ class CarsRepository extends BaseRepository
         ];
     }
 
-    /**
-     * Prepare entity for showing
-     * @param $id
-     * @return array
-     */
-    public function show($id) : array
+    public function show($car) : array
     {
-        $car = $this->model->query()->find($id);
-
-        if (!$car) {
-            throw new NotFoundHttpException('Entity not found');
-        }
-
         return [
             'id' => $car->id,
             'manufacturer' => $car->manufacturer,

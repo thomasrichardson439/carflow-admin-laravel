@@ -23,5 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DrivingLicense extends Model
 {
-    //
+    protected $table = 'driving_licenses';
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 }

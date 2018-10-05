@@ -1,121 +1,104 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\User;
+use App\Repositories\UsersRepository;
+use Aws\S3\S3Client;
 use DB;
 use Illuminate\Http\Request;
-use Storage;
 
 /**
  * Class UsersController
  * @package App\Http\Controllers\Api
  */
-class UsersController extends Controller
+class UsersController extends BaseApiController
 {
-
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var UsersRepository
      */
-    public function index()
+    private $usersRepository;
+
+    public function __construct()
     {
-        return response()->json(User::all(), 200);
+        $this->usersRepository = new UsersRepository();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * Allows to get authenticated user info
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function me()
     {
-        if (!$user = User::find($id)) {
-            return $this->errorResponse(404);
-        }
+        /**
+         * @var $user User
+         */
+        $user = auth()->user();
 
-        return response()->json($user, 200);
+        return $this->success([
+            'user' => $this->usersRepository->show($user)
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * Updates authenticated user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        /**
+         * @var $user User
+         */
+        $user = auth()->user();
+
         $this->validate($request, [
+            'full_name' => 'min:2|max:100',
+            'email' => 'email|unique:users,email,' . $user->id,
             'address' => 'min:2|max:255',
             'phone' => 'min:9|max:19',
             'photo' => 'image|max:2048'
         ]);
 
-        if (!$user = User::find($id)) {
-            return $this->errorResponse(404);
-        }
-
         $data = $request->only([
+            'full_name',
+            'email',
             'address',
             'phone'
         ]);
 
         if ($request->hasFile('photo')) {
-            $data['photo'] = Storage::url(
-                $request->photo->store('user/images/' . $user->id)
-            );
+
+            /**
+             * @var $client S3Client
+             */
+            $client = \App::make('aws')->createClient('s3');
+
+            $photo = $request->file('photo');
+
+            $data['photo'] = $client->putObject([
+                'Bucket'     => getenv('AWS_BUCKET'),
+                'Key'        => 'users/' . getenv('APP_ENV') . $user->id . '.' . $photo->extension(),
+                'SourceFile' => $photo->getPathName(),
+            ])['ObjectURL'];
         }
 
-        $user->update($data);
-
-        return response()->json($user, 200);
+        return $this->success([
+            'user' => $this->usersRepository->update($user, $data)
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        if ($user = User::find($id)) {
-            $user->delete();
-            return response()->json($user);
-        }
-
-        return $this->errorResponse(404);
-    }
-
-    /**
-     * Return error response for specified code
-     *
-     * @param  int $code
-     * @return \Illuminate\Http\Response
-     */
-    private function errorResponse($code)
-    {
-        switch ($code) {
-            case 404:
-                return response()->json(['message' => 'User not found'], 404);
-        }
-    }
-
-    /**
+     * Shows user current status
      * @return \Illuminate\Http\JsonResponse
      */
     public function status()
     {
         $user = auth()->user();
 
-        return response()->json([
+        return $this->success([
             'advanced_message' => $this->getAdvancedMessage($user->status),
             'message' => 'User status is ' . $user->status,
             'status' => $user->status
@@ -123,26 +106,10 @@ class UsersController extends Controller
     }
 
     /**
-     * @param $status
-     * @return string
+     * Allows to resubmit profile for moderation
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getAdvancedMessage($status)
-    {
-        if ($status == \ConstUserStatus::PENDING) {
-            return 'Pending approval';
-        }
-
-        if ($status == \ConstUserStatus::APPROVED) {
-            return 'Approved';
-        }
-
-        if ($status == \ConstUserStatus::REJECTED) {
-            return 'Not approved/Regular';
-        }
-
-        return '@TODO';
-    }
-
     public function reSubmit(Request $request)
     {
         if (auth()->user()->status != \ConstUserStatus::REJECTED) {
@@ -196,8 +163,29 @@ class UsersController extends Controller
             $user->save();
         });
 
-        return response()->json([
+        return $this->success([
             'user' => auth()->user(),
         ]);
+    }
+
+    /**
+     * @param $status
+     * @return string
+     */
+    private function getAdvancedMessage($status)
+    {
+        if ($status == \ConstUserStatus::PENDING) {
+            return 'Pending approval';
+        }
+
+        if ($status == \ConstUserStatus::APPROVED) {
+            return 'Approved';
+        }
+
+        if ($status == \ConstUserStatus::REJECTED) {
+            return 'Not approved/Regular';
+        }
+
+        return '@TODO';
     }
 }
