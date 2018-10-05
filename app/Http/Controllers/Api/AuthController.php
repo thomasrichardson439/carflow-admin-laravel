@@ -59,9 +59,11 @@ class AuthController extends BaseApiController
 
         $exists = User::where(['email' => $request->get('email')])->exists();
 
-        return $this->success([
-            'email' => $exists ? 'taken' : 'free'
-        ], $exists ? 406 : 200);
+        if ($exists) {
+            return $this->error(406, 'Email is taken');
+        }
+
+        return $this->success(['email' => 'free']);
     }
 
     /**
