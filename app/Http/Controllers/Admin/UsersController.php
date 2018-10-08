@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
-use App\Mail\DocumentsReviewNotification;
+use App\Mail\UserReviewNotification;
 
 /**
  * Class UsersController
@@ -32,7 +32,10 @@ class UsersController extends Controller
      */
     public function usersData()
     {
-        return Datatables::of(User::where('admin', 0))->make(true);
+        return Datatables::of(
+            User::query()->where('admin', 0)->orderBy('id', 'ASC')
+
+        )->make(true);
     }
 
     /**
@@ -102,6 +105,24 @@ class UsersController extends Controller
     {
         //
     }
+
+
+    /**
+     * Reject profile changes
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function rejectProfile($id)
+    {
+        $user = User::findOrFail($id);
+        $user->status = \ConstUserStatus::REJECTED_PROFILE;
+        $user->save();
+
+        Mail::to($user->email)->send(new UserReviewNotification($user->status));
+
+        return redirect()->route('admin.users.index');
+    }
+
     /**
      * Reject user documents
      *
@@ -111,11 +132,11 @@ class UsersController extends Controller
     public function rejectDocuments($id)
     {
         $user = User::findOrFail($id);
-        $user->status = 'rejected';
+        $user->status = \ConstUserStatus::REJECTED;
         $user->documents_uploaded = 0;
         $user->save();
 
-        Mail::to($user->email)->send(new DocumentsReviewNotification(0));
+        Mail::to($user->email)->send(new UserReviewNotification($user->status));
 
         return redirect()->route('admin.users.index');
     }
@@ -129,11 +150,11 @@ class UsersController extends Controller
     public function approveDocuments($id)
     {
         $user = User::findOrFail($id);
-        $user->status = 'approved';
+        $user->status = \ConstUserStatus::APPROVED;
         $user->documents_uploaded = 1;
         $user->save();
 
-        Mail::to($user->email)->send(new DocumentsReviewNotification(1));
+        Mail::to($user->email)->send(new UserReviewNotification($user->status));
 
         return redirect()->route('admin.users.index');
     }

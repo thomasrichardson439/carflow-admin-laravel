@@ -54,6 +54,23 @@ class UsersController extends BaseApiController
          */
         $user = auth()->user();
 
+        /**
+         * A list of fields which requires status to be changed to profile pending
+         */
+        $fieldRequiresChangeStatus = [
+            'full_name', 'email', 'address', 'phone'
+        ];
+
+        if ($request->hasAny($fieldRequiresChangeStatus)
+            && !in_array($user->status, [
+                \ConstUserStatus::APPROVED,
+                \ConstUserStatus::REJECTED_PROFILE,
+                \ConstUserStatus::PENDING_PROFILE
+            ])
+        ) {
+            return $this->error(403, 'Your account should be approved to do this action');
+        }
+
         $this->validate($request, [
             'full_name' => 'min:2|max:100',
             'email' => 'email|unique:users,email,' . $user->id,
@@ -83,6 +100,10 @@ class UsersController extends BaseApiController
                 'Key'        => 'users/' . getenv('APP_ENV') . $user->id . '.' . $photo->extension(),
                 'SourceFile' => $photo->getPathName(),
             ])['ObjectURL'];
+        }
+
+        if ($request->hasAny($fieldRequiresChangeStatus)) {
+            $data['status'] = \ConstUserStatus::PENDING_PROFILE;
         }
 
         return $this->success([
@@ -174,18 +195,24 @@ class UsersController extends BaseApiController
      */
     private function getAdvancedMessage($status)
     {
-        if ($status == \ConstUserStatus::PENDING) {
-            return 'Pending approval';
-        }
+        switch ($status) {
+            case \ConstUserStatus::PENDING:
+                return 'Pending for registration approval';
 
-        if ($status == \ConstUserStatus::APPROVED) {
-            return 'Approved';
-        }
+            case \ConstUserStatus::APPROVED:
+                return 'Approved';
 
-        if ($status == \ConstUserStatus::REJECTED) {
-            return 'Not approved/Regular';
-        }
+            case \ConstUserStatus::REJECTED:
+                return 'Rejected for registration';
 
-        return '@TODO';
+            case \ConstUserStatus::PENDING_PROFILE:
+                return 'Pending for profile review';
+
+            case \ConstUserStatus::REJECTED_PROFILE:
+                return 'Rejected for profile review';
+
+            default:
+                return 'Unknown';
+        }
     }
 }

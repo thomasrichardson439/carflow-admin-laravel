@@ -35,11 +35,7 @@
                 serverSide: true,
                 ajax: '{!! route('admin.users.usersData') !!}',
                 columns: [
-                    {"data": "id",
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
+                    { data: 'id', name: 'ID'},
                     { data: 'full_name', name: 'full_name' },
                     { data: 'email', name: 'email' },
                     { data: 'address', name: 'address' },
@@ -55,13 +51,13 @@
                         name: 'id',
                         "render": function(data, type, row, meta) {
                             var title = 'Review';
+
                             if (row.status == 'approved') {
                                 title = 'Unapprove';
                             }
                             return '<a href="/admin/users/'+ data + '">' +  title + '</a>';
                         } },
                 ],
-                "order": [[ 1, 'asc' ]]
             });
         });
     </script>
