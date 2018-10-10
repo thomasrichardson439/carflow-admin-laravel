@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\AwsHelper;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\User;
@@ -21,9 +22,15 @@ class UsersController extends BaseApiController
      */
     private $usersRepository;
 
+    /**
+     * @var AwsHelper
+     */
+    private $awsHelper;
+
     public function __construct()
     {
         $this->usersRepository = new UsersRepository();
+        $this->awsHelper = new AwsHelper();
     }
 
     /**
@@ -61,14 +68,12 @@ class UsersController extends BaseApiController
             'full_name', 'email', 'address', 'phone'
         ];
 
-        if ($request->hasAny($fieldRequiresChangeStatus)
-            && !in_array($user->status, [
-                \ConstUserStatus::APPROVED,
-                \ConstUserStatus::REJECTED_PROFILE,
-                \ConstUserStatus::PENDING_PROFILE
-            ])
-        ) {
-            return $this->error(403, 'Your account should be approved to do this action');
+        if ($user->status != \ConstUserStatus::APPROVED) {
+            abort(403, 'Your account should be approved to do this action');
+        }
+
+        if ($request->hasAny($fieldRequiresChangeStatus) && $this->usersRepository->userPendingProfileUpdateRequest($user->id)) {
+            abort(403, 'You have already sent a request for changing your profile. Please wait for approval');
         }
 
         $this->validate($request, [
@@ -79,35 +84,27 @@ class UsersController extends BaseApiController
             'photo' => 'image|max:2048'
         ]);
 
-        $data = $request->only([
-            'full_name',
-            'email',
-            'address',
-            'phone'
-        ]);
-
         if ($request->hasFile('photo')) {
-
-            /**
-             * @var $client S3Client
-             */
-            $client = \App::make('aws')->createClient('s3');
-
-            $photo = $request->file('photo');
-
-            $data['photo'] = $client->putObject([
-                'Bucket'     => getenv('AWS_BUCKET'),
-                'Key'        => 'users/' . getenv('APP_ENV') . $user->id . '.' . $photo->extension(),
-                'SourceFile' => $photo->getPathName(),
-            ])['ObjectURL'];
+            $user->update([
+                'photo' => $this->awsHelper->replaceS3File(
+                    $user->photo,
+                    $request->file('photo'),
+                    'users/' . $user->id
+                ),
+            ]);
         }
 
-        if ($request->hasAny($fieldRequiresChangeStatus)) {
-            $data['status'] = \ConstUserStatus::PENDING_PROFILE;
+        $data = $request->only($fieldRequiresChangeStatus);
+
+        if (!empty($data)) {
+            if (!$this->usersRepository->updateProfile($user->id, $data)) {
+                abort(500, 'Unable to send request to update your profile');
+            }
         }
 
         return $this->success([
-            'user' => $this->usersRepository->update($user, $data)
+            'updated' => true,
+            'user' => $user,
         ]);
     }
 
@@ -117,12 +114,14 @@ class UsersController extends BaseApiController
      */
     public function status()
     {
+        /**
+         * @var User
+         */
         $user = auth()->user();
 
         return $this->success([
-            'advanced_message' => $this->getAdvancedMessage($user->status),
-            'message' => 'User status is ' . $user->status,
-            'status' => $user->status
+            'status' => $user->status,
+            'profileUpdateStatus' => $user->profileUpdateRequest ? $user->profileUpdateRequest->status : null,
         ], 201);
     }
 
@@ -144,10 +143,10 @@ class UsersController extends BaseApiController
             'ridesharing_approved' => 'required|boolean',
             'ridesharing_apps' => 'required|string',
 
-            'driving_license_front' => 'required|string',
-            'driving_license_back' => 'required|string',
-            'tlc_license_front' => 'required|string',
-            'tlc_license_back' => 'required|string',
+            'driving_license_front' => 'required|image',
+            'driving_license_back' => 'required|image',
+            'tlc_license_front' => 'required|image',
+            'tlc_license_back' => 'required|image',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -168,12 +167,27 @@ class UsersController extends BaseApiController
 
             $drivingLicense = new DrivingLicense;
 
-            $drivingLicense->front = $request->get('driving_license_front');
-            $drivingLicense->back = $request->get('driving_license_back');
+            $drivingLicense->front = $this->awsHelper->uploadToS3(
+                $request->file('driving_license_front'),
+                'users/driving_license/front_' . $user->id
+            );
+
+            $drivingLicense->back = $this->awsHelper->uploadToS3(
+                $request->file('driving_license_back'),
+                'users/driving_license/back_' . $user->id
+            );
 
             $tlcLicense = new TLCLicense;
-            $tlcLicense->front = $request->get('tlc_license_front');
-            $tlcLicense->back = $request->get('tlc_license_back');
+
+            $tlcLicense->front = $this->awsHelper->uploadToS3(
+                $request->file('tlc_license_front'),
+                'users/tlc_license/front_' . $user->id
+            );
+
+            $tlcLicense->back = $this->awsHelper->uploadToS3(
+                $request->file('tlc_license_back'),
+                'users/tlc_license/back_' . $user->id
+            );
 
             $user->drivingLicense()->save($drivingLicense);
             $user->tlcLicense()->save($tlcLicense);
@@ -187,32 +201,5 @@ class UsersController extends BaseApiController
         return $this->success([
             'user' => auth()->user(),
         ]);
-    }
-
-    /**
-     * @param $status
-     * @return string
-     */
-    private function getAdvancedMessage($status)
-    {
-        switch ($status) {
-            case \ConstUserStatus::PENDING:
-                return 'Pending for registration approval';
-
-            case \ConstUserStatus::APPROVED:
-                return 'Approved';
-
-            case \ConstUserStatus::REJECTED:
-                return 'Rejected for registration';
-
-            case \ConstUserStatus::PENDING_PROFILE:
-                return 'Pending for profile review';
-
-            case \ConstUserStatus::REJECTED_PROFILE:
-                return 'Rejected for profile review';
-
-            default:
-                return 'Unknown';
-        }
     }
 }

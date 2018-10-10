@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Models\UserProfileUpdate;
 
 class UsersRepository extends BaseRepository
 {
@@ -16,14 +17,34 @@ class UsersRepository extends BaseRepository
         $this->model = new User();
     }
 
-    public function show($model): array
+    /**
+     * Allows to store profile update request
+     * @param int $userId
+     * @param array $data
+     * @return bool
+     */
+    public function updateProfile(int $userId, array $data) : bool
     {
-        return array_merge(
-            parent::show($model),
-            [
-                'created_at' => dateResponseFormat($model->created_at),
-                'updated_at' => dateResponseFormat($model->updated_at),
-            ]
-        );
+        $model = new UserProfileUpdate();
+
+        $model->user_id = $userId;
+        $model->status = 'pending';
+
+        $model->fill($data);
+
+        return $model->save();
+    }
+
+    /**
+     * Allows to check if user has pending profile update request
+     * @param int $userId
+     * @return bool
+     */
+    public function userPendingProfileUpdateRequest(int $userId) : bool
+    {
+        return UserProfileUpdate::query()
+            ->where('user_id', $userId)
+            ->where('status', UserProfileUpdate::STATUS_PENDING)
+            ->exists();
     }
 }

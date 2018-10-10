@@ -35,14 +35,17 @@ class AddUserStatuses extends Migration
     public function down()
     {
         DB::statement("
+            UPDATE users SET status = 'pending' 
+            WHERE status IN ('pending_profile', 'rejected_profile')
+        ");
+
+        DB::statement("
             ALTER TABLE users 
             CHANGE COLUMN status status 
             ENUM(
                 'rejected',
                 'pending',
-                'approved',
-                'pending_profile',
-                'rejected_profile'
+                'approved'                
             ) 
             NOT NULL DEFAULT 'pending'
         ");

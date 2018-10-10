@@ -35,7 +35,7 @@
                 serverSide: true,
                 ajax: '{!! route('admin.users.usersData') !!}',
                 columns: [
-                    { data: 'id', name: 'ID'},
+                    { data: 'id', name: 'ID', label: 'ID'},
                     { data: 'full_name', name: 'full_name' },
                     { data: 'email', name: 'email' },
                     { data: 'address', name: 'address' },
@@ -46,17 +46,34 @@
                             return row.documents_uploaded == 0 ? 'Not Uploaded' : 'Uploaded';
                         }
                     },
-                    { data: 'status', name: 'status' },
-                    { data: 'id',
-                        name: 'id',
-                        "render": function(data, type, row, meta) {
-                            var title = 'Review';
+                    { data: 'status', name: 'status', render: function(data, type, row, meta) {
 
-                            if (row.status == 'approved') {
-                                title = 'Unapprove';
+                        var html = '<p><b>Registration:</b> ' + row.status + '</p>';
+
+                        var profileStatus = 'None';
+
+                        if (row.profile_update_request) {
+                            profileStatus = row.profile_update_request.status;
+                        }
+
+                        html += '<p><b>Profile:</b> ' + profileStatus + '</p>';
+
+                        return html;
+                    }},
+                    { data: 'id', name: 'id', render: function(data, type, row, meta) {
+                        var title = 'Review';
+
+                        if (row.status === 'approved') {
+                            title = 'Unapprove';
+
+                            if (row.profile_update_request &&
+                                ['pending', 'rejected'].indexOf(row.profile_update_request.status) !== -1
+                            ) {
+                                title = 'Review';
                             }
-                            return '<a href="/admin/users/'+ data + '">' +  title + '</a>';
-                        } },
+                        }
+                        return '<a href="/admin/users/'+ data + '">' +  title + '</a>';
+                    }},
                 ],
             });
         });

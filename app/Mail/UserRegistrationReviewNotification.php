@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserReviewNotification extends Mailable
+class UserRegistrationReviewNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,8 +30,8 @@ class UserReviewNotification extends Mailable
      */
     public function build()
     {
-        return $this->from('admin@carflow.com', 'CarFlow')
-            ->subject('CarFlow')
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
+            ->subject('CarFlow - Account registration status')
             ->markdown(
                 'emails.user_review',
                 ['newUserStatus' => $this->newUserStatus]

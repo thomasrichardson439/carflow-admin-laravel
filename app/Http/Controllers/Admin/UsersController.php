@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Mail\UserProfileReviewNotification;
+use App\Models\UserProfileUpdate;
 use Mail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
-use App\Mail\UserReviewNotification;
+use App\Mail\UserRegistrationReviewNotification;
 
 /**
  * Class UsersController
@@ -33,7 +35,9 @@ class UsersController extends Controller
     public function usersData()
     {
         return Datatables::of(
-            User::query()->where('admin', 0)->orderBy('id', 'ASC')
+            User::query()->where('admin', 0)
+                ->with('profileUpdateRequest')
+                ->orderBy('id', 'ASC')
 
         )->make(true);
     }
@@ -69,7 +73,10 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('admin.users.show', ['user' => $user]);
+        return view('admin.users.show', [
+            'user' => $user,
+            'profileUpdateRequest' => $user->profileUpdateRequest,
+        ]);
     }
 
     /**
@@ -112,13 +119,47 @@ class UsersController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function rejectProfile($id)
+    public function rejectProfileChanges($id)
     {
-        $user = User::findOrFail($id);
-        $user->status = \ConstUserStatus::REJECTED_PROFILE;
-        $user->save();
+        $update = UserProfileUpdate::query()->findOrFail($id);
 
-        Mail::to($user->email)->send(new UserReviewNotification($user->status));
+        $update->setAttribute('status', UserProfileUpdate::STATUS_REJECTED)->save();
+
+        Mail::to($update->user->email)->send(new UserProfileReviewNotification($update->status));
+
+        return redirect()->route('admin.users.index');
+    }
+
+    /**
+     * Approves profile changes
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approveProfileChanges($id)
+    {
+        $update = UserProfileUpdate::query()->findOrFail($id);
+
+        $update->setAttribute('status', UserProfileUpdate::STATUS_APPROVED)->save();
+
+        if (!empty($update->full_name)) {
+            $update->user->full_name = $update->full_name;
+        }
+
+        if (!empty($update->email)) {
+            $update->user->email = $update->email;
+        }
+
+        if (!empty($update->phone)) {
+            $update->user->phone = $update->phone;
+        }
+
+        if (!empty($update->address)) {
+            $update->user->address = $update->address;
+        }
+
+        $update->user->save();
+
+        Mail::to($update->user->email)->send(new UserProfileReviewNotification($update->status));
 
         return redirect()->route('admin.users.index');
     }
@@ -136,7 +177,7 @@ class UsersController extends Controller
         $user->documents_uploaded = 0;
         $user->save();
 
-        Mail::to($user->email)->send(new UserReviewNotification($user->status));
+        Mail::to($user->email)->send(new UserRegistrationReviewNotification($user->status));
 
         return redirect()->route('admin.users.index');
     }
@@ -154,7 +195,7 @@ class UsersController extends Controller
         $user->documents_uploaded = 1;
         $user->save();
 
-        Mail::to($user->email)->send(new UserReviewNotification($user->status));
+        Mail::to($user->email)->send(new UserRegistrationReviewNotification($user->status));
 
         return redirect()->route('admin.users.index');
     }

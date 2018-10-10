@@ -13,7 +13,9 @@ Route::group([
     Route::get('/users-data', 'UsersController@usersData')->name('users.usersData');
     Route::post('/approve/{id}', 'UsersController@approveDocuments');
     Route::post('/reject/{id}', 'UsersController@rejectDocuments');
-    Route::post('/reject-profile/{id}', 'UsersController@rejectProfile');
+
+    Route::post('/approve-profile-changes/{id}', 'UsersController@approveProfileChanges');
+    Route::post('/reject-profile-changes/{id}', 'UsersController@rejectProfileChanges');
 });
 
 Auth::routes();

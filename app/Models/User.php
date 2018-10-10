@@ -9,11 +9,12 @@ use Laravel\Passport\HasApiTokens;
 /**
  * App\Models\User
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
- * @property-read \App\Models\DrivingLicense $drivingLicense
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \App\Models\TLCLicense $tlcLicense
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
+ * @property \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property \App\Models\DrivingLicense $drivingLicense
+ * @property \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property \App\Models\TLCLicense $tlcLicense
+ * @property \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
+ * @property UserProfileUpdate $profileUpdateRequest
  * @mixin \Eloquent
  * @property int $id
  * @property string|null $full_name
@@ -77,9 +78,22 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
+    protected $visible = [
+        'id',
+        'full_name',
+        'email',
+        'address',
+        'phone',
+        'photo',
+        'ridesharing_apps',
+        'status',
+        'documents_uploaded',
+        'ridesharing_approved',
+        'created_at',
+
+        'drivingLicense',
+        'tlcLicense',
+        'profileUpdateRequest',
     ];
 
     /**
@@ -111,13 +125,13 @@ class User extends Authenticatable
         return $this->hasOne(TLCLicense::class);
     }
 
-    // public function getDrivingLicenseAttribute()
-    // {
-    //     return $this->drivingLicense();
-    // }
-    //
-    // public function getTlcLicenseAttribute()
-    // {
-    //     return $this->drivingLicense();
-    // }
+    /**
+     * Allows to get the latest profile update request (if any)
+     */
+    public function profileUpdateRequest()
+    {
+        return $this->hasOne(UserProfileUpdate::class)
+            ->orderBy('created_at', 'DESC')
+            ->limit(1);
+    }
 }

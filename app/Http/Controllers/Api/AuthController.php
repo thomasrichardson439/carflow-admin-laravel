@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\AwsHelper;
 use App\Http\Controllers\Controller;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
@@ -9,8 +10,6 @@ use App\Models\User;
 use Aws\S3\S3Client;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Session\Store;
-use Storage;
 
 /**
  * Class AuthController
@@ -18,6 +17,10 @@ use Storage;
  */
 class AuthController extends BaseApiController
 {
+    /**
+     * @var AwsHelper
+     */
+    private $awsHelper;
 
     /**
      * AuthController constructor.
@@ -25,6 +28,7 @@ class AuthController extends BaseApiController
     public function __construct()
     {
         $this->middleware('api')->except('validateEmail');
+        $this->awsHelper = new AwsHelper();
     }
 
     /**
@@ -90,40 +94,27 @@ class AuthController extends BaseApiController
 
             $drivingLicense = new DrivingLicense;
 
-            /**
-             * @var $client S3Client
-             */
-            $client = \App::make('aws')->createClient('s3');
+            $drivingLicense->front = $this->awsHelper->uploadToS3(
+                $request->file('driving_license_front'),
+                'users/driving_license/front_' . $user->id
+            );
 
-            $licenseFront = $request->file('driving_license_front');
-            $drivingLicense->front = $client->putObject([
-                'Bucket'     => getenv('AWS_BUCKET'),
-                'Key'        => 'users/driving_license_front_' . getenv('APP_ENV') . $user->id . '.' . $licenseFront->extension(),
-                'SourceFile' => $licenseFront->getPathName(),
-            ])['ObjectURL'];
-
-            $licenseBack = $request->file('driving_license_back');
-            $drivingLicense->back = $client->putObject([
-                'Bucket'     => getenv('AWS_BUCKET'),
-                'Key'        => 'users/driving_license_back_' . getenv('APP_ENV') . $user->id . '.' . $licenseBack->extension(),
-                'SourceFile' => $licenseBack->getPathName(),
-            ])['ObjectURL'];
+            $drivingLicense->back = $this->awsHelper->uploadToS3(
+                $request->file('driving_license_back'),
+                'users/driving_license/back_' . $user->id
+            );
 
             $tlcLicense = new TLCLicense;
 
-            $licenseFront = $request->file('tlc_license_front');
-            $tlcLicense->front = $client->putObject([
-                'Bucket'     => getenv('AWS_BUCKET'),
-                'Key'        => 'users/tlc_license_front_' . getenv('APP_ENV') . $user->id . '.' . $licenseFront->extension(),
-                'SourceFile' => $licenseFront->getPathName(),
-            ])['ObjectURL'];
+            $tlcLicense->front = $this->awsHelper->uploadToS3(
+                $request->file('tlc_license_front'),
+                'users/tlc_license/front_' . $user->id
+            );
 
-            $licenseBack = $request->file('tlc_license_back');
-            $tlcLicense->back = $client->putObject([
-                'Bucket'     => getenv('AWS_BUCKET'),
-                'Key'        => 'users/tlc_license_back_' . getenv('APP_ENV') . $user->id . '.' . $licenseBack->extension(),
-                'SourceFile' => $licenseBack->getPathName(),
-            ])['ObjectURL'];
+            $tlcLicense->back = $this->awsHelper->uploadToS3(
+                $request->file('tlc_license_back'),
+                'users/tlc_license/back_' . $user->id
+            );
 
             $user->drivingLicense()->save($drivingLicense);
             $user->tlcLicense()->save($tlcLicense);
@@ -131,6 +122,7 @@ class AuthController extends BaseApiController
             $user->documents_uploaded = 1;
             $user->ridesharing_apps = $request->ridesharing_apps;
             $user->ridesharing_approved = $request->ridesharing_approved;
+
             $user->save();
 
             $auth_token = $user->createToken('Car Flow')->accessToken;

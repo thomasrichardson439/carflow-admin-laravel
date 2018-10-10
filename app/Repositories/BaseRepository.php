@@ -52,6 +52,17 @@ abstract class BaseRepository
             throw new NotFoundHttpException('Entity not found');
         }
 
-        return $model->toArray();
+        $data = $model->toArray();
+
+        // Convert dates to api format before show:
+        foreach ($model->getDates() as $dateKey) {
+            if (!isset($data[$dateKey])) {
+                continue;
+            }
+
+            $data[$dateKey] = dateResponseFormat($model->getAttribute($dateKey));
+        }
+
+        return $data;
     }
 }
