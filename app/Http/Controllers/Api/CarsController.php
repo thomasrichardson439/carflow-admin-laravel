@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
@@ -49,10 +50,10 @@ class CarsController extends BaseApiController
          */
         $model = Car::query()->findOrFail($id);
 
-        return $this->success(
-            $this->carsRepository->bookingPreview($model) +
-            ['booked_slots' => $this->bookingsRepository->bookedSlots($model->id)]
-        );
+        return $this->success([
+            'car' => $this->carsRepository->show($model),
+            'booked' => $this->bookingsRepository->bookedSlots($model)
+        ]);
     }
 
     /**
@@ -73,28 +74,48 @@ class CarsController extends BaseApiController
         $model = Car::query()->findOrFail($id);
 
         $this->validate($request, [
-            'slot_start_timestamp' => 'required|integer|between:' . $model->booking_starting_at->timestamp . ',' . $model->booking_ending_at->timestamp,
-            'slot_end_timestamp' => 'required|integer|between:' . $model->booking_starting_at->timestamp . ',' . $model->booking_ending_at->timestamp,
+            'booking_starting_at' => 'required|date|date_format:"Y-m-d H:i"|after:now',
+            'booking_ending_at' => 'required|date|date_format:"Y-m-d H:i"|after:booking_starting_at',
         ]);
 
-        $this->validate($request, [
-            'slot_end_timestamp' => 'integer|min:' . $request->slot_start_timestamp,
-        ]);
+        $startingAt = Carbon::parse($request->booking_starting_at);
+        $endingAt = Carbon::parse($request->booking_ending_at);
+
+        if ($startingAt->hour < $model->starting_at_carbon->hour) {
+            return $this->validationErrors([
+                'booking_starting_at' => 'Selected time is not available (too early)',
+            ]);
+        }
+
+        /**
+         * This conditions means that app should accept ending date without including next hour
+         */
+        if ($endingAt->minute != 59) {
+            return $this->validationErrors([
+                'booking_ending_at' => 'Minute should be 59',
+            ]);
+        }
+
+        if ($endingAt->hour > $model->ending_at_carbon->hour) {
+            return $this->validationErrors([
+                'booking_ending_at' => 'Selected time is not available (too late)',
+            ]);
+        }
 
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
-            $model->id, $request->slot_start_timestamp, $request->slot_end_timestamp
+            $model->id, $startingAt, $endingAt
         )) {
 
             return $this->validationErrors([
-                'slot_start_timestamp' => 'Picked slots are already booked',
+                'booking_starting_at' => 'Picked range contains already booked hours',
             ]);
         }
 
         $booking = $this->bookingsRepository->create([
             'user_id' => auth()->user()->id,
             'car_id' => $id,
-            'booking_starting_at' => $request->slot_start_timestamp,
-            'booking_ending_at' => $request->slot_end_timestamp,
+            'booking_starting_at' => $startingAt->timestamp,
+            'booking_ending_at' => $endingAt->timestamp,
         ]);
 
         return $this->success(['booking' => $booking]);

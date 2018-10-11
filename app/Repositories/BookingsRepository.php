@@ -3,7 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Booking;
+use App\Models\Car;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
 
 class BookingsRepository extends BaseRepository
@@ -21,54 +24,68 @@ class BookingsRepository extends BaseRepository
     /**
      * Allows to check if interval is outside booked slots
      * @param int $carId
-     * @param int $timestampStart
-     * @param int $timestampEnd
+     * @param Carbon $start
+     * @param Carbon $end
      * @return bool
      */
-    public function checkIntervalIsNotBooked(int $carId, int $timestampStart, int $timestampEnd) : bool
+    public function checkIntervalIsNotBooked(int $carId, Carbon $start, Carbon $end) : bool
     {
-        $bookings = $this->model->query()->where(['car_id' => $carId])->get();
+        return !($this->model->query()
+            ->where(['car_id' => $carId])
+            ->where(function(Builder $query) use ($start, $end) {
+                $query->where('booking_starting_at', '<=', $start);
+                $query->where('booking_ending_at', '>=', $start);
 
-        if ($bookings->isEmpty()) {
-            return true;
-        }
-
-        foreach ($bookings as $booking) {
-            if ($booking->booking_starting_at->timestamp <= $timestampStart &&
-                $booking->booking_ending_at->timestamp > $timestampStart ||
-                $booking->booking_starting_at->timestamp <= $timestampEnd &&
-                $booking->booking_ending_at->timestamp >= $timestampEnd
-            ) {
-                return false;
-            }
-        }
-
-        return true;
+                $query->orWhere('booking_starting_at', '<=', $end);
+                $query->where('booking_ending_at', '>=', $end);
+            })
+            ->exists());
     }
 
     /**
      * Allows to get a list of slots which are already booked
-     * @param int $carId
+     * @param Car $car
      * @return array
      */
-    public function bookedSlots(int $carId) : array
+    public function bookedSlots(Car $car) : array
     {
-        $bookings = $this->model->query()->where(['car_id' => $carId])->get();
+        $bookings = $this->model->query()->where(['car_id' => $car->id])->get();
 
         if ($bookings->isEmpty()) {
             return [];
         }
 
+        /**
+         * Each hour from hours list means that this hour is booked from h:00 to h:59
+         */
         $slots = [];
+
+        $carBookingHoursAmount = $car->starting_at_carbon->diffInHours(
+            $car->ending_at_carbon
+        );
+
         foreach ($bookings as $booking) {
-            $slots = array_merge(
-                $slots,
-                range(
-                    $booking->booking_starting_at->timestamp,
-                    $booking->booking_ending_at->timestamp,
-                    60 * 60
-                )
-            );
+
+            /**
+             * @var Carbon $walkThroughDate
+             */
+            $walkThroughDate = clone $booking->booking_starting_at;
+
+            while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
+
+                $slots[$walkThroughDate->format('Y-m-d')][] = $walkThroughDate->format('H:i');
+
+                $walkThroughDate->addHour();
+            }
+        }
+
+        foreach ($slots as $date => &$hours) {
+
+            sort($hours);
+
+            if (count($hours) == $carBookingHoursAmount + 1) {
+                $hours = false;
+            }
         }
 
         return $slots;
@@ -98,7 +115,7 @@ class BookingsRepository extends BaseRepository
     {
         return $this->model->query()
             ->select('car_id')
-            ->where('booking_starting_at', '<', now())
+            ->where('booking_ending_at', '<', now())
             ->where('user_id', $userId)
             ->groupBy('car_id')
             ->get();

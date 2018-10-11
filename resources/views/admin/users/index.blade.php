@@ -9,7 +9,7 @@
                     <table id="usersTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>No</th>
+                            <th>ID</th>
                             <th>Full Name</th>
                             <th>Email </th>
                             <th>Address </th>
@@ -35,7 +35,7 @@
                 serverSide: true,
                 ajax: '{!! route('admin.users.usersData') !!}',
                 columns: [
-                    { data: 'id', name: 'ID', label: 'ID'},
+                    { data: 'id', name: 'ID'},
                     { data: 'full_name', name: 'full_name' },
                     { data: 'email', name: 'email' },
                     { data: 'address', name: 'address' },

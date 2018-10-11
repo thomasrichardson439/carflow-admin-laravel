@@ -14,7 +14,6 @@ class ChangeUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('street', 'city', 'zip_code', 'state');
             $table->string('address')->nullable()->after('admin');
-            //
         });
     }
     /**

@@ -11,10 +11,10 @@
  *  @OA\Response(
  *    response=200,
  *    description="successfully get all cars",
- *    @OA\JsonContent(
- *      type="array",
- *      @OA\Items(ref="#/components/schemas/Car")
- *    )
+ *    @OA\JsonContent(type="array", @OA\Items(
+ *      @OA\Property(property="car", ref="#/components/schemas/Car"),
+ *      @OA\Property(property="availability", type="string"),
+ *    ))
  *  ),
  *  @OA\Response(
  *    response="401",
@@ -49,15 +49,14 @@
  *  @OA\Response(
  *    response=200,
  *    description="successfully get the car",
- *    @OA\JsonContent(
- *      ref="#/components/schemas/Car",
- *      @OA\Property(property="booked_slots", type="array", example="[1539446400, 1539446600]",
- *          @OA\Items(type="integer")
- *      ),
- *      @OA\Property(property="slots", type="array", example="[1539446400: 11:00 AM]",
- *          @OA\Items(type="string")
- *      )
- *    )
+ *    @OA\JsonContent(type="array", @OA\Items(
+ *      @OA\Property(property="car", ref="#/components/schemas/Car"),
+ *      @OA\Property(property="booking", type="array", @OA\Items(
+ *          @OA\Property(property="booking", type="array", @OA\Items(
+ *              @OA\Property(type="string"),
+ *          ))
+ *      )),
+ *    ))
  *  ),
  *  @OA\Response(
  *    response="401",
@@ -95,8 +94,8 @@
  *    @OA\MediaType(
  *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
- *        @OA\Property(property="slot_start_timestamp", example="1539464400", format="int64", type="integer"),
- *        @OA\Property(property="slot_end_timestamp", example="1539471600", format="int64", type="integer"),
+ *        @OA\Property(property="booking_starting_at", example="2018-10-11 11:00", format="string", type="string"),
+ *        @OA\Property(property="booking_ending_at", example="2018-10-11 12:59", format="string", type="string"),
  *      ),
  *    )
  *  ),
@@ -111,19 +110,7 @@
  *  @OA\Response(
  *    response="422",
  *    description="Validation failed",
- *    @OA\JsonContent(
- *      @OA\Property(
- *        property="errors",
- *        type="array",
- *        @OA\Items(
- *          @OA\Property(
- *            property="any",
- *            type="array",
- *            @OA\Items(type="string", example="Dummy error")
- *          )
- *        )
- *      ),
- *    )
+ *    @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
  *  ),
  *  @OA\Response(
  *    response="401",

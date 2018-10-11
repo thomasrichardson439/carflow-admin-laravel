@@ -3,12 +3,13 @@
 namespace App\Repositories;
 
 use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class BaseRepository
 {
     /**
-     * @var \Eloquent
+     * @var \Eloquent|Model
      */
     protected $model;
 
@@ -22,7 +23,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param \Eloquent $model
+     * @param \Eloquent|Model $model
      * @param array $data
      * @return array
      */
@@ -43,7 +44,7 @@ abstract class BaseRepository
 
     /**
      * Prepare entity for showing
-     * @param \Eloquent $model
+     * @param \Eloquent|Model $model
      * @return array
      */
     public function show($model) : array

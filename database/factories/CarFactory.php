@@ -13,6 +13,6 @@ $factory->define(App\Models\Car::class, function (Faker $faker) {
         'pickup_location' => $faker->address,
         'return_location' => $faker->address,
         'booking_starting_at' => $date->setTime($faker->numberBetween(6, 10), 00),
-        'booking_ending_at' => (clone $date)->setTime($faker->numberBetween(11, 19), 00),
+        'booking_ending_at' => (clone $date)->setTime($faker->numberBetween(11, 19), 59, 59),
     ];
 });

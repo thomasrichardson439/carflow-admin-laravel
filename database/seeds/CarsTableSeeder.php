@@ -11,6 +11,10 @@ class CarsTableSeeder extends Seeder
      */
     public function run()
     {
+        \App\Models\Car::query()->truncate();
+
+        \App\Models\Booking::query()->truncate();
+
         factory(\App\Models\Car::class)->create([
             'image_s3_url' => 'https://hips.hearstapps.com/amv-prod-cad-assets.s3.amazonaws.com/media/assets/submodel/7800.jpg',
             'manufacturer' => 'Toyota',

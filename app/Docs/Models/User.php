@@ -6,7 +6,6 @@
  *   @OA\Property(property="id", format="int64", type="integer"),
  *   @OA\Property(property="full_name", format="string", type="string"),
  *   @OA\Property(property="email", format="email", type="string"),
- *   @OA\Property(property="admin", format="int64", type="boolean"),
  *   @OA\Property(property="address", format="string", type="string"),
  *   @OA\Property(property="phone", format="phone", type="string"),
  *   @OA\Property(property="photo", format="url", type="string"),

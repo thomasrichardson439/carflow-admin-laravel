@@ -73,18 +73,7 @@
  *  @OA\Response(
  *    response="422",
  *    description="Validation failed",
- *    @OA\JsonContent(
- *      @OA\Property(property="message", example="The given data was invalid.", type="string"),
- *      @OA\Property(
- *        property="errors",
- *        type="object",
- *        @OA\Property(
- *          property="email",
- *          type="array",
- *          @OA\Items(type="string", example="Email field is required.")
- *        )
- *      ),
- *    )
+ *    @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
  *  ),
  *  @OA\Response(
  *    response="500",
@@ -126,18 +115,7 @@
  *  @OA\Response(
  *    response="422",
  *    description="Validation failed",
- *    @OA\JsonContent(
- *      @OA\Property(property="message", example="The given data was invalid.", type="string"),
- *      @OA\Property(
- *        property="errors",
- *        type="object",
- *        @OA\Property(
- *          property="email",
- *          type="array",
- *          @OA\Items(type="string", example="Email field is required.")
- *        )
- *      ),
- *    )
+ *    @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
  *  ),
  *  @OA\Response(
  *    response="500",
