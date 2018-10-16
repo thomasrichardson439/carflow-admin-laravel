@@ -19,7 +19,12 @@ abstract class BaseRepository
      */
     public function create(array $data) : array
     {
-        return $this->show($this->model->create($data));
+        $model = $this->model->create($data);
+        $model->refresh();
+
+        return $this->show(
+            $model
+        );
     }
 
     /**
@@ -65,5 +70,17 @@ abstract class BaseRepository
         }
 
         return $data;
+    }
+
+    /**
+     * Allows to find and show entity by id
+     * @param $id
+     * @return array
+     */
+    public function findAndShow($id) : array
+    {
+        return $this->show(
+            $this->model->find($id)
+        );
     }
 }

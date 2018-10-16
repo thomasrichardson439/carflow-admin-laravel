@@ -16,15 +16,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $color
  * @property int $year
  * @property string $plate
- * @property string $pickup_location
- * @property string $return_location
- * @property string $booking_starting_at
- * @property string $booking_ending_at
+ * @property string $full_pickup_location
+ * @property string $full_return_location
+ * @property string $short_pickup_location
+ * @property string $short_return_location
+ * @property float $pickup_location_lat
+ * @property float $pickup_location_lon
+ * @property float $return_location_lat
+ * @property float $return_location_lon
+ * @property string $booking_available_from
+ * @property string $booking_available_to
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property Carbon $starting_at_carbon
- * @property Carbon $ending_at_carbon
+ * @property Carbon $booking_available_from_carbon
+ * @property Carbon $booking_available_to_carbon
  */
 class Car extends Model
 {
@@ -42,10 +48,16 @@ class Car extends Model
         'color',
         'year',
         'plate',
-        'pickup_location',
-        'return_location',
-        'booking_starting_at',
-        'booking_ending_at',
+        'full_pickup_location',
+        'full_return_location',
+        'short_pickup_location',
+        'short_return_location',
+        'pickup_location_lat',
+        'pickup_location_lon',
+        'return_location_lat',
+        'return_location_lon',
+        'booking_available_from',
+        'booking_available_to',
     ];
 
     protected $visible = [
@@ -56,25 +68,38 @@ class Car extends Model
         'color',
         'year',
         'plate',
-        'pickup_location',
-        'return_location',
-        'booking_starting_at',
-        'booking_ending_at',
+        'full_pickup_location',
+        'full_return_location',
+        'short_pickup_location',
+        'short_return_location',
+        'pickup_location_lat',
+        'pickup_location_lon',
+        'return_location_lat',
+        'return_location_lon',
+        'booking_available_from',
+        'booking_available_to',
+    ];
+
+    protected $casts = [
+        'pickup_location_lat' => 'float',
+        'pickup_location_lon' => 'float',
+        'return_location_lat' => 'float',
+        'return_location_lon' => 'float',
     ];
 
     /**
      * @return Carbon
      */
-    public function getStartingAtCarbonAttribute() : Carbon
+    public function getBookingAvailableFromCarbonAttribute() : Carbon
     {
-        return Carbon::parse($this->booking_starting_at);
+        return Carbon::parse($this->booking_available_from);
     }
 
     /**
      * @return Carbon
      */
-    public function getEndingAtCarbonAttribute() : Carbon
+    public function getBookingAvailableToCarbonAttribute() : Carbon
     {
-        return Carbon::parse($this->booking_ending_at);
+        return Carbon::parse($this->booking_available_to);
     }
 }

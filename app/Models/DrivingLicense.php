@@ -29,4 +29,11 @@ class DrivingLicense extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $visible = [
+        'id',
+        'front',
+        'back',
+        'created_at',
+    ];
 }

@@ -35,6 +35,16 @@ class UserProfileUpdate extends Model
         'address',
     ];
 
+    protected $visible = [
+        'id',
+        'full_name',
+        'email',
+        'phone',
+        'address',
+        'status',
+        'created_at',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -32,6 +32,16 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         Route::group(['prefix' => 'bookings'], function() {
             Route::get('upcoming', 'BookingsController@upcoming');
             Route::get('history', 'BookingsController@history');
+            Route::get('{id}', 'BookingsController@show');
+            Route::post('{id}/start', 'BookingsController@start');
+            Route::post('{id}/end', 'BookingsController@end');
+            Route::post('{id}/cancel', 'BookingsController@cancel');
+
+            Route::group(['prefix' => '{id}/help'], function() {
+                Route::post('damage', 'BookingsHelpController@damage');
+                Route::post('malfunction', 'BookingsHelpController@malfunction');
+                Route::post('late', 'BookingsHelpController@late');
+            });
         });
     });
 

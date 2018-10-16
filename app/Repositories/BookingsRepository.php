@@ -3,11 +3,15 @@
 namespace App\Repositories;
 
 use App\Models\Booking;
+use App\Models\BookingEndedReport;
+use App\Models\BookingIssueReport;
 use App\Models\Car;
+use App\Models\LateNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
+use Illuminate\Http\UploadedFile;
 
 class BookingsRepository extends BaseRepository
 {
@@ -60,8 +64,8 @@ class BookingsRepository extends BaseRepository
          */
         $slots = [];
 
-        $carBookingHoursAmount = $car->starting_at_carbon->diffInHours(
-            $car->ending_at_carbon
+        $carBookingHoursAmount = $car->booking_available_from_carbon->diffInHours(
+            $car->booking_available_to_carbon
         );
 
         foreach ($bookings as $booking) {
@@ -94,16 +98,36 @@ class BookingsRepository extends BaseRepository
     /**
      * Allows to fetch a list of cars which booking by user is upcoming
      * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array
      */
-    public function upcoming(int $userId) : Collection
+    public function upcoming(int $userId) : array
     {
-        return $this->model->query()
-            ->select('car_id', new Expression('MIN(booking_starting_at) as booking_starting_at'))
+        $rows = $this->model->query()
             ->where('booking_starting_at', '>', now())
             ->where('user_id', $userId)
-            ->groupBy('car_id')
+            ->where('status', 'pending')
+            ->orderBy('booking_starting_at', 'ASC')
             ->get();
+
+        $result = [];
+        
+        $now = now();
+
+        foreach ($rows as $booking) {
+
+            /** @var $booking Booking */
+
+            $result[] = array_merge(
+                $this->show($booking), [
+                    'booking_starting_at' => [
+                        'object' => $booking->booking_starting_at,
+                        'formatted' => 'in ' . trim(str_replace('after', '', $booking->booking_starting_at->diffForHumans($now))),
+                    ]
+                ]
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -111,13 +135,116 @@ class BookingsRepository extends BaseRepository
      * @param int $userId
      * @return Collection
      */
-    public function history(int $userId) : Collection
+    public function history(int $userId) : array
     {
-        return $this->model->query()
+        $rows = $this->model->query()
             ->select('car_id')
-            ->where('booking_ending_at', '<', now())
+            ->where('status', 'ended')
             ->where('user_id', $userId)
-            ->groupBy('car_id')
+            ->orderBy('booking_ending_at', 'DESC')
             ->get();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $result[] = $this->show($row);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Booking $booking
+     * @param UploadedFile $plateImage
+     * @return bool
+     */
+    public function validatePlateNumberCorrect(Booking $booking, UploadedFile $plateImage)
+    {
+        return true; //@todo: implement image OCR handler
+    }
+
+    /**
+     * Allows to start ride
+     * @param Booking $booking
+     * @return array
+     */
+    public function startRide(Booking $booking) : array
+    {
+        $booking->status = Booking::STATUS_DRIVING;
+        $booking->save();
+
+        return $this->show($booking);
+    }
+
+    /**
+     * Ends ride
+     * @param Booking $booking
+     * @param array $data
+     * @return array
+     * @throws \Throwable
+     */
+    public function endRide(Booking $booking, array $data) : array
+    {
+        \DB::transaction(function() use ($booking, $data) {
+            $booking->status = Booking::STATUS_ENDED;
+            $booking->save();
+
+            $report = new BookingEndedReport();
+            $report->fill($data);
+            $report->booking_id = $booking->id;
+            $report->save();
+        });
+
+        return $this->show($booking);
+    }
+
+    /**
+     * Allows to cancel ride
+     * @param Booking $booking
+     * @return array
+     */
+    public function cancelRide(Booking $booking) : array
+    {
+        $booking->status = Booking::STATUS_CANCELED;
+        $booking->save();
+
+        return $this->show($booking);
+    }
+
+    /**
+     * Allows to send issue report while/before/after driving
+     * @param string $type
+     * @param Booking $booking
+     * @param array $data
+     * @return array - booking
+     */
+    public function sendIssueReport(string $type, Booking $booking, array $data) : array
+    {
+        $model = new BookingIssueReport();
+        $model->booking_id = $booking->id;
+        $model->report_type = $type;
+        $model->fill($data);
+        $model->save();
+
+        $booking->refresh();
+
+        return $this->show($booking);
+    }
+
+    /**
+     * @param Booking $booking
+     * @param array $data
+     * @return array - booking
+     */
+    public function sendLateNotification(Booking $booking, array $data) : array
+    {
+        $model = new LateNotification();
+        $model->booking_id = $booking->id;
+        $model->fill($data);
+        $model->save();
+
+        $booking->refresh();
+
+        return $this->show($booking);
     }
 }

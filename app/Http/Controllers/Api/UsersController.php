@@ -129,6 +129,7 @@ class UsersController extends BaseApiController
      * Allows to resubmit profile for moderation
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function reSubmit(Request $request)
     {

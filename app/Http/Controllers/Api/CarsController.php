@@ -81,7 +81,7 @@ class CarsController extends BaseApiController
         $startingAt = Carbon::parse($request->booking_starting_at);
         $endingAt = Carbon::parse($request->booking_ending_at);
 
-        if ($startingAt->hour < $model->starting_at_carbon->hour) {
+        if ($startingAt->hour < $model->booking_available_from_carbon->hour) {
             return $this->validationErrors([
                 'booking_starting_at' => 'Selected time is not available (too early)',
             ]);
@@ -96,7 +96,7 @@ class CarsController extends BaseApiController
             ]);
         }
 
-        if ($endingAt->hour > $model->ending_at_carbon->hour) {
+        if ($endingAt->hour > $model->booking_available_to_carbon->hour) {
             return $this->validationErrors([
                 'booking_ending_at' => 'Selected time is not available (too late)',
             ]);
@@ -118,6 +118,8 @@ class CarsController extends BaseApiController
             'booking_ending_at' => $endingAt->timestamp,
         ]);
 
-        return $this->success(['booking' => $booking]);
+        return $this->success([
+            'booking' => $booking
+        ]);
     }
 }

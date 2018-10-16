@@ -99,15 +99,11 @@ class User extends Authenticatable
     /**
      * @var array
      */
-    protected $relations = [
+    protected $with = [
+        'tlcLicense',
         'drivingLicense',
-        'tlcLicense'
+        'profileUpdateRequest',
     ];
-
-    /**
-     * @var array
-     */
-    protected $with = ['tlcLicense', 'drivingLicense'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

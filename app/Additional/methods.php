@@ -11,7 +11,7 @@ declare(strict_types=1);
 function dateResponseFormat(\Carbon\Carbon $date, string $format = '')
 {
     if (empty($format)) {
-        $format = 'd m, Y h:i a';
+        $format = 'd M, Y h:i a';
     }
 
     return [

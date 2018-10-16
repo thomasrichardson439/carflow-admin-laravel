@@ -34,7 +34,7 @@ class CarsRepository extends BaseRepository
 
         foreach ($cars as $car) {
 
-            $bookingStartingAt = Carbon::parse($car->booking_starting_at);
+            $bookingStartingAt = Carbon::parse($car->booking_available_from);
 
             if ($bookingStartingAt->greaterThanOrEqualTo($now)) {
                 $availability = 'Available now';
