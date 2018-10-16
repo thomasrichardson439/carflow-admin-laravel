@@ -20,7 +20,11 @@ abstract class BaseRepository
     public function create(array $data) : array
     {
         $model = $this->model->create($data);
-        $model->refresh();
+
+        /**
+         * Added in order to reload relations on newly created models
+         */
+        $model = $this->model->find($model->getKey());
 
         return $this->show(
             $model

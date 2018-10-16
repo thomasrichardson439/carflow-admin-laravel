@@ -39,16 +39,9 @@ class BookingsController extends BaseApiController
      */
     public function history()
     {
-        $bookings = $this->bookingsRepository->history(auth()->user()->id);
-        $result = [];
-
-        foreach ($bookings as $booking) {
-            $result[] = $this->carsRepository->show(
-                Car::query()->find($booking['car_id'])->first()
-            );
-        }
-
-        return $this->success($result);
+        return $this->success([
+            'bookings' => $this->bookingsRepository->history(auth()->user()->id),
+        ]);
     }
 
     /**

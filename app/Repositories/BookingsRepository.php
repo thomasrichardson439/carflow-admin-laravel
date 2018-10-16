@@ -114,17 +114,9 @@ class BookingsRepository extends BaseRepository
         $now = now();
 
         foreach ($rows as $booking) {
-
             /** @var $booking Booking */
 
-            $result[] = array_merge(
-                $this->show($booking), [
-                    'booking_starting_at' => [
-                        'object' => $booking->booking_starting_at,
-                        'formatted' => 'in ' . trim(str_replace('after', '', $booking->booking_starting_at->diffForHumans($now))),
-                    ]
-                ]
-            );
+            $result[] = $this->show($booking);
         }
 
         return $result;
@@ -138,7 +130,6 @@ class BookingsRepository extends BaseRepository
     public function history(int $userId) : array
     {
         $rows = $this->model->query()
-            ->select('car_id')
             ->where('status', 'ended')
             ->where('user_id', $userId)
             ->orderBy('booking_ending_at', 'DESC')
@@ -146,8 +137,10 @@ class BookingsRepository extends BaseRepository
 
         $result = [];
 
-        foreach ($rows as $row) {
-            $result[] = $this->show($row);
+        foreach ($rows as $booking) {
+            /** @var $booking Booking */
+
+            $result[] = $this->show($booking);
         }
 
         return $result;
