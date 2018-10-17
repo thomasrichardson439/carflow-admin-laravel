@@ -36,6 +36,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
             Route::post('{id}/start', 'BookingsController@start');
             Route::post('{id}/end', 'BookingsController@end');
             Route::post('{id}/cancel', 'BookingsController@cancel');
+            Route::post('{id}/receipt', 'BookingsController@receipt');
 
             Route::group(['prefix' => '{id}/help'], function() {
                 Route::post('damage', 'BookingsHelpController@damage');

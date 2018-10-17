@@ -163,6 +163,32 @@ class BookingsController extends BaseApiController
     }
 
     /**
+     * Cancel ride
+     * @param $id
+     * @return array
+     */
+    public function receipt($id, Request $request)
+    {
+        $booking = $this->findModel($id);
+
+        $this->validate($request, [
+            'title' => 'string|required|max:255',
+            'description' => 'string|required|max:255',
+            'price' => 'integer|required',
+            'receipt_date' => 'date|date_format:Y-m-d|required',
+            'photo' => 'image|required',
+        ]);
+
+        $data = $request->all();
+
+        $data['photo_s3_link'] = $this->awsHelper->uploadToS3(
+            $request->file('photo'), 'bookings/' . $booking->id . '_receipt'
+        );
+
+        return $this->bookingsRepository->sendReceipt($booking, $data);
+    }
+
+    /**
      * Allows to find booking model
      * @param int $id
      * @return Booking

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Booking;
 use App\Models\BookingEndedReport;
 use App\Models\BookingIssueReport;
+use App\Models\BookingReceipt;
 use App\Models\Car;
 use App\Models\LateNotification;
 use Carbon\Carbon;
@@ -232,6 +233,23 @@ class BookingsRepository extends BaseRepository
     public function sendLateNotification(Booking $booking, array $data) : array
     {
         $model = new LateNotification();
+        $model->booking_id = $booking->id;
+        $model->fill($data);
+        $model->save();
+
+        $booking->refresh();
+
+        return $this->show($booking);
+    }
+
+    /**
+     * @param Booking $booking
+     * @param array $data
+     * @return array
+     */
+    public function sendReceipt(Booking $booking, array $data) : array
+    {
+        $model = new BookingReceipt();
         $model->booking_id = $booking->id;
         $model->fill($data);
         $model->save();
