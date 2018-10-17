@@ -36,12 +36,12 @@ class AwsHelper
 
     /**
      * Allows to remove old file and replace it with a new one
-     * @param string $oldFileUrl
+     * @param string|null $oldFileUrl
      * @param UploadedFile $file
      * @param string $path
      * @return string
      */
-    public function replaceS3File(string $oldFileUrl, UploadedFile $file, string $path = '') : string
+    public function replaceS3File($oldFileUrl, UploadedFile $file, string $path = '') : string
     {
         if (!empty($oldFileUrl) && strpos($oldFileUrl, '.amazonaws.com') !== false) {
             $url = parse_url($oldFileUrl);
