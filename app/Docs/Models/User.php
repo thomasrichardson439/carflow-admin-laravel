@@ -13,17 +13,18 @@
  *   @OA\Property(property="ridesharing_approved", format="integer", type="boolean"),
  *   @OA\Property(property="documents_uploaded", format="integer", type="boolean"),
  *   @OA\Property(property="ridesharing_apps", format="string", example="uber, lyft", type="string"),
- *      @OA\Property(
- *        property="tlcLicense",
- *        type="object",
- *        @OA\Property(property="front", format="url", type="string"),
- *        @OA\Property(property="back", format="url", type="string"),
- *      ),
- *      @OA\Property(
- *        property="drivingLicense",
- *        type="object",
- *        @OA\Property(property="front", format="url", type="string"),
- *        @OA\Property(property="back", format="url", type="string"),
- *      ),
+ *   @OA\Property(
+ *     property="tlc_license",
+ *     type="object",
+ *     @OA\Property(property="front", format="url", type="string"),
+ *     @OA\Property(property="back", format="url", type="string"),
+ *   ),
+ *   @OA\Property(
+ *     property="driving_license",
+ *     type="object",
+ *     @OA\Property(property="front", format="url", type="string"),
+ *     @OA\Property(property="back", format="url", type="string"),
+ *   ),
+ *   @OA\Property(property="profile_update_request", ref="#/components/schemas/ProfileUpdateRequest")
  * )
  */
