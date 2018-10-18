@@ -78,20 +78,12 @@ class BookingsRepository extends BaseRepository
 
             while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
 
-                $slots[$walkThroughDate->format('Y-m-d')][] = $walkThroughDate->format('H:i');
-
+                $slots[] = $walkThroughDate->timestamp;
                 $walkThroughDate->addHour();
             }
         }
 
-        foreach ($slots as $date => &$hours) {
-
-            sort($hours);
-
-            if (count($hours) == $carBookingHoursAmount + 1) {
-                $hours = false;
-            }
-        }
+        sort($slots);
 
         return $slots;
     }
