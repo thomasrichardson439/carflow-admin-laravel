@@ -170,12 +170,12 @@
  *    @OA\MediaType(
  *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
- *        @OA\Property(property="license_plate_photo", format="file", type="file"),
  *        @OA\Property(property="car_front_photo", format="file", type="file"),
  *        @OA\Property(property="car_back_photo", format="file", type="file"),
  *        @OA\Property(property="car_left_photo", format="file", type="file"),
  *        @OA\Property(property="car_right_photo", format="file", type="file"),
  *        @OA\Property(property="gas_tank_photo", format="file", type="file"),
+ *        @OA\Property(property="notes", format="string", type="string"),
  *      ),
  *    )
  *  ),

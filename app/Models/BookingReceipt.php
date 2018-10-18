@@ -44,4 +44,8 @@ class BookingReceipt extends Model
         'photo_s3_link',
         'created_at',
     ];
+
+    protected $casts = [
+        'price' => 'float',
+    ];
 }

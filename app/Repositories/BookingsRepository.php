@@ -189,6 +189,8 @@ class BookingsRepository extends BaseRepository
             $report->save();
         });
 
+        $booking->refresh();
+
         return $this->show($booking);
     }
 

@@ -4,7 +4,6 @@
  * @OA\Schema(
  *   schema="Receipt",
  *   @OA\Property(property="id", format="int64", type="integer"),
- *   @OA\Property(property="booking_id", format="int64", type="integer"),
  *   @OA\Property(property="title", format="string", type="string"),
  *   @OA\Property(property="description", format="string", type="string"),
  *   @OA\Property(property="price", format="float", type="float"),

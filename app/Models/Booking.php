@@ -44,14 +44,14 @@ class Booking extends Model
 
     protected $visible = [
         'id',
+        'booking_starting_at',
+        'booking_ending_at',
+        'status',
         'car',
         'endedReport',
         'issueReports',
         'receipts',
         'lateNotifications',
-        'booking_starting_at',
-        'booking_ending_at',
-        'status',
     ];
 
     protected $with = [

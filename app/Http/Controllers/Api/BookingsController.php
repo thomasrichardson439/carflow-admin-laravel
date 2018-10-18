@@ -79,7 +79,7 @@ class BookingsController extends BaseApiController
         $booking = $this->findModel($id);
 
         if ($booking->status != Booking::STATUS_PENDING) {
-            abort(409, 'This drive could not be started (possible, it is already started)');
+            abort(409, 'This drive could not be started');
         }
 
         $this->validate($request, [
@@ -156,7 +156,7 @@ class BookingsController extends BaseApiController
         $booking = $this->findModel($id);
 
         if ($booking->status != Booking::STATUS_PENDING) {
-            abort(409, 'Unable to cancel ride that is already started or finished');
+            abort(409, 'Unable to cancel ride');
         }
 
         return $this->bookingsRepository->cancelRide($booking);
