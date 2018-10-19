@@ -54,9 +54,10 @@ abstract class BaseRepository
     /**
      * Prepare entity for showing
      * @param \Eloquent|Model $model
+     * @param \Closure|null $renderCallback - allows to tune particular show request
      * @return array
      */
-    public function show($model) : array
+    public function show($model, $renderCallback = null) : array
     {
         if (!$model) {
             throw new NotFoundHttpException('Entity not found');
@@ -71,6 +72,10 @@ abstract class BaseRepository
             }
 
             $data[$dateKey] = dateResponseFormat($model->getAttribute($dateKey));
+        }
+
+        if ($renderCallback instanceof \Closure) {
+            $renderCallback($model, $data);
         }
 
         return $data;

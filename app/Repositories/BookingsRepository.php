@@ -61,13 +61,9 @@ class BookingsRepository extends BaseRepository
         }
 
         /**
-         * Each hour from hours list means that this hour is booked from h:00 to h:59
+         * Each slot is a timestamp with the beginning of booked hour (ex: 15:00:00)
          */
         $slots = [];
-
-        $carBookingHoursAmount = $car->booking_available_from_carbon->diffInHours(
-            $car->booking_available_to_carbon
-        );
 
         foreach ($bookings as $booking) {
 
@@ -109,7 +105,10 @@ class BookingsRepository extends BaseRepository
         foreach ($rows as $booking) {
             /** @var $booking Booking */
 
-            $result[] = $this->show($booking);
+            $result[] = $this->show($booking, function($model, &$data) {
+                $data['booking_starting_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
+                $data['booking_ending_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
+            });
         }
 
         return $result;
@@ -137,16 +136,6 @@ class BookingsRepository extends BaseRepository
         }
 
         return $result;
-    }
-
-    /**
-     * @param Booking $booking
-     * @param UploadedFile $plateImage
-     * @return bool
-     */
-    public function validatePlateNumberCorrect(Booking $booking, UploadedFile $plateImage)
-    {
-        return true; //@todo: implement image OCR handler
     }
 
     /**

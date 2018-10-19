@@ -82,18 +82,6 @@ class BookingsController extends BaseApiController
             abort(409, 'This drive could not be started');
         }
 
-        $this->validate($request, [
-            'license_plate_photo' => 'image|required',
-        ]);
-
-        if (!$this->bookingsRepository->validatePlateNumberCorrect(
-            $booking, $request->file('license_plate_photo')
-        )) {
-            return $this->validationErrors([
-               'license_plate_photo' => 'Photo does not contain correct license plate',
-            ]);
-        }
-
         return $this->success($this->bookingsRepository->startRide($booking));
     }
 

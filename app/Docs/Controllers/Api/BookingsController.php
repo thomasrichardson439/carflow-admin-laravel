@@ -111,16 +111,6 @@
  *      type="int"
  *    )
  *  ),
- *  @OA\RequestBody(
- *    required=true,
- *    description="Booking record",
- *    @OA\MediaType(
- *      mediaType="application/x-www-form-urlencoded",
- *      @OA\Schema(
- *        @OA\Property(property="license_plate_photo", format="file", type="file"),
- *      ),
- *    )
- *  ),
  *  @OA\Response(
  *    response=200,
  *    description="success",
