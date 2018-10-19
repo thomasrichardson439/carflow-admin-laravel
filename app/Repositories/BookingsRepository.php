@@ -213,16 +213,28 @@ class BookingsRepository extends BaseRepository
      * @param array $data
      * @return array - booking
      */
-    public function sendLateNotification(Booking $booking, array $data) : array
+    public function sendLateNotification(Booking $booking) : array
     {
         $model = new LateNotification();
         $model->booking_id = $booking->id;
+        $model->save();
+
+        return $this->show($model);
+    }
+
+    /**
+     * @param LateNotification $model
+     * @param array $data
+     * @return array
+     */
+    public function detailedLateNotification(LateNotification $model, array $data) : array
+    {
         $model->fill($data);
         $model->save();
 
-        $booking->refresh();
+        $model->booking->refresh();
 
-        return $this->show($booking);
+        return $this->show($model->booking);
     }
 
     /**

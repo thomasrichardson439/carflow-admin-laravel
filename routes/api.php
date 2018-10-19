@@ -42,6 +42,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
                 Route::post('damage', 'BookingsHelpController@damage');
                 Route::post('malfunction', 'BookingsHelpController@malfunction');
                 Route::post('late', 'BookingsHelpController@late');
+                Route::post('late/{lateNotificationId}/details', 'BookingsHelpController@lateDetailed');
             });
         });
     });

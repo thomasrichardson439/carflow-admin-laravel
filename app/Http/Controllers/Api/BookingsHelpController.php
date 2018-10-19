@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\AwsHelper;
 use App\Models\Booking;
 use App\Models\BookingIssueReport;
+use App\Models\LateNotification;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
 use Illuminate\Http\Request;
@@ -108,9 +109,32 @@ class BookingsHelpController extends BaseApiController
         );
     }
 
-    public function late($id, Request $request)
+    /**
+     * Allows to notify administrator about late for ride
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function late($id)
     {
         $booking = $this->findModel($id);
+
+        return $this->success(
+            $this->bookingsRepository->sendLateNotification($booking)
+        );
+    }
+
+    /**
+     * Allows to fill late notification with more details
+     * @param $lateNotificationId
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function lateDetailed($id, $lateNotificationId, Request $request)
+    {
+        /**
+         * @var LateNotification $lateNotification
+         */
+        $lateNotification = LateNotification::query()->findOrFail($lateNotificationId);
 
         $this->validate($request, [
             'delay_minutes' => 'int|required',
@@ -121,12 +145,12 @@ class BookingsHelpController extends BaseApiController
         $data = $request->all();
 
         $data['photo_s3_link'] = $this->awsHelper->uploadToS3(
-            $request->file('photo'), $booking->id . '_late'
+            $request->file('photo'), $lateNotification->booking->id . '_late'
         );
 
         return $this->success(
-            $this->bookingsRepository->sendLateNotification(
-                $booking, $data
+            $this->bookingsRepository->detailedLateNotification(
+                $lateNotification, $data
             )
         );
     }

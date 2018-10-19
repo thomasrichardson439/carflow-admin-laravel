@@ -129,9 +129,64 @@
  *      type="int"
  *    )
  *  ),
+ *  @OA\Response(
+ *    response=200,
+ *    description="success",
+ *    @OA\JsonContent(
+ *      type="array",
+ *      @OA\Items(ref="#/components/schemas/LateNotification")
+ *    )
+ *  ),
+ *  @OA\Response(
+ *    response="422",
+ *    description="Validation failed",
+ *    @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
+ *  ),
+ *  @OA\Response(
+ *    response="401",
+ *    description="Unauthorized",
+ *    @OA\JsonContent(@OA\Property(property="message", example="Unauthorized.", type="string"))
+ *  ),
+ *  @OA\Response(
+ *    response="409",
+ *    description="Conflict"
+ *  ),
+ *  @OA\Response(
+ *    response="500",
+ *    description="Server error"
+ *  )
+ *)
+ */
+
+/**
+ * @OA\Post(
+ *  tags={"bookings_help"},
+ *  path="/api/bookings/{id}/help/late/{lateNotificationId}/details",
+ *  summary="Send details to a late report",
+ *  security={
+ *    {"api_key": {}}
+ *  },
+ *  @OA\Parameter(
+ *    name="id",
+ *    required=true,
+ *    in="path",
+ *    description="The booking id",
+ *    @OA\Schema(
+ *      type="int"
+ *    )
+ *  ),
+ *  @OA\Parameter(
+ *    name="lateNotificationId",
+ *    required=true,
+ *    in="path",
+ *    description="The late notification id",
+ *    @OA\Schema(
+ *      type="int"
+ *    )
+ *  ),
  *  @OA\RequestBody(
  *    required=true,
- *    description="Booking record",
+ *    description="Late details",
  *    @OA\MediaType(
  *      mediaType="multipart/form-data",
  *      @OA\Schema(
@@ -169,4 +224,5 @@
  *  )
  *)
  */
+
 

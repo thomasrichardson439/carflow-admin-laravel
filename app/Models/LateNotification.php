@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $reason
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Booking $booking
  */
 class LateNotification extends Model
 {
@@ -34,9 +36,18 @@ class LateNotification extends Model
 
     protected $visible = [
         'id',
+        'booking_id',
         'delay_minutes',
         'photo_s3_link',
         'reason',
         'created_at',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 }
