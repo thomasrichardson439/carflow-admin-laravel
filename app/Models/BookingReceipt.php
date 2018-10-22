@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  * @property int $booking_id
  * @property string $title
- * @property string $description
+ * @property string $location
  * @property float $price
  * @property Carbon $receipt_date
  * @property string $photo_s3_link
@@ -29,7 +29,7 @@ class BookingReceipt extends Model
 
     protected $fillable = [
         'title',
-        'description',
+        'location',
         'price',
         'receipt_date',
         'photo_s3_link',
@@ -38,7 +38,7 @@ class BookingReceipt extends Model
     protected $visible = [
         'id',
         'title',
-        'description',
+        'location',
         'price',
         'receipt_date',
         'photo_s3_link',

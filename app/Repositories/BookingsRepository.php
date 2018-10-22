@@ -54,7 +54,10 @@ class BookingsRepository extends BaseRepository
      */
     public function bookedSlots(Car $car) : array
     {
-        $bookings = $this->model->query()->where(['car_id' => $car->id])->get();
+        $bookings = $this->model->query()
+            ->where(['car_id' => $car->id])
+            ->where('status', '!=', Booking::STATUS_CANCELED)
+            ->get();
 
         if ($bookings->isEmpty()) {
             return [];
@@ -94,7 +97,7 @@ class BookingsRepository extends BaseRepository
         $rows = $this->model->query()
             ->where('booking_starting_at', '>', now())
             ->where('user_id', $userId)
-            ->where('status', 'pending')
+            ->where('status', [Booking::STATUS_PENDING, Booking::STATUS_DRIVING])
             ->orderBy('booking_starting_at', 'ASC')
             ->get();
 
@@ -105,10 +108,7 @@ class BookingsRepository extends BaseRepository
         foreach ($rows as $booking) {
             /** @var $booking Booking */
 
-            $result[] = $this->show($booking, function($model, &$data) {
-                $data['booking_starting_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
-                $data['booking_ending_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
-            });
+            $result[] = $this->show($booking);
         }
 
         return $result;
@@ -122,7 +122,7 @@ class BookingsRepository extends BaseRepository
     public function history(int $userId) : array
     {
         $rows = $this->model->query()
-            ->where('status', 'ended')
+            ->where('status', Booking::STATUS_ENDED)
             ->where('user_id', $userId)
             ->orderBy('booking_ending_at', 'DESC')
             ->get();
@@ -252,5 +252,15 @@ class BookingsRepository extends BaseRepository
         $booking->refresh();
 
         return $this->show($booking);
+    }
+
+    public function show($model, $renderCallback = null): array
+    {
+        $data = parent::show($model, $renderCallback);
+
+        $data['booking_starting_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
+        $data['booking_ending_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
+
+        return $data;
     }
 }

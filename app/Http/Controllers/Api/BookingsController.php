@@ -161,9 +161,10 @@ class BookingsController extends BaseApiController
 
         $this->validate($request, [
             'title' => 'string|required|max:255',
-            'description' => 'string|required|max:255',
+            'location' => 'string|required|max:255',
             'price' => 'integer|required',
             'receipt_date' => 'date|date_format:Y-m-d|required',
+            'receipt_time' => 'date_format:"H:i"|required',
             'photo' => 'image|required',
         ]);
 
@@ -172,6 +173,8 @@ class BookingsController extends BaseApiController
         $data['photo_s3_link'] = $this->awsHelper->uploadToS3(
             $request->file('photo'), 'bookings/' . $booking->id . '_receipt'
         );
+
+        $data['receipt_date'] = $data['receipt_date'] . ' ' . $data['receipt_time'] . ':00';
 
         return $this->bookingsRepository->sendReceipt($booking, $data);
     }

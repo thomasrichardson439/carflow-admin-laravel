@@ -266,6 +266,7 @@
  *        @OA\Property(property="description", format="string", type="string"),
  *        @OA\Property(property="price", format="int64", type="int"),
  *        @OA\Property(property="receipt_date", format="date:Y-m-d", type="string"),
+ *        @OA\Property(property="receipt_time", format="date:H:i", type="string"),
  *        @OA\Property(property="photo", format="file", type="file"),
  *      ),
  *    )
