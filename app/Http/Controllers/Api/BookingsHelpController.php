@@ -81,7 +81,7 @@ class BookingsHelpController extends BaseApiController
         $booking = $this->findModel($id);
 
         $this->validate($request, [
-            'car_photos' => 'array|max:4',
+            'car_photos' => 'required|array|min:2|max:4',
             'car_photos.*' => 'image',
             'description' => 'string|required|max:1000',
             'license_plate' => 'string|required|max:255',
