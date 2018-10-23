@@ -95,9 +95,8 @@ class BookingsRepository extends BaseRepository
     public function upcoming(int $userId) : array
     {
         $rows = $this->model->query()
-            ->where('booking_starting_at', '>', now())
             ->where('user_id', $userId)
-            ->where('status', [Booking::STATUS_PENDING, Booking::STATUS_DRIVING])
+            ->whereIn('status', [Booking::STATUS_PENDING, Booking::STATUS_DRIVING])
             ->orderBy('booking_starting_at', 'ASC')
             ->get();
 
@@ -259,7 +258,7 @@ class BookingsRepository extends BaseRepository
         $data = parent::show($model, $renderCallback);
 
         $data['booking_starting_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
-        $data['booking_ending_at'] = dateResponseFormat($model->booking_starting_at, 'd M, h:i a');
+        $data['booking_ending_at'] = dateResponseFormat($model->booking_ending_at, 'd M, h:i a');
 
         return $data;
     }

@@ -162,7 +162,7 @@ class BookingsController extends BaseApiController
         $this->validate($request, [
             'title' => 'string|required|max:255',
             'location' => 'string|required|max:255',
-            'price' => 'integer|required',
+            'price' => 'numeric|required',
             'receipt_date' => 'date|date_format:Y-m-d|required',
             'receipt_time' => 'date_format:"H:i"|required',
             'photo' => 'image|required',
