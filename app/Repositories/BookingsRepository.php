@@ -218,7 +218,7 @@ class BookingsRepository extends BaseRepository
         $model->booking_id = $booking->id;
         $model->save();
 
-        return $this->show($model);
+        return $model->toArray();
     }
 
     /**
