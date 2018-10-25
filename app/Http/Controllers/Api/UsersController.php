@@ -102,6 +102,8 @@ class UsersController extends BaseApiController
             }
         }
 
+        $user->refresh();
+
         return $this->success([
             'updated' => true,
             'user' => $user,
