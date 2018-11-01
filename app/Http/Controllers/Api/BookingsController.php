@@ -48,10 +48,10 @@ class BookingsController extends BaseApiController
      * Displays upcoming bookings
      * @return \Illuminate\Http\JsonResponse
      */
-    public function upcoming()
+    public function upcoming($recurring)
     {
         return $this->success([
-            'bookings' => $this->bookingsRepository->upcoming(auth()->user()->id)
+            'bookings' => $this->bookingsRepository->upcoming($recurring, auth()->user()->id)
         ]);
     }
 
