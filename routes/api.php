@@ -24,15 +24,22 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
         });
 
         Route::group(['prefix' => 'cars'], function() {
-            Route::get('available', 'CarsController@availableForBooking');
+            Route::post('available', 'CarsController@availableForBooking');
             Route::get('{id}/book', 'CarsController@bookGet');
             Route::post('{id}/book', 'CarsController@bookPost');
+
+            Route::get('categories', 'CarsController@categories');
+            Route::get('manufacturers', 'CarsController@manufacturers');
         });
 
+        Route::get('boroughs', 'BoroughsController@all');
+
         Route::group(['prefix' => 'bookings'], function() {
-            Route::get('upcoming', 'BookingsController@upcoming');
+            Route::get('upcoming/{recurring}', 'BookingsController@upcoming')
+                ->where(['recurring' => '(all|one\-time|recurring)']);
+
             Route::get('history', 'BookingsController@history');
-            Route::get('{id}', 'BookingsController@show');
+            Route::get('{id}', 'BookingsController@show')->where(['id' => '\d+']);
             Route::post('{id}/start', 'BookingsController@start');
             Route::post('{id}/end', 'BookingsController@end');
             Route::post('{id}/cancel', 'BookingsController@cancel');

@@ -3,11 +3,20 @@
 /**
  * @OA\Get(
  *  tags={"bookings"},
- *  path="/api/bookings/upcoming",
+ *  path="/api/bookings/upcoming/{recurring}",
  *  summary="All cars which are upcoming in user's booking",
  *  security={
  *    {"api_key": {}}
  *  },
+ *  @OA\Parameter(
+ *    name="recurring",
+ *    required=true,
+ *    in="path",
+ *    description="Recurring filter, enum(all,one-time,recurring)",
+ *    @OA\Schema(
+ *      type="string",
+ *    )
+ *  ),
  *  @OA\Response(
  *    response=200,
  *    description="success",
@@ -43,8 +52,14 @@
  *    description="success",
  *    @OA\JsonContent(
  *      @OA\Property(
- *          property="bookings", type="array",
- *          @OA\Items(ref="#/components/schemas/Booking")*
+ *        property="bookings", type="array",
+ *        @OA\Items(
+ *          @OA\Property(
+ *            property="date", type="array",
+ *            @OA\Items(ref="#/components/schemas/Booking")
+ *
+ *          )
+ *        )
  *      )
  *    )
  *  ),

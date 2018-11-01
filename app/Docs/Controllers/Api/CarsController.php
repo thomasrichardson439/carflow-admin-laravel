@@ -1,13 +1,28 @@
 <?php
 
 /**
- * @OA\Get(
+ * @OA\Post(
  *  tags={"cars"},
  *  path="/api/cars/available",
  *  summary="All cars which are available for booking",
  *  security={
  *    {"api_key": {}}
  *  },
+ *  @OA\RequestBody(
+ *    required=true,
+ *    description="Available cars",
+ *    @OA\MediaType(
+ *      mediaType="application/x-www-form-urlencoded",
+ *      @OA\Schema(
+ *        @OA\Property(property="available_from", example="2018-10-11 11:00", format="string", type="string"),
+ *        @OA\Property(property="available_to", example="2018-10-11 12:59", format="string", type="string"),
+ *        @OA\Property(property="categories", format="array", type="array", @OA\Items(
+ *          type="int"
+ *        )),
+ *        @OA\Property(property="allowed_recurring", example="true", format="boolean", type="boolean"),
+ *      ),
+ *    )
+ *  ),
  *  @OA\Response(
  *    response=200,
  *    description="successfully get all cars",
@@ -27,7 +42,6 @@
  *  )
  *)
  */
-
 
 /**
  * @OA\Get(
@@ -96,6 +110,7 @@
  *      @OA\Schema(
  *        @OA\Property(property="booking_starting_at", example="2018-10-11 11:00", format="string", type="string"),
  *        @OA\Property(property="booking_ending_at", example="2018-10-11 12:59", format="string", type="string"),
+ *        @OA\Property(property="is_recurring", example="1", format="boolean", type="boolean"),
  *      ),
  *    )
  *  ),
@@ -111,6 +126,56 @@
  *    response="422",
  *    description="Validation failed",
  *    @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
+ *  ),
+ *  @OA\Response(
+ *    response="401",
+ *    description="Unauthorized",
+ *    @OA\JsonContent(@OA\Property(property="message", example="Unauthorized.", type="string"))
+ *  ),
+ *  @OA\Response(
+ *    response="500",
+ *    description="Server error"
+ *  )
+ *)
+ */
+
+/**
+ * @OA\Get(
+ *  tags={"cars"},
+ *  path="/api/cars/categories",
+ *  summary="List of car categories",
+ *  security={
+ *    {"api_key": {}}
+ *  },
+ *  @OA\Response(
+ *    response=200,
+ *    description="successfully get the list",
+ *    @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/CarCategory")),
+ *  ),
+ *  @OA\Response(
+ *    response="401",
+ *    description="Unauthorized",
+ *    @OA\JsonContent(@OA\Property(property="message", example="Unauthorized.", type="string"))
+ *  ),
+ *  @OA\Response(
+ *    response="500",
+ *    description="Server error"
+ *  )
+ *)
+ */
+
+/**
+ * @OA\Get(
+ *  tags={"cars"},
+ *  path="/api/cars/manufacturers",
+ *  summary="List of car manufacturers",
+ *  security={
+ *    {"api_key": {}}
+ *  },
+ *  @OA\Response(
+ *    response=200,
+ *    description="successfully get the list",
+ *    @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/CarManufacturer")),
  *  ),
  *  @OA\Response(
  *    response="401",

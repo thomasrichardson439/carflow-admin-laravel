@@ -33,9 +33,19 @@ class CarsController extends BaseApiController
      * Displays cars list which are available for booking now
      * @return \Illuminate\Http\JsonResponse
      */
-    public function availableForBooking()
+    public function availableForBooking(Request $request)
     {
-        return $this->success($this->carsRepository->allAvailableForBooking());
+        $this->validate($request, [
+            'available_from' => 'date|date_format:"Y-m-d H:i"|required',
+            'available_to' => 'date|date_format:"Y-m-d H:i"|required',
+            'categories' => 'array',
+            'categories.*' => 'integer|exists:car_categories',
+            'allowed_recurring' => 'boolean',
+        ]);
+
+        return $this->success(
+            $this->carsRepository->availableForBooking($request->all())
+        );
     }
 
     /**
@@ -76,6 +86,7 @@ class CarsController extends BaseApiController
         $this->validate($request, [
             'booking_starting_at' => 'required|date|date_format:"Y-m-d H:i"|after:now',
             'booking_ending_at' => 'required|date|date_format:"Y-m-d H:i"|after:booking_starting_at',
+            'is_recurring' => 'required|boolean',
         ]);
 
         $startingAt = Carbon::parse($request->booking_starting_at);
@@ -116,10 +127,33 @@ class CarsController extends BaseApiController
             'car_id' => $id,
             'booking_starting_at' => $startingAt->timestamp,
             'booking_ending_at' => $endingAt->timestamp,
+            'is_recurring' => $request->is_recurring,
         ]);
 
         return $this->success([
             'booking' => $booking
+        ]);
+    }
+
+    /**
+     * Cars categories list
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categories()
+    {
+        return $this->success([
+            'categories' => $this->carsRepository->categories(),
+        ]);
+    }
+
+    /**
+     * Cars manufacturers list
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function manufacturers()
+    {
+        return $this->success([
+            'categories' => $this->carsRepository->manufacturers(),
         ]);
     }
 }

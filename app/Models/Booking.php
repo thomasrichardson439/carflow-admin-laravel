@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property Carbon $booking_starting_at - should always be h:00:00
  * @property Carbon $booking_ending_at - should always be h:59:59, in order to avoid interferration of dates
+ * @property bool $is_recurring
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $status
@@ -31,6 +32,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'car_id',
+        'is_recurring',
         'booking_starting_at',
         'booking_ending_at',
     ];
@@ -46,6 +48,7 @@ class Booking extends Model
         'id',
         'booking_starting_at',
         'booking_ending_at',
+        'is_recurring',
         'status',
         'car',
         'endedReport',
@@ -60,6 +63,10 @@ class Booking extends Model
         'issueReports',
         'receipts',
         'lateNotifications',
+    ];
+
+    protected $casts = [
+        'is_recurring' => 'boolean',
     ];
 
     /**

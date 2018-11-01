@@ -12,5 +12,6 @@
  *   @OA\Property(property="issue_reports", type="array", @OA\Items(ref="#/components/schemas/IssueReport")),
  *   @OA\Property(property="receipts", type="array", @OA\Items(ref="#/components/schemas/Receipt")),
  *   @OA\Property(property="late_notifications", type="array", @OA\Items(ref="#/components/schemas/LateNotification")),
+ *   @OA\Property(property="is_recurring", format="boolean", type="boolean"),
  * )
  */

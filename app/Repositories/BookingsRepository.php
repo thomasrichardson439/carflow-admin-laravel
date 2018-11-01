@@ -89,22 +89,30 @@ class BookingsRepository extends BaseRepository
 
     /**
      * Allows to fetch a list of cars which booking by user is upcoming
+     * @param string $recurring - all, one-time, recurring
      * @param int $userId
      * @return array
      */
-    public function upcoming(int $userId) : array
+    public function upcoming(string $recurring, int $userId) : array
     {
-        $rows = $this->model->query()
+        $query = $this->model->query()
             ->where('user_id', $userId)
             ->whereIn('status', [Booking::STATUS_PENDING, Booking::STATUS_DRIVING])
-            ->orderBy('booking_starting_at', 'ASC')
-            ->get();
+            ->orderBy('booking_starting_at', 'ASC');
+        
+        switch ($recurring) {
+            case 'one-time':
+                $query->where('is_recurring', false);
+                break;
+                
+            case 'recurring':
+                $query->where('is_recurring', true);
+                break;
+        }
 
         $result = [];
-        
-        $now = now();
 
-        foreach ($rows as $booking) {
+        foreach ($query->get() as $booking) {
             /** @var $booking Booking */
 
             $result[] = $this->show($booking);
@@ -123,7 +131,7 @@ class BookingsRepository extends BaseRepository
         $rows = $this->model->query()
             ->where('status', Booking::STATUS_ENDED)
             ->where('user_id', $userId)
-            ->orderBy('booking_ending_at', 'DESC')
+            ->orderBy('booking_ending_at', 'ASC')
             ->get();
 
         $result = [];
@@ -131,7 +139,7 @@ class BookingsRepository extends BaseRepository
         foreach ($rows as $booking) {
             /** @var $booking Booking */
 
-            $result[] = $this->show($booking);
+            $result[$booking->booking_starting_at->format('l, j M')][] = $this->show($booking);
         }
 
         return $result;
