@@ -31,6 +31,7 @@ class BookingEndedReport extends Model
         'photo_left_s3_link',
         'photo_right_s3_link',
         'photo_gas_tank_s3_link',
+        'photo_mileage_s3_link',
         'notes',
     ];
 
@@ -40,6 +41,7 @@ class BookingEndedReport extends Model
         'photo_left_s3_link',
         'photo_right_s3_link',
         'photo_gas_tank_s3_link',
+        'photo_mileage_s3_link',
         'notes',
         'created_at',
     ];

@@ -8,6 +8,7 @@
  *   @OA\Property(property="photo_left_s3_link", format="url", type="string"),
  *   @OA\Property(property="photo_right_s3_link", format="url", type="string"),
  *   @OA\Property(property="photo_gas_tank_s3_link", format="url", type="string"),
+ *   @OA\Property(property="photo_mileage_s3_link", format="url", type="string"),
  *   @OA\Property(property="notes", format="string", type="string"),
  *   @OA\Property(property="created_at", ref="#/components/schemas/ApiDate"),
  * )

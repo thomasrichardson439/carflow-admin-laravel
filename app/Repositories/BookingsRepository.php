@@ -150,10 +150,13 @@ class BookingsRepository extends BaseRepository
      * @param Booking $booking
      * @return array
      */
-    public function startRide(Booking $booking) : array
+    public function startRide(Booking $booking, string $startMileagePhotoS3Link) : array
     {
         $booking->status = Booking::STATUS_DRIVING;
+        $booking->photo_start_mileage_s3_link = $startMileagePhotoS3Link;
         $booking->save();
+
+        $booking->refresh();
 
         return $this->show($booking);
     }

@@ -78,11 +78,19 @@ class BookingsController extends BaseApiController
     {
         $booking = $this->findModel($id);
 
+        $this->validate($request, [
+            'mileage_photo' => 'image|required',
+        ]);
+
+        $startMileagePhotoS3Link = $this->awsHelper->uploadToS3(
+            $request->file('mileage_photo'), $booking->id . '_gas_tank'
+        );
+
         if ($booking->status != Booking::STATUS_PENDING) {
             abort(409, 'This drive could not be started');
         }
 
-        return $this->success($this->bookingsRepository->startRide($booking));
+        return $this->success($this->bookingsRepository->startRide($booking, $startMileagePhotoS3Link));
     }
 
     /**
@@ -106,6 +114,7 @@ class BookingsController extends BaseApiController
             'car_right_photo' => 'image|required',
             'car_left_photo' => 'image|required',
             'gas_tank_photo' => 'image|required',
+            'mileage_photo' => 'image|required',
             'notes' => 'string|max:1000',
         ]);
 
@@ -129,6 +138,10 @@ class BookingsController extends BaseApiController
 
         $data['photo_gas_tank_s3_link'] = $this->awsHelper->uploadToS3(
             $request->file('gas_tank_photo'), $booking->id . '_gas_tank'
+        );
+
+        $data['photo_mileage_s3_link'] = $this->awsHelper->uploadToS3(
+            $request->file('mileage_photo'), $booking->id . '_gas_tank'
         );
 
         return $this->bookingsRepository->endRide($booking, $data);

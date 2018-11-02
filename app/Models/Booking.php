@@ -35,6 +35,7 @@ class Booking extends Model
         'is_recurring',
         'booking_starting_at',
         'booking_ending_at',
+        'photo_start_mileage_s3_link',
     ];
 
     protected $dates = [
@@ -55,6 +56,7 @@ class Booking extends Model
         'issueReports',
         'receipts',
         'lateNotifications',
+        'photo_start_mileage_s3_link',
     ];
 
     protected $with = [

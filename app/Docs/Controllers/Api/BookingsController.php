@@ -126,6 +126,16 @@
  *      type="int"
  *    )
  *  ),
+ *  @OA\RequestBody(
+ *    required=true,
+ *    description="Start ride info",
+ *    @OA\MediaType(
+ *      mediaType="application/x-www-form-urlencoded",
+ *      @OA\Schema(
+ *        @OA\Property(property="mileage_photo", format="file", type="file"),
+ *      ),
+ *    )
+ *  ),
  *  @OA\Response(
  *    response=200,
  *    description="success",
@@ -171,7 +181,7 @@
  *  ),
  *  @OA\RequestBody(
  *    required=true,
- *    description="Booking record",
+ *    description="End ride report",
  *    @OA\MediaType(
  *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
@@ -180,6 +190,7 @@
  *        @OA\Property(property="car_left_photo", format="file", type="file"),
  *        @OA\Property(property="car_right_photo", format="file", type="file"),
  *        @OA\Property(property="gas_tank_photo", format="file", type="file"),
+ *        @OA\Property(property="mileage_photo", format="file", type="file"),
  *        @OA\Property(property="notes", format="string", type="string"),
  *      ),
  *    )
