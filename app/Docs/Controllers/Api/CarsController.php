@@ -14,8 +14,8 @@
  *    @OA\MediaType(
  *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
- *        @OA\Property(property="available_from", example="2018-10-11 11:00", format="string", type="string"),
- *        @OA\Property(property="available_to", example="2018-10-11 12:59", format="string", type="string"),
+ *        @OA\Property(property="available_from", required={"true"}, example="2018-10-11 11:00", format="string", type="string"),
+ *        @OA\Property(property="available_to", required={"true"}, example="2018-10-11 12:59", format="string", type="string"),
  *        @OA\Property(property="categories", format="array", type="array", @OA\Items(
  *          type="int"
  *        )),

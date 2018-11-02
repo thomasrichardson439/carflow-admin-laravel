@@ -39,7 +39,7 @@ class CarsController extends BaseApiController
             'available_from' => 'date|date_format:"Y-m-d H:i"|required',
             'available_to' => 'date|date_format:"Y-m-d H:i"|required',
             'categories' => 'array',
-            'categories.*' => 'integer|exists:car_categories',
+            'categories.*' => 'integer|exists:car_categories,id',
             'allowed_recurring' => 'boolean',
         ]);
 
