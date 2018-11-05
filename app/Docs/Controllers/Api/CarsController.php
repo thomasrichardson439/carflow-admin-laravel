@@ -14,12 +14,15 @@
  *    @OA\MediaType(
  *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
- *        @OA\Property(property="available_from", required={"true"}, example="2018-10-11 11:00", format="string", type="string"),
- *        @OA\Property(property="available_to", required={"true"}, example="2018-10-11 12:59", format="string", type="string"),
+ *        @OA\Property(property="available_from", example="2018-10-11 11:00", format="string", type="string"),
+ *        @OA\Property(property="available_to", example="2018-10-11 12:59", format="string", type="string"),
  *        @OA\Property(property="categories", format="array", type="array", @OA\Items(
  *          type="int"
  *        )),
  *        @OA\Property(property="allowed_recurring", example="true", format="boolean", type="boolean"),
+ *        @OA\Property(property="pickup_location_lat", format="double", type="double"),
+ *        @OA\Property(property="pickup_location_lon", format="double", type="double"),
+ *        @OA\Property(property="allowed_range_miles", format="int64", type="integer"),
  *      ),
  *    )
  *  ),
@@ -28,6 +31,7 @@
  *    description="successfully get all cars",
  *    @OA\JsonContent(type="array", @OA\Items(
  *      @OA\Property(property="car", ref="#/components/schemas/Car"),
+ *      @OA\Property(property="distance_miles", type="double"),
  *      @OA\Property(property="availability", type="string"),
  *    ))
  *  ),

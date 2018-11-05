@@ -10,6 +10,9 @@ use Carbon\Carbon;
 
 class CarsRepository extends BaseRepository
 {
+    const METERS_IN_MILE = 1609.34;
+    const EARTH_RADIUS = 6371000;
+
     /**
      * @var Car
      */
@@ -51,11 +54,26 @@ class CarsRepository extends BaseRepository
             $query->where('allowed_recurring', $filters['allowed_recurring']);
         }
 
+        if (!empty($filters['pickup_location_lat'])) {
+
+            $diff = 'geoDiffBetweenDotsInMeters(
+                pickup_location_lat, 
+                pickup_location_lon,
+                ' . floatval($filters['pickup_location_lat']) . ',
+                ' . floatval($filters['pickup_location_lon']) . '
+                 
+            )';
+
+            $query->whereRaw($diff . ' <' . ($filters['allowed_range_miles'] * self::METERS_IN_MILE))
+                  ->orderBy(\DB::raw($diff), 'ASC');
+        }
 
         $now = Carbon::now();
         $data = [];
 
         foreach ($query->get() as $car) {
+
+            /** @var Car $car */
 
             $bookingStartingAt = Carbon::parse($car->booking_available_from);
 
@@ -67,6 +85,12 @@ class CarsRepository extends BaseRepository
 
             $data[] = [
                 'car' => $this->show($car),
+                'distance_miles' => $this->haversineGreatCircleDistance(
+                    $car->pickup_location_lat, $car->pickup_location_lon,
+                    $filters['pickup_location_lat'], $filters['pickup_location_lon']
+
+                ) / self::METERS_IN_MILE,
+
                 'availability' => $availability,
             ];
         }
@@ -90,5 +114,30 @@ class CarsRepository extends BaseRepository
     public function manufacturers()
     {
         return CarManufacturer::query()->orderBy('name', 'ASC')->get();
+    }
+
+    /**
+     * Allows to calculate distance between points
+     * @param float $latitudeFrom
+     * @param float $longitudeFrom
+     * @param float $latitudeTo
+     * @param float $longitudeTo
+     * @return float
+     */
+    private function haversineGreatCircleDistance(
+        $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo)
+    {
+        // convert from degrees to radians
+        $latFrom = deg2rad($latitudeFrom);
+        $lonFrom = deg2rad($longitudeFrom);
+        $latTo = deg2rad($latitudeTo);
+        $lonTo = deg2rad($longitudeTo);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+                cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+        return $angle * self::EARTH_RADIUS;
     }
 }

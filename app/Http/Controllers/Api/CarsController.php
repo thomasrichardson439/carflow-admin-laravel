@@ -40,6 +40,9 @@ class CarsController extends BaseApiController
             'available_to' => 'date|date_format:"Y-m-d H:i"|required',
             'categories' => 'array',
             'categories.*' => 'integer|exists:car_categories,id',
+            'pickup_location_lat' => 'numeric',
+            'pickup_location_lon' => 'numeric|required_with:pickup_location_lat',
+            'allowed_range_miles' => 'integer|required_with:pickup_location_lat|min:1|max:100',
             'allowed_recurring' => 'boolean',
         ]);
 
