@@ -83,14 +83,19 @@ class CarsRepository extends BaseRepository
                 $availability = 'in ' . $bookingStartingAt->diffForHumans($now, true);
             }
 
-            $data[] = [
-                'car' => $this->show($car),
-                'distance_miles' => $this->haversineGreatCircleDistance(
+            if (!empty($filters['pickup_location_lat'])) {
+                $distance = $this->haversineGreatCircleDistance(
                     $car->pickup_location_lat, $car->pickup_location_lon,
                     $filters['pickup_location_lat'], $filters['pickup_location_lon']
 
-                ) / self::METERS_IN_MILE,
+                ) / self::METERS_IN_MILE;
+            } else {
+                $distance = null;
+            }
 
+            $data[] = [
+                'car' => $this->show($car),
+                'distance_miles' => $distance,
                 'availability' => $availability,
             ];
         }
