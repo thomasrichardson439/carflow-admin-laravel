@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Mail\UserProfileReviewNotification;
+use App\Models\Booking;
 use App\Models\UserProfileUpdate;
 use Mail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Woo\GridView\DataProviders\EloquentDataProvider;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\Mail\UserRegistrationReviewNotification;
@@ -24,22 +26,15 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return view('admin.users.index');
-    }
-
-    /**
-     * Process datatables ajax request.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function usersData()
-    {
-        return Datatables::of(
+        $dataProvider = new EloquentDataProvider(
             User::query()->where('admin', 0)
                 ->with('profileUpdateRequest')
                 ->orderBy('id', 'ASC')
+        );
 
-        )->make(true);
+        return view('admin.users.index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -76,30 +71,62 @@ class UsersController extends Controller
         return view('admin.users.show', [
             'user' => $user,
             'profileUpdateRequest' => $user->profileUpdateRequest,
+            'recurringBookingsProvider' => new EloquentDataProvider(
+                $user->bookings()
+                    ->getQuery()
+                    ->where('is_recurring', true)
+            ),
+            'oneTimeBookingsProvider' => new EloquentDataProvider(
+                $user->bookings()
+                    ->getQuery()
+                    ->where('is_recurring', false)
+            ),
+            'averageBookingTime' => Booking::query()
+                ->where('user_id', $user->id)
+                ->average(\DB::raw('booking_ending_at - booking_starting_at')) / (60 * 60),
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws \Throwable
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $this->validate($request, [
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|unique:users,email,' . $user->id . '|email',
+            'phone' => 'required|numeric',
+            'address' => 'required|string|max:255',
+            'ridesharing_apps' => 'array',
+            'ridesharing_apps.*' => 'string',
+            'ridesharing_app_additional' => 'string|nullable',
+            'driving_license_front' => 'image',
+            'driving_license_back' => 'image',
+            'tlc_license_front' => 'image',
+            'tlc_license_back' => 'image',
+        ]);
+
+        $apps = $request->ridesharing_apps ?? [];
+
+        if (!empty($request->ridesharing_app_additional)) {
+            $apps = array_merge(
+                $apps,
+                array_filter(array_map('trim', explode(',', $request->ridesharing_app_additional)))
+            );
+        }
+
+        $user->fill($request->all());
+        $user->ridesharing_apps = implode(', ', $apps);
+        $user->saveOrFail();
+
+        return redirect()->back()->with('success', 'User successfully updated');
     }
 
     /**

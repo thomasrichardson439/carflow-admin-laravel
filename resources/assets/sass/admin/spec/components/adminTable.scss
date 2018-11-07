@@ -1,0 +1,76 @@
+.table.admin-table {
+  thead th {
+    border: 0;
+    color: #212529;
+  }
+
+  tbody {
+    tr {
+      background-color: #fff;
+
+      td {
+        border: 0;
+        border-bottom: 2px solid #f9fafb;
+
+        &.actionsColumn {
+          border-left: 3px solid #f2f3f4;
+        }
+
+        &.small-font {
+          font-size: 85%;
+        }
+
+        a:not(:last-child):after {
+          content: "·";
+          display: inline;
+          color: #ccd1d6;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+
+.table.table-modal {
+
+  caption {
+    caption-side: top;
+    color: #212529;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 10px 0 5px 0;
+  }
+
+  thead {
+    th {
+      color: #899198;
+      border-bottom: 1px solid #eff1f3;
+      font-weight: normal;
+
+      &:first-of-type {
+        padding-left: 0;
+      }
+
+      &:last-of-type {
+        padding-right: 0;
+      }
+    }
+  }
+
+  tbody td {
+    border-color: #eff1f3;
+    vertical-align: center !important;
+
+    &:first-of-type {
+      padding-left: 0;
+    }
+
+    &:last-of-type {
+      padding-right: 0;
+    }
+  }
+
+  tr:last-of-type td {
+    border-bottom: 1px solid #eff1f3;
+  }
+}

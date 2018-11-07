@@ -10,7 +10,6 @@ Route::group([
 ], function () {
     Route::get('/', 'DashboardController@index')->name('home');
     Route::resource('users', 'UsersController');
-    Route::get('/users-data', 'UsersController@usersData')->name('users.usersData');
     Route::post('/approve/{id}', 'UsersController@approveDocuments');
     Route::post('/reject/{id}', 'UsersController@rejectDocuments');
 

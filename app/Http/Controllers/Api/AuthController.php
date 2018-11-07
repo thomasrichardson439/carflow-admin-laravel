@@ -75,10 +75,24 @@ class AuthController extends BaseApiController
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function registers(Request $request)
     {
-        $this->validate($request, $this->rules());
+        $this->validate($request, [
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed|min:6',
+            'full_name' => 'required|min:2|max:100',
+            'address' => 'required|min:2|max:255',
+            'phone' => 'required|min:9|max:19',
+            'ridesharing_approved' => 'required|boolean',
+            'ridesharing_apps' => 'required|string',
+
+            'driving_license_front' => 'required|image',
+            'driving_license_back' => 'required|image',
+            'tlc_license_front' => 'required|image',
+            'tlc_license_back' => 'required|image',
+        ]);
 
         $user = new User;
         $auth_token = null;
@@ -132,28 +146,5 @@ class AuthController extends BaseApiController
             'user' => $user,
             'auth_token' => $auth_token
         ], 201);
-    }
-
-    /**
-     * Get rules for register step
-     *
-     * @return array
-     */
-    protected function rules()
-    {
-        return [
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:6',
-            'full_name' => 'required|min:2|max:100',
-            'address' => 'required|min:2|max:255',
-            'phone' => 'required|min:9|max:19',
-            'ridesharing_approved' => 'required|boolean',
-            'ridesharing_apps' => 'required|string',
-
-            'driving_license_front' => 'required|image',
-            'driving_license_back' => 'required|image',
-            'tlc_license_front' => 'required|image',
-            'tlc_license_back' => 'required|image',
-        ];
     }
 }

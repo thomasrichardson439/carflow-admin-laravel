@@ -1,156 +1,144 @@
-<?php
+@php
 
 /** @var $user \App\Models\User */
 /** @var $profileUpdateRequest \App\Models\UserProfileUpdate */
 
-?>
+@endphp
 
 @extends('layouts.admin')
 
 @section('content')
-    <div class="row gap-20 masonry pos-r">
-        <div class="masonry-sizer col-md-6"></div>
-        <div class="masonry-item col-md-12">
-            <div class="bgc-white p-20 bd">
-                <div class="mT-30">
-                    @if (!empty($profileUpdateRequest))
-                        <h2>Profile update (from {{ $profileUpdateRequest->created_at->format('D m, Y, h:i A') }})</h2>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h4>Current:</h4>
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <input type="text" class="form-control" value="{{ $user->full_name }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="text" class="form-control" value="{{ $user->email }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <input type="text" class="form-control" value="{{ $user->address }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone</label>
-                                    <input type="text" class="form-control" value="{{ $user->phone }}" disabled>
-                                </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <h4>New:</h4>
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <input type="text" class="form-control" value="{{ $profileUpdateRequest->full_name }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="text" class="form-control" value="{{ $profileUpdateRequest->email }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <input type="text" class="form-control" value="{{ $profileUpdateRequest->address }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone</label>
-                                    <input type="text" class="form-control" value="{{ $profileUpdateRequest->phone }}" disabled>
-                                </div>
-                            </div>
-                        </div>
+    <div class="container-fluid container-admin-form">
+        <div class="row">
+            <div class="col-md-11 col-sm-12 col-lg-10">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <h1 class="title">
+                            <a href="{{ url('admin/users') }}">Users</a>
+                            <i class="fa fa-caret-right"></i>
+                            {{ $user->full_name }}
+                            <small>
+                                ID {{ $user->id }}
 
-                        <div class="form-row mt-5 align-items-end">
-                            <a href="/admin/users" class="btn btn-primary mr-2">Back</a>
+                                @if ($user->status == 'pending')
+                                    <span class="admin-label label-warning">Pending</span>
 
-                            @if($profileUpdateRequest->status == \App\Models\UserProfileUpdate::STATUS_PENDING)
-                                <form class="mr-2" action="/admin/reject-profile-changes/{{$profileUpdateRequest->id}}" method="post">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger">Reject</button>
-                                </form>
-                            @endif
+                                @elseif ($user->status == 'rejected')
+                                    <span class="admin-label label-danger">Rejected</span>
 
-                            @if($profileUpdateRequest->status === \App\Models\UserProfileUpdate::STATUS_APPROVED)
-                                <div class="">
-                                    <form class="" action="/admin/reject-profile-changes/{{$profileUpdateRequest->id}}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger">Unapprove</button>
-                                    </form>
-                                </div>
-                            @else
-                                <form class="mr-2" action="/admin/approve-profile-changes/{{$profileUpdateRequest->id}}" method="post">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success">Approve</button>
-                                </form>
-                            @endif
-                        </div>
+                                @elseif ($user->profileUpdateRequest !== null && $user->profileUpdateRequest->status == 'pending')
+                                    <span class="admin-label label-warning">Profile Pending</span>
 
-                        <hr>
-                    @endif
-
-                    <h2>Documents approval</h2>
-                    <div class="form-row">
-                        <div class="">
-                            <h4 class="c-grey-900">Driving License</h4>
-                            <div class="form-row">
-                                <div class="">
-                                    @if($user->drivingLicense)
-                                        <img src="{{$user->drivingLicense->front}}"
-                                             data-high-res-src="{{$user->drivingLicense->front}}"
-                                             class="img-thumbnail preview-img gallery-items" alt="">
-                                        <img src="{{$user->drivingLicense->back}}"
-                                             data-high-res-src="{{$user->drivingLicense->back}}"
-                                             class="img-thumbnail preview-img gallery-items" alt="">
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ml-5">
-                            <h4 class="c-grey-900">TLC License</h4>
-                            <div class="form-row">
-                                <div class="">
-                                    @if($user->tlcLicense)
-                                        <img src="{{$user->tlcLicense->front}}"
-                                             data-high-res-src="{{$user->tlcLicense->front}}"
-                                             class="img-thumbnail preview-img gallery-items" alt="">
-                                        <img src="{{$user->tlcLicense->back}}"
-                                             data-high-res-src="{{$user->tlcLicense->back}}"
-                                             class="img-thumbnail preview-img gallery-items" alt="">
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
+                                @elseif ($user->profileUpdateRequest !== null && $user->profileUpdateRequest->status == 'rejected')
+                                    <span class="admin-label label-warning">Profile Rejected</span>
+                                @else
+                                    <span class="admin-label label-success">Approved</span>
+                                @endif
+                            </small>
+                        </h1>
                     </div>
-                    <div class="mt-5">
-                        <h4 class="c-grey-900">Approved Ridesharing Applications</h4>
-                        <h6>{{ $user->ridesharing_apps }}</h6>
-                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <div class="edit-off edit-buttons">
+                            <a href="#" class="btn btn-gray" id="edit">Edit</a>
+                            <a href="#" class="btn btn-gray">Delete</a>
+                        </div>
+                        <div class="edit-on edit-buttons">
+                            <p class="muted edit-has-changes">Unsaved changes</p>
 
-                    <div class="form-row mt-5 align-items-end">
-                        <a href="/admin/users" class="btn btn-primary mr-2">Back</a>
-
-                        @if($user->status == \ConstUserStatus::PENDING)
-                            <form class="mr-2" action="/admin/reject/{{$user->id}}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-danger">Reject</button>
-                            </form>
-                        @endif
-
-                        @if($user->status === \ConstUserStatus::APPROVED)
-                            <div class="">
-                                <form class="" action="/admin/reject/{{$user->id}}" method="post">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger">Unapprove</button>
-                                </form>
-                            </div>
-                        @else
-                            <form class="mr-2" action="/admin/approve/{{$user->id}}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-success">Approve</button>
-                            </form>
-                        @endif
+                            <a href="#" class="btn btn-gray" id="cancelChanges">Cancel</a>
+                            <a href="#" class="btn btn-danger" id="save" data-form="#user-info">Save</a>
+                        </div>
                     </div>
                 </div>
+
+                @if(Session::has('success'))
+                    <div class="alert alert-success">
+                        {{ Session::get('success')}}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-danger mb-3">
+                        <b>Errors found while validating your request:</b>
+                        <ul>
+                            {!! implode('', $errors->all('<li>:message</li>')) !!}
+                        </ul>
+                    </div>
+                @endif
+
+                @if ($user->status == \App\Models\User::STATUS_PENDING)
+                    <div class="alert alert-soft-danger mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>Pending account approval</h3>
+                                <p>Account was created {{ $user->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end align-items-center">
+                                <form action="/admin/approve/{{$user->id}}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success mR-10">Accept user</button>
+                                </form>
+
+                                <form action="/admin/reject/{{$user->id}}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-default">Reject user</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\Models\UserProfileUpdate::STATUS_PENDING)
+                    <div class="alert alert-soft-danger mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>Pending profile changes approval</h3>
+                                <p>Request was made {{ $user->profileUpdateRequest->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end align-items-center">
+                                <a href="#" class="btn btn-success">Approve changes</a>
+                                <a href="#" class="btn btn-default">Reject changes</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#user-bookings">Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#user-info">Information</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-info">
+                    {{csrf_field()}}
+                    {{ method_field('PATCH') }}
+
+                    <div class="tab-content">
+
+                        <div class="tab-pane" id="user-bookings">
+                            @include('admin.users._bookings')
+                        </div>
+
+                        <div class="tab-pane active" id="user-info">
+                            @include('admin.users._info')
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+    @include('admin.users.modals._ride_photos')
+    @include('admin.users.modals._receipts')
+
 @endsection
 
 @push('styles')

@@ -128,12 +128,29 @@
   border-bottom: 1px solid $border-color;
   border-right: 1px solid $border-color;
   line-height: 0;
-  padding: 0 20px;
+  padding: 0 40px;
   transition: all 0.2s ease;
+
+  .peer-logo {
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h5 {
+    font-weight: bold;
+
+    .label-logo {
+      position: relative;
+      top: -3px;
+    }
+  }
 
   a {
     display: inline-block;
     width: 100%;
+    color: #f03e3e;
 
     .logo {
       background-position: center left;
@@ -182,27 +199,21 @@
   overflow: auto;
   padding: 0;
   position: relative;
+  padding-left: 20px;
 
   .dropdown-toggle::after {
     display: none;
   }
 
   .sidebar-link {
-    &.active::before {
-      background: $md-blue-500;
-      border-radius: 50%;
-      content: '';
-      display: block;
-      height: 8px;
-      left: -4px;
-      position: absolute;
-      top: calc(50% - 4px);
-      width: 8px;
+    &.active {
+      color: #f03e3e;
     }
   }
 
   li {
     position: relative;
+    padding: 10px 0;
 
     &.dropdown {
       .arrow {
