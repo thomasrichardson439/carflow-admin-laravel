@@ -1,0 +1,20 @@
+.modal.admin-modal {
+
+  .modal-body, .modal-header {
+    padding: 1rem 2rem;
+  }
+
+  h3.group {
+    font-size: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+
+    i.fa {
+      color: #adb5bd;
+    }
+  }
+
+  .modal-dialog {
+    min-width: 800px;
+  }
+}

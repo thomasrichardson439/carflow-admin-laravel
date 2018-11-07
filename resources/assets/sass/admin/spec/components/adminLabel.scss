@@ -1,0 +1,29 @@
+.admin-label {
+  display: inline-block;
+  padding: 3px 5px;
+  background: #eee;
+  border-radius: 4px;
+  font-size: 85%;
+
+  &.label-danger {
+    background: #fff5f5;
+    color: #e65858;
+  }
+
+  &.label-warning {
+    background: #fff4e6;
+    color: #ea641c;
+  }
+
+  &.label-success {
+    background: #ebfbee;
+    color: #20ae82;
+  }
+
+  &.label-logo {
+    background: #fff;
+    border: 1px solid #f03e3e;
+    color: #f03e3e;
+    font-size: 50%;
+  }
+}

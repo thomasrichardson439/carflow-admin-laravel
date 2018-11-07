@@ -17,6 +17,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $status
+ * @property string $photo_start_mileage_s3_link
+ *
+ * @property BookingIssueReport[] $issueReports
+ * @property BookingReceipt[] $receipts
+ * @property LateNotification[] $lateNotifications
+ * @property BookingEndedReport $endedReport
  * @property Car $car
  * @property User $user
  */

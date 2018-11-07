@@ -160,6 +160,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Aws\Laravel\AwsServiceProvider::class,
+        Woo\GridView\GridViewServiceProvider::class,
     ],
 
     /*

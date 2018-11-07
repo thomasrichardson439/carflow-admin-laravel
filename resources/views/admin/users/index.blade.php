@@ -1,81 +1,92 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="bgc-white bd bdrs-3 p-20 mB-20">
-                    <h4 class="c-grey-900 mB-20">Applicants for Car Flow Inc:</h4>
-                    <table id="usersTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Full Name</th>
-                            <th>Email </th>
-                            <th>Address </th>
-                            <th>Phone</th>
-                            <th>Ridesharing apps</th>
-                            <th>Documents</th>
-                            <th>Status</th>
-                            <th>View</th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
+    <div class="container-fluid container-admin-list">
+        <h1 class="title">Users</h1>
+        <h4 class="subtitle">Edit and manually add users</h4>
 
-@push('scripts')
-    <script>
-        $(function() {
-            $('#usersTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: '{!! route('admin.users.usersData') !!}',
-                columns: [
-                    { data: 'id', name: 'ID'},
-                    { data: 'full_name', name: 'full_name' },
-                    { data: 'email', name: 'email' },
-                    { data: 'address', name: 'address' },
-                    { data: 'phone', name: 'phone' },
-                    { data: 'ridesharing_apps', name: 'ridesharing_apps' },
-                    { data: 'documents_uploaded', name: 'documents_uploaded',
-                        "render": function(data, type, row, meta) {
-                            return row.documents_uploaded == 0 ? 'Not Uploaded' : 'Uploaded';
-                        }
-                    },
-                    { data: 'status', name: 'status', render: function(data, type, row, meta) {
+        {!! grid([
+            'dataProvider' => $dataProvider,
+            'rowsPerPage' => 20,
+            'tableHtmlOptions' => [
+                'class' => 'table admin-table',
+            ],
+            'columns' => [
+                'id',
+                [
+                    'class' => \Woo\GridView\Columns\RawColumn::class,
+                    'title' => 'Status',
+                    'value' => function(\App\Models\User $model) {
 
-                        var html = '<p><b>Registration:</b> ' + row.status + '</p>';
+                        if ($model->status == 'pending') {
+                            return '<span class="admin-label label-warning">Pending</span>';
 
-                        var profileStatus = 'None';
-
-                        if (row.profile_update_request) {
-                            profileStatus = row.profile_update_request.status;
+                        } elseif ($model->status == 'rejected') {
+                            return '<span class="admin-label label-danger">Rejected</span>';
                         }
 
-                        html += '<p><b>Profile:</b> ' + profileStatus + '</p>';
+                        if ($model->profileUpdateRequest !== null) {
 
-                        return html;
-                    }},
-                    { data: 'id', name: 'id', render: function(data, type, row, meta) {
-                        var title = 'Review';
+                            switch ($model->profileUpdateRequest->status) {
+                                case 'pending':
+                                    return '<span class="admin-label label-warning">Profile Pending</span>';
 
-                        if (row.status === 'approved') {
-                            title = 'Unapprove';
-
-                            if (row.profile_update_request &&
-                                ['pending', 'rejected'].indexOf(row.profile_update_request.status) !== -1
-                            ) {
-                                title = 'Review';
+                                case 'rejected':
+                                    return '<span class="admin-label label-warning">Profile Rejected</span>';
                             }
                         }
-                        return '<a href="/admin/users/'+ data + '">' +  title + '</a>';
-                    }},
+
+                        return '<span class="admin-label label-success">Approved</span>';
+                    }
                 ],
-            });
-        });
-    </script>
-@endpush
+                'full_name',
+                [
+                    'value' => 'email',
+                    'contentFormat' => 'email',
+                    'contentHtmlOptions' => ['class' => 'small-font'],
+                ],
+                [
+                    'value' => 'address',
+                    'contentHtmlOptions' => ['class' => 'small-font'],
+                ],
+                [
+                    'value' => 'phone',
+                    'contentHtmlOptions' => ['class' => 'small-font'],
+                ],
+                [
+                    'class' => \Woo\GridView\Columns\RawColumn::class,
+                    'title' => 'Documents',
+                    'value' => function(\App\Models\User $model) {
+
+                        $html = '';
+
+                        if ($model->drivingLicense) {
+                            $html .= '<a href="' . url('users/' . $model->id) . '">DL</a> ';
+                        }
+
+                        if ($model->tlcLicense) {
+                            $html .= '<a href="' . url('users/' . $model->id) . '">TLC</a> ';
+                        }
+
+                        return $html;
+                    }
+                ],
+                'ridesharing_apps',
+                [
+                    'class' => \Woo\GridView\Columns\ActionsColumn::class,
+                    'value' => '{show} {edit} {delete}',
+                    'contentHtmlOptions' => [
+                        'class' => 'actionsColumn',
+                    ],
+                    'actionsUrls' => function($model) {
+                        return [
+                            'show' => url('admin/users/' . $model->id),
+                            'edit' => url('admin/users/' . $model->id . '#edit'),
+                            'delete' => url('admin/users/' . $model->id . '/delete'),
+                        ];
+                    }
+                ]
+            ]
+        ])->render() !!}
+    </div>
+@endsection
