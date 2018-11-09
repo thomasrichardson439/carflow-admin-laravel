@@ -133,6 +133,14 @@
       .content {
         color: #212529;
         font-weight: bold;
+
+        &.success {
+          color: #12b886;
+        }
+
+        &.danger {
+          color: #f03e3e;
+        }
       }
 
       &:not(:last-child) {
