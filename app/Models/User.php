@@ -23,6 +23,7 @@ use Laravel\Passport\HasApiTokens;
  * @property BookingIssueReport[] $accidents
  * @property BookingIssueReport[] $malfunctions
  * @property string[] $ridesharing_apps_list
+ * @property BookingIssueReport[] $issueReports
  *
  * @mixin \Eloquent
  *
@@ -211,6 +212,17 @@ class User extends Authenticatable
             BookingIssueReport::class,
             Booking::class
         )->where('report_type', BookingIssueReport::TYPE_MALFUNCTION);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function issueReports()
+    {
+        return $this->hasManyThrough(
+            BookingIssueReport::class,
+            Booking::class
+        );
     }
 
     /**

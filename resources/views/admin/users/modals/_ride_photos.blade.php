@@ -13,7 +13,7 @@
             </div>
 
             <div class="modal-body">
-                @foreach ($user->endedBookings as $index => $booking)
+                @forelse ($user->endedBookings as $index => $booking)
                     <div class="row">
                         <div class="col-12">
                             <h3 class="group" data-toggle="collapse" href="#group-{{ $index }}">
@@ -39,7 +39,13 @@
                             </table>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div class="row">
+                        <div class="col-12">
+                            <p>No data to display</p>
+                        </div>
+                    </div>
+                @endforelse
             </div>
 
             <div class="modal-footer">
@@ -58,7 +64,7 @@
             </div>
 
             <div class="modal-body">
-                @foreach ($user->endedBookings as $index => $booking)
+                @forelse ($user->endedBookings as $index => $booking)
 
                     @php
                         if ($booking->endedReport == null) continue;
@@ -151,7 +157,13 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div class="row">
+                        <div class="col-12">
+                            <p>No data to display</p>
+                        </div>
+                    </div>
+                @endforelse
             </div>
 
             <div class="modal-footer">

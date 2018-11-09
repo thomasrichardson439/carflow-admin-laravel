@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.71.0",
+            "version": "3.71.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8585a1b39db65ed393dff4018fe545ea44005532"
+                "reference": "d9d44345e478146560ab67fee26e56a7a828da5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8585a1b39db65ed393dff4018fe545ea44005532",
-                "reference": "8585a1b39db65ed393dff4018fe545ea44005532",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d9d44345e478146560ab67fee26e56a7a828da5b",
+                "reference": "d9d44345e478146560ab67fee26e56a7a828da5b",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-11-06 22:04:52"
+            "time": "2018-11-08 23:12:09"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -2558,16 +2558,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v6.20.1",
+            "version": "v6.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "d9e9b35309dbaf3c44e5a848ca1eba179459d22a"
+                "reference": "77eb5bb91e29981eea29b552fc648dbcb55a97f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d9e9b35309dbaf3c44e5a848ca1eba179459d22a",
-                "reference": "d9e9b35309dbaf3c44e5a848ca1eba179459d22a",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/77eb5bb91e29981eea29b552fc648dbcb55a97f5",
+                "reference": "77eb5bb91e29981eea29b552fc648dbcb55a97f5",
                 "shasum": ""
             },
             "require": {
@@ -2609,7 +2609,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2018-11-07 18:35:42"
+            "time": "2018-11-09 01:33:39"
         },
         {
             "name": "swagger-api/swagger-ui",
@@ -3822,12 +3822,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/deniskoronets/Laravel-GridView.git",
-                "reference": "48150742e29e4da4aa811f9f3fdba1cf7f63673b"
+                "reference": "14b417e0a1dce5d72759111bbdadbba612c5ef63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deniskoronets/Laravel-GridView/zipball/48150742e29e4da4aa811f9f3fdba1cf7f63673b",
-                "reference": "48150742e29e4da4aa811f9f3fdba1cf7f63673b",
+                "url": "https://api.github.com/repos/deniskoronets/Laravel-GridView/zipball/14b417e0a1dce5d72759111bbdadbba612c5ef63",
+                "reference": "14b417e0a1dce5d72759111bbdadbba612c5ef63",
                 "shasum": ""
             },
             "require": {
@@ -3850,7 +3850,7 @@
                 }
             ],
             "description": "Yii2 gridview analog for laravel",
-            "time": "2018-11-07 23:21:15"
+            "time": "2018-11-09 13:21:49"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
