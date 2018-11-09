@@ -28,6 +28,16 @@
                     <span class="title">Users</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class='sidebar-link' href="{{ route('admin.cars.index') }}">
+                    <span class="title">Cars</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class='sidebar-link' href="{{ route('admin.receipts.index') }}">
+                    <span class="title">Receipts</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

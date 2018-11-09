@@ -138,6 +138,8 @@
 
     @include('admin.users.modals._ride_photos')
     @include('admin.users.modals._receipts')
+    @include('admin.users.modals._issue_reports')
+    @include('admin.users.modals._booked_cars')
 
 @endsection
 

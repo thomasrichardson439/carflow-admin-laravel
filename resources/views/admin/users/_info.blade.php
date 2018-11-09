@@ -209,14 +209,14 @@
 
             <div class="info">
                 <p class="title">Total numbers of cars booked</p>
-                <p class="content"><a href="#">{{ $user->bookings()->count() }}</a></p>
+                <p class="content"><a href="#" data-toggle="modal" data-target="#booked-cars">{{ $user->bookings()->count() }}</a></p>
             </div>
 
             <div class="info">
                 <p class="title">Currently booked car</p>
                 <p class="content">
                     @if ($user->lastBooking)
-                        <a href="#">
+                        <a href="{{ url('admin/cars/' . $user->lastBooking->car->id) }}">
                             {{ $user->lastBooking->car->manufacturer->name }}
                             {{ $user->lastBooking->car->model }}
                         </a>
@@ -246,12 +246,12 @@
 
             <div class="info">
                 <p class="title">Number of car malfunctions</p>
-                <p class="content">{{ $user->accidents()->count() }} malfunctions <a href="#">Show</a></p>
+                <p class="content">{{ $user->accidents()->count() }} malfunctions <a href="#" data-toggle="modal" data-target="#malfunctions">Show</a></p>
             </div>
 
             <div class="info">
                 <p class="title">Number of accidents</p>
-                <p class="content">{{ $user->accidents()->count() }} accidents <a href="#">Show</a></p>
+                <p class="content">{{ $user->accidents()->count() }} accidents <a href="#" data-toggle="modal" data-target="#accidents">Show</a></p>
             </div>
 
             <div class="info">

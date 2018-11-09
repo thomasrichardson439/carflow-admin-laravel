@@ -14,7 +14,7 @@
             'columns' => [
                 'id',
                 [
-                    'class' => \Woo\GridView\Columns\RawColumn::class,
+                    'class' => 'raw',
                     'title' => 'Status',
                     'value' => function(\App\Models\User $model) {
 
@@ -54,18 +54,18 @@
                     'contentHtmlOptions' => ['class' => 'small-font'],
                 ],
                 [
-                    'class' => \Woo\GridView\Columns\RawColumn::class,
+                    'class' => 'raw',
                     'title' => 'Documents',
                     'value' => function(\App\Models\User $model) {
 
                         $html = '';
 
                         if ($model->drivingLicense) {
-                            $html .= '<a href="' . url('users/' . $model->id) . '">DL</a> ';
+                            $html .= '<a href="' . url('admin/users/' . $model->id) . '">DL</a> ';
                         }
 
                         if ($model->tlcLicense) {
-                            $html .= '<a href="' . url('users/' . $model->id) . '">TLC</a> ';
+                            $html .= '<a href="' . url('admin/users/' . $model->id) . '">TLC</a> ';
                         }
 
                         return $html;
@@ -73,7 +73,7 @@
                 ],
                 'ridesharing_apps',
                 [
-                    'class' => \Woo\GridView\Columns\ActionsColumn::class,
+                    'class' => 'actions',
                     'value' => '{show} {edit} {delete}',
                     'contentHtmlOptions' => [
                         'class' => 'actionsColumn',
