@@ -1,5 +1,5 @@
-import Chart from 'chart.js';
-import { COLORS } from '../../constants/colors';
+import Chart from '../../../../../../../node_modules/chart.js/src/chart';
+import { COLORS } from '../../../constants/colors';
 
 export default (function () {
   // ------------------------------------------------------
