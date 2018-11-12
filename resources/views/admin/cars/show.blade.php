@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <form action="{{ url('/admin/cars/' . $car->id) }}" method="post" id="car-info">
+                <form action="{{ url('/admin/cars/' . $car->id) }}" method="post" id="car-info" enctype="multipart/form-data">
                     {{csrf_field()}}
                     {{ method_field('PATCH') }}
 

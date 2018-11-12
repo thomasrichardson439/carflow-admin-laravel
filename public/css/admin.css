@@ -11718,9 +11718,25 @@ hr {
   list-style-type: none;
 }
 
+.sidebar .peer-logo .collapsed {
+  display: none;
+}
+
+.sidebar .peer-logo h5 {
+  text-align: center;
+}
+
 @media screen and (min-width: 992px) and (max-width: 1439px) {
   .sidebar {
     width: 70px;
+  }
+
+  .sidebar .peer-logo .expanded {
+    display: none;
+  }
+
+  .sidebar .peer-logo .collapsed {
+    display: block;
   }
 
   .sidebar .sidebar-inner .sidebar-logo {
@@ -11751,6 +11767,14 @@ hr {
 
   .sidebar:hover {
     width: 280px;
+  }
+
+  .sidebar:hover .peer-logo .expanded {
+    display: block;
+  }
+
+  .sidebar:hover .peer-logo .collapsed {
+    display: none;
   }
 
   .sidebar:hover .sidebar-inner .sidebar-logo {

@@ -117,7 +117,7 @@
                     </div>
                 </div>
 
-                <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-info">
+                <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-info" enctype="multipart/form-data">
                     {{csrf_field()}}
                     {{ method_field('PATCH') }}
 

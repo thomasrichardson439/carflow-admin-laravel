@@ -5,7 +5,7 @@
 
             <div class="form-group">
                 <label>Category</label>
-                <select name="manufacturer_id" class="form-control select2">
+                <select name="category_id" class="form-control select2">
                     @foreach (\App\Models\CarCategory::all() as $category)
                         <option @if (old('category_id', $car->category_id) == $category->id) selected @endif
                         value="{{ $category->id }}"
@@ -38,6 +38,34 @@
             <div class="form-group">
                 <label>Number of seats</label>
                 <input type="text" name="seats" value="{{ old('seats', $car->seats) }}" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h4>Car photo</h4>
+            <div class="form-group">
+                <label>Front photo</label>
+                @if($car->image_s3_url)
+                    <div class="image-card">
+                        <div class="image">
+                            <img src="{{$car->image_s3_url}}"
+                                 data-high-res-src="{{$car->image_s3_url}}"
+                                 class="img-thumbnail gallery-items" alt="">
+                        </div>
+                        <div class="text">
+                            <a href="{{ $car->image_s3_url }}">{{ basename($car->image_s3_url) }}</a>
+                        </div>
+                    </div>
+                @else
+                    <div class="edit-off">
+                        <p class="text-muted">No photo uploaded</p>
+                    </div>
+                @endif
+
+                <div class="edit-on mT-10">
+                    <p class="text-muted">Fill only to replace:</p>
+                    <input type="file" name="image">
+                </div>
             </div>
         </div>
 

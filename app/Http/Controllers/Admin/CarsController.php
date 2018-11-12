@@ -2,12 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AwsHelper;
+use App\Http\Controllers\Controller;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Woo\GridView\DataProviders\EloquentDataProvider;
 
-class CarsController
+class CarsController extends Controller
 {
+    /**
+     * @var AwsHelper
+     */
+    private $awsHelper;
+
+    public function __construct()
+    {
+        $this->awsHelper = new AwsHelper();
+    }
+
     public function index()
     {
         $dataProvider = new EloquentDataProvider(
@@ -67,7 +79,31 @@ class CarsController
     {
         $car = Car::query()->findOrFail($id);
 
-        return redirect()->back()->with('success', 'User successfully updated');
+        $this->validate($request, [
+            'category_id' => 'required|integer|exists:car_categories,id',
+            'manufacturer_id' => 'required|integer|exists:car_manufacturers,id',
+            'model' => 'required|string|max:255',
+            'year' => 'required|integer|min:1990|max:' . date('Y'),
+            'seats' => 'required|integer|max:10',
+            'owner' => 'required|string|max:255',
+            'policy_number' => 'string|max:255|nullable',
+            'image' => 'image|nullable',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image_s3_url'] = $this->awsHelper->replaceS3File(
+                $car->image_s3_url,
+                $request->file('image'),
+                'cars/' . $car->id
+            );
+        }
+
+        $car->fill($data);
+        $car->saveOrFail();
+
+        return redirect()->back()->with('success', 'Car successfully updated');
     }
 
     /**

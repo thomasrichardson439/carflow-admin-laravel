@@ -26,8 +26,29 @@
     list-style-type: none;
   }
 
+  .peer-logo {
+    .collapsed {
+      display: none;
+    }
+
+    h5 {
+      text-align: center;
+    }
+  }
+
   @include between($breakpoint-md, $breakpoint-xl) {
     width: $collapsed-size;
+
+    .peer-logo {
+
+      .expanded {
+        display: none;
+      }
+
+      .collapsed {
+        display: block;
+      }
+    }
 
     .sidebar-inner {
       .sidebar-logo {
@@ -71,6 +92,17 @@
 
     &:hover {
       width: $offscreen-size;
+
+      .peer-logo {
+
+        .expanded {
+          display: block;
+        }
+
+        .collapsed {
+          display: none;
+        }
+      }
 
       .sidebar-inner {
         .sidebar-logo {
