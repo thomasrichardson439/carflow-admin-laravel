@@ -6,7 +6,7 @@
             <div class="form-group">
                 <label>Category</label>
                 <select name="category_id" class="form-control select2">
-                    @foreach (\App\Models\CarCategory::all() as $category)
+                    @foreach ($carCategories as $category)
                         <option @if (old('category_id', $car->category_id) == $category->id) selected @endif
                         value="{{ $category->id }}"
                         >{{ $category->name }}</option>
@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label>Car maker</label>
                 <select name="manufacturer_id" class="form-control select2">
-                    @foreach (\App\Models\CarManufacturer::all() as $manufacturer)
+                    @foreach ($carManufacturers as $manufacturer)
                         <option @if (old('manufacturer_id', $car->manufacturer_id) == $manufacturer->id) selected @endif
                                 value="{{ $manufacturer->id }}"
                         >{{ $manufacturer->name }}</option>
@@ -91,7 +91,12 @@
             <div class="col-12">
                 <div class="form-card">
                     <h4>Location</h4>
-                    <div id="locationMap" style="height: 300px;"></div>
+
+                    <div class="overlay-container">
+                        <div id="locationMap" style="height: 300px;"></div>
+
+                        <div class="overlay edit-off"></div>
+                    </div>
 
                     <ul class="nav nav-tabs" id="location-tabs">
                         <li class="nav-item">
@@ -101,7 +106,6 @@
                             <a class="nav-link" data-toggle="tab" href="#tab-return">Return location</a>
                         </li>
                     </ul>
-
 
                     <div class="tab-content mT-10">
                         <div class="tab-pane active" id="tab-pickup">
@@ -117,9 +121,22 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Full address</label>
-                                <input type="text" name="full_pickup_location" value="{{ old('full_pickup_location', $car->full_pickup_location) }}" class="form-control">
+                            <div class="row">
+                                <div class="form-group col-8">
+                                    <label>Full address</label>
+                                    <input type="text" name="full_pickup_location" value="{{ old('full_pickup_location', $car->full_pickup_location) }}" class="form-control">
+                                </div>
+
+                                <div class="form-group col-4">
+                                    <label>Borough</label>
+                                    <select name="pickup_borough_id" class="form-control select2">
+                                        @foreach ($boroughs as $borough)
+                                            <option @if (old('pickup_borough_id', $car->pickup_borough_id) == $borough->id) selected @endif
+                                            value="{{ $borough->id }}"
+                                            >{{ $borough->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -136,9 +153,22 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Full address</label>
-                                <input type="text" name="full_return_location" value="{{ old('full_return_location', $car->full_return_location) }}" class="form-control">
+                            <div class="row">
+                                <div class="form-group col-8">
+                                    <label>Full address</label>
+                                    <input type="text" name="full_return_location" value="{{ old('full_return_location', $car->full_return_location) }}" class="form-control">
+                                </div>
+
+                                <div class="form-group col-4">
+                                    <label>Borough</label>
+                                    <select name="return_borough_id" class="form-control select2">
+                                        @foreach ($boroughs as $borough)
+                                            <option @if (old('return_borough_id', $car->return_borough_id) == $borough->id) selected @endif
+                                            value="{{ $borough->id }}"
+                                            >{{ $borough->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>

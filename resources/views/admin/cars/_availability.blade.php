@@ -1,1 +1,1 @@
-Test
+Availability info

@@ -31,7 +31,7 @@
                             <p class="muted edit-has-changes">Unsaved changes</p>
 
                             <a href="#" class="btn btn-gray" id="cancelChanges">Cancel</a>
-                            <a href="#" class="btn btn-danger" id="save" data-form="#car-info">Save</a>
+                            <a href="#" class="btn btn-danger" id="save" data-form="#car-form">Save</a>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <form action="{{ url('/admin/cars/' . $car->id) }}" method="post" id="car-info" enctype="multipart/form-data">
+                <form action="{{ url('/admin/cars/' . $car->id) }}" method="post" id="car-form" enctype="multipart/form-data">
                     {{csrf_field()}}
                     {{ method_field('PATCH') }}
 

@@ -13104,6 +13104,20 @@ input.apple-switch:checked:after {
   border: 1px solid #eff1f3;
 }
 
+.overlay-container {
+  position: relative;
+}
+
+.overlay-container .overlay {
+  background: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 10000;
+}
+
 #chat-sidebar {
   width: 250px;
   height: calc(100vh - 65px - 60px);

@@ -1,9 +1,11 @@
 import * as Map from 'leaflet';
 import * as $ from 'jquery';
+import MapHelper from "../helpers/map_helper";
 
 export default function carsShow() {
 
-    let map = Map.map('locationMap').setView([40.6917969,-74.0360951], 10);
+    let map = new MapHelper('locationMap');
+    map.moveTo(40.6917969, -74.0360951, 10);
 
     let marker = null;
 
@@ -13,31 +15,18 @@ export default function carsShow() {
         full_location: $('[name=full_pickup_location]'),
     };
 
-    Map.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox.streets',
-        accessToken: 'pk.eyJ1IjoiZGVuaXNrb3JvbmV0cyIsImEiOiJjam9kYTl6b3gyamkzM3BwdWpndjRxdDRpIn0.Bf3g80PoLcbYTmlpqGoJVg'
-    }).addTo(map);
+    map.subscribe('click', function (e) {
 
-    map.on('click', function (e) {
+        map.removeMarkers();
+        map.addMarker(e.lat, e.lon);
 
-        if (marker) {
-            marker.removeFrom(map);
-        }
-
-        marker = Map.marker([e.latlng.lat, e.latlng.lng]);
-        marker.addTo(map);
-
-        inputs.location_lat.val(e.latlng.lat);
-        inputs.location_lon.val(e.latlng.lng);
+        inputs.location_lat.val(e.lat);
+        inputs.location_lon.val(e.lon);
 
         inputs.full_location.val('Loading...');
 
-        $.ajax({
-            url: 'https://nominatim.openstreetmap.org/search?q=' + e.latlng.lat + ',' + e.latlng.lng + '&format=json&addressdetails=1'
-        }).done(function(response) {
-            inputs.full_location.val(response[0].display_name);
+        map.locateAddress(e.lat, e.lon).then(function(address) {
+            inputs.full_location.val(address);
         });
     });
 

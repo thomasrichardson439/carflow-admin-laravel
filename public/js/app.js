@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 154);
+/******/ 	return __webpack_require__(__webpack_require__.s = 160);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10444,8 +10444,8 @@ return jQuery;
 "use strict";
 
 
-var bind = __webpack_require__(17);
-var isBuffer = __webpack_require__(159);
+var bind = __webpack_require__(19);
+var isBuffer = __webpack_require__(165);
 
 /*global toString:true*/
 
@@ -10779,7 +10779,9 @@ module.exports = g;
 /* 7 */,
 /* 8 */,
 /* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -10807,8 +10809,8 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 11 */,
-/* 12 */
+/* 13 */,
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -10825,7 +10827,7 @@ module.exports = function(module) {
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.10';
+  var VERSION = '4.17.11';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -11089,7 +11091,7 @@ module.exports = function(module) {
   var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange  + rsComboRange + rsVarRange + ']');
 
   /** Used to detect strings that need a more robust regexp to match words. */
-  var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2,}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
+  var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
 
   /** Used to assign default `context` object properties. */
   var contextProps = [
@@ -12035,20 +12037,6 @@ module.exports = function(module) {
       }
     }
     return result;
-  }
-
-  /**
-   * Gets the value at `key`, unless `key` is "__proto__".
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @param {string} key The key of the property to get.
-   * @returns {*} Returns the property value.
-   */
-  function safeGet(object, key) {
-    return key == '__proto__'
-      ? undefined
-      : object[key];
   }
 
   /**
@@ -14508,7 +14496,7 @@ module.exports = function(module) {
           if (isArguments(objValue)) {
             newValue = toPlainObject(objValue);
           }
-          else if (!isObject(objValue) || (srcIndex && isFunction(objValue))) {
+          else if (!isObject(objValue) || isFunction(objValue)) {
             newValue = initCloneObject(srcValue);
           }
         }
@@ -17429,6 +17417,22 @@ module.exports = function(module) {
         array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
       }
       return array;
+    }
+
+    /**
+     * Gets the value at `key`, unless `key` is "__proto__".
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {string} key The key of the property to get.
+     * @returns {*} Returns the property value.
+     */
+    function safeGet(object, key) {
+      if (key == '__proto__') {
+        return;
+      }
+
+      return object[key];
     }
 
     /**
@@ -27918,17 +27922,17 @@ module.exports = function(module) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(10)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(12)(module)))
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(global) {/**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.14.4
+ * @version 1.14.5
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -28025,7 +28029,8 @@ function getStyleComputedProperty(element, property) {
     return [];
   }
   // NOTE: 1 DOM access here
-  var css = getComputedStyle(element, null);
+  var window = element.ownerDocument.defaultView;
+  var css = window.getComputedStyle(element, null);
   return property ? css[property] : css;
 }
 
@@ -28113,7 +28118,7 @@ function getOffsetParent(element) {
   var noOffsetParent = isIE(10) ? document.body : null;
 
   // NOTE: 1 DOM access here
-  var offsetParent = element.offsetParent;
+  var offsetParent = element.offsetParent || null;
   // Skip hidden elements which don't have an offsetParent
   while (offsetParent === noOffsetParent && element.nextElementSibling) {
     offsetParent = (element = element.nextElementSibling).offsetParent;
@@ -28125,9 +28130,9 @@ function getOffsetParent(element) {
     return element ? element.ownerDocument.documentElement : document.documentElement;
   }
 
-  // .offsetParent will return the closest TD or TABLE in case
+  // .offsetParent will return the closest TH, TD or TABLE in case
   // no offsetParent is present, I hate this job...
-  if (['TD', 'TABLE'].indexOf(offsetParent.nodeName) !== -1 && getStyleComputedProperty(offsetParent, 'position') === 'static') {
+  if (['TH', 'TD', 'TABLE'].indexOf(offsetParent.nodeName) !== -1 && getStyleComputedProperty(offsetParent, 'position') === 'static') {
     return getOffsetParent(offsetParent);
   }
 
@@ -28675,7 +28680,8 @@ function getReferenceOffsets(state, popper, reference) {
  * @returns {Object} object containing width and height properties
  */
 function getOuterSizes(element) {
-  var styles = getComputedStyle(element);
+  var window = element.ownerDocument.defaultView;
+  var styles = window.getComputedStyle(element);
   var x = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
   var y = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
   var result = {
@@ -30462,14 +30468,14 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(4);
-var normalizeHeaderName = __webpack_require__(161);
+var normalizeHeaderName = __webpack_require__(167);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -30485,10 +30491,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(19);
+    adapter = __webpack_require__(21);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(19);
+    adapter = __webpack_require__(21);
   }
   return adapter;
 }
@@ -30563,10 +30569,10 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20)))
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1.10.18
@@ -45869,8 +45875,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 
 /***/ }),
-/* 16 */,
-/* 17 */
+/* 18 */,
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45888,7 +45894,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -46078,19 +46084,19 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(4);
-var settle = __webpack_require__(162);
-var buildURL = __webpack_require__(164);
-var parseHeaders = __webpack_require__(165);
-var isURLSameOrigin = __webpack_require__(166);
-var createError = __webpack_require__(20);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(167);
+var settle = __webpack_require__(168);
+var buildURL = __webpack_require__(170);
+var parseHeaders = __webpack_require__(171);
+var isURLSameOrigin = __webpack_require__(172);
+var createError = __webpack_require__(22);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(173);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -46187,7 +46193,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(168);
+      var cookies = __webpack_require__(174);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -46265,13 +46271,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(163);
+var enhanceError = __webpack_require__(169);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -46290,7 +46296,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46302,7 +46308,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46328,8 +46334,6 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 23 */,
-/* 24 */,
 /* 25 */,
 /* 26 */,
 /* 27 */,
@@ -46459,25 +46463,31 @@ module.exports = Cancel;
 /* 151 */,
 /* 152 */,
 /* 153 */,
-/* 154 */
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */,
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(155);
-__webpack_require__(180);
-module.exports = __webpack_require__(182);
+__webpack_require__(161);
+__webpack_require__(186);
+module.exports = __webpack_require__(188);
 
 
 /***/ }),
-/* 155 */
+/* 161 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_datatables__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_datatables__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_datatables___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_datatables__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_viewerjs__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_viewerjs__ = __webpack_require__(185);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -46485,20 +46495,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(156);
+__webpack_require__(162);
 
-window.Vue = __webpack_require__(176);
+window.Vue = __webpack_require__(182);
 
 
 
 
 /***/ }),
-/* 156 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(12);
-window.Popper = __webpack_require__(13).default;
+window._ = __webpack_require__(14);
+window.Popper = __webpack_require__(15).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -46518,7 +46528,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(157);
+window.axios = __webpack_require__(163);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -46554,22 +46564,22 @@ if (token) {
 // });
 
 /***/ }),
-/* 157 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(158);
+module.exports = __webpack_require__(164);
 
 /***/ }),
-/* 158 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(4);
-var bind = __webpack_require__(17);
-var Axios = __webpack_require__(160);
-var defaults = __webpack_require__(14);
+var bind = __webpack_require__(19);
+var Axios = __webpack_require__(166);
+var defaults = __webpack_require__(16);
 
 /**
  * Create an instance of Axios
@@ -46602,15 +46612,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(22);
-axios.CancelToken = __webpack_require__(174);
-axios.isCancel = __webpack_require__(21);
+axios.Cancel = __webpack_require__(24);
+axios.CancelToken = __webpack_require__(180);
+axios.isCancel = __webpack_require__(23);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(175);
+axios.spread = __webpack_require__(181);
 
 module.exports = axios;
 
@@ -46619,7 +46629,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 159 */
+/* 165 */
 /***/ (function(module, exports) {
 
 /*!
@@ -46646,16 +46656,16 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 160 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(14);
+var defaults = __webpack_require__(16);
 var utils = __webpack_require__(4);
-var InterceptorManager = __webpack_require__(169);
-var dispatchRequest = __webpack_require__(170);
+var InterceptorManager = __webpack_require__(175);
+var dispatchRequest = __webpack_require__(176);
 
 /**
  * Create a new instance of Axios
@@ -46732,7 +46742,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 161 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46751,13 +46761,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 162 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(20);
+var createError = __webpack_require__(22);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -46784,7 +46794,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 163 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46812,7 +46822,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 164 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46885,7 +46895,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 165 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46945,7 +46955,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 166 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47020,7 +47030,7 @@ module.exports = (
 
 
 /***/ }),
-/* 167 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47063,7 +47073,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 168 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47123,7 +47133,7 @@ module.exports = (
 
 
 /***/ }),
-/* 169 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47182,18 +47192,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 170 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(4);
-var transformData = __webpack_require__(171);
-var isCancel = __webpack_require__(21);
-var defaults = __webpack_require__(14);
-var isAbsoluteURL = __webpack_require__(172);
-var combineURLs = __webpack_require__(173);
+var transformData = __webpack_require__(177);
+var isCancel = __webpack_require__(23);
+var defaults = __webpack_require__(16);
+var isAbsoluteURL = __webpack_require__(178);
+var combineURLs = __webpack_require__(179);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -47275,7 +47285,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 171 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47302,7 +47312,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 172 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47323,7 +47333,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 173 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47344,13 +47354,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 174 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(22);
+var Cancel = __webpack_require__(24);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -47408,7 +47418,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 175 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47442,7 +47452,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 176 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58405,10 +58415,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(177).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(183).setImmediate))
 
 /***/ }),
-/* 177 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -58464,7 +58474,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(178);
+__webpack_require__(184);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -58478,7 +58488,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 178 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -58668,35 +58678,66 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(18)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(20)))
 
 /***/ }),
-/* 179 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /*!
- * Viewer.js v1.2.0
+ * Viewer.js v1.3.0
  * https://fengyuanchen.github.io/viewerjs
  *
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-07-15T10:10:54.376Z
+ * Date: 2018-10-25T12:41:54.899Z
  */
+
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
 
 var DEFAULTS = {
   /**
-   * Define the initial index of image for viewing.
-   * @type {number}
-   */
-  initialViewIndex: 0,
-
-  /**
-   * Enable inline mode.
+   * Enable a modal backdrop, specify `static` for a backdrop
+   * which doesn't close the modal on click.
    * @type {boolean}
    */
-  inline: false,
+  backdrop: true,
 
   /**
    * Show the button on the top-right of the viewer.
@@ -58723,46 +58764,40 @@ var DEFAULTS = {
   toolbar: true,
 
   /**
-   * Show the tooltip with image ratio (percentage) when zoom in or zoom out.
-   * @type {boolean}
+   * Custom class name(s) to add to the viewer's root element.
+   * @type {string}
    */
-  tooltip: true,
+  className: '',
 
   /**
-   * Enable to move the image.
-   * @type {boolean}
+   * Define where to put the viewer in modal mode.
+   * @type {string | Element}
    */
-  movable: true,
+  container: 'body',
 
   /**
-   * Enable to zoom the image.
-   * @type {boolean}
+   * Filter the images for viewing. Return true if the image is viewable.
+   * @type {Function}
    */
-  zoomable: true,
-
-  /**
-   * Enable to rotate the image.
-   * @type {boolean}
-   */
-  rotatable: true,
-
-  /**
-   * Enable to scale the image.
-   * @type {boolean}
-   */
-  scalable: true,
-
-  /**
-   * Enable CSS3 Transition for some special elements.
-   * @type {boolean}
-   */
-  transition: true,
+  filter: null,
 
   /**
    * Enable to request fullscreen when play.
    * @type {boolean}
    */
   fullscreen: true,
+
+  /**
+   * Define the initial index of image for viewing.
+   * @type {number}
+   */
+  initialViewIndex: 0,
+
+  /**
+   * Enable inline mode.
+   * @type {boolean}
+   */
+  inline: false,
 
   /**
    * The amount of time to delay between automatically cycling an image when playing.
@@ -58775,13 +58810,6 @@ var DEFAULTS = {
    * @type {boolean}
    */
   keyboard: true,
-
-  /**
-   * Enable a modal backdrop, specify `static` for a backdrop
-   * which doesn't close the modal on click.
-   * @type {boolean}
-   */
-  backdrop: true,
 
   /**
    * Indicate if show a loading spinner when load image or not.
@@ -58808,6 +58836,61 @@ var DEFAULTS = {
   minHeight: 100,
 
   /**
+   * Enable to move the image.
+   * @type {boolean}
+   */
+  movable: true,
+
+  /**
+   * Enable to zoom the image.
+   * @type {boolean}
+   */
+  zoomable: true,
+
+  /**
+   * Enable to rotate the image.
+   * @type {boolean}
+   */
+  rotatable: true,
+
+  /**
+   * Enable to scale the image.
+   * @type {boolean}
+   */
+  scalable: true,
+
+  /**
+   * Indicate if toggle the image size between its natural size
+   * and initial size when double click on the image or not.
+   * @type {boolean}
+   */
+  toggleOnDblclick: true,
+
+  /**
+   * Show the tooltip with image ratio (percentage) when zoom in or zoom out.
+   * @type {boolean}
+   */
+  tooltip: true,
+
+  /**
+   * Enable CSS3 Transition for some special elements.
+   * @type {boolean}
+   */
+  transition: true,
+
+  /**
+   * Define the CSS `z-index` value of viewer in modal mode.
+   * @type {number}
+   */
+  zIndex: 2015,
+
+  /**
+   * Define the CSS `z-index` value of viewer in inline mode.
+   * @type {number}
+   */
+  zIndexInline: 0,
+
+  /**
    * Define the ratio when zoom the image by wheeling mouse.
    * @type {number}
    */
@@ -58826,41 +58909,10 @@ var DEFAULTS = {
   maxZoomRatio: 100,
 
   /**
-   * Define the CSS `z-index` value of viewer in modal mode.
-   * @type {number}
-   */
-  zIndex: 2015,
-
-  /**
-   * Define the CSS `z-index` value of viewer in inline mode.
-   * @type {number}
-   */
-  zIndexInline: 0,
-
-  /**
    * Define where to get the original image URL for viewing.
    * @type {string | Function}
    */
   url: 'src',
-
-  /**
-   * Define where to put the viewer in modal mode.
-   * @type {string | Element}
-   */
-  container: 'body',
-
-  /**
-   * Filter the images for viewing. Return true if the image is viewable.
-   * @type {Function}
-   */
-  filter: null,
-
-  /**
-   * Indicate if toggle the image size between its natural size
-   * and initial size when double click on the image or not.
-   * @type {boolean}
-   */
-  toggleOnDblclick: true,
 
   /**
    * Event shortcuts.
@@ -58881,33 +58933,30 @@ var TEMPLATE = '<div class="viewer-container" touch-action="none">' + '<div clas
 
 var IN_BROWSER = typeof window !== 'undefined';
 var WINDOW = IN_BROWSER ? window : {};
-var NAMESPACE = 'viewer';
+var NAMESPACE = 'viewer'; // Actions
 
-// Actions
 var ACTION_MOVE = 'move';
 var ACTION_SWITCH = 'switch';
-var ACTION_ZOOM = 'zoom';
+var ACTION_ZOOM = 'zoom'; // Classes
 
-// Classes
-var CLASS_ACTIVE = NAMESPACE + '-active';
-var CLASS_CLOSE = NAMESPACE + '-close';
-var CLASS_FADE = NAMESPACE + '-fade';
-var CLASS_FIXED = NAMESPACE + '-fixed';
-var CLASS_FULLSCREEN = NAMESPACE + '-fullscreen';
-var CLASS_FULLSCREEN_EXIT = NAMESPACE + '-fullscreen-exit';
-var CLASS_HIDE = NAMESPACE + '-hide';
-var CLASS_HIDE_MD_DOWN = NAMESPACE + '-hide-md-down';
-var CLASS_HIDE_SM_DOWN = NAMESPACE + '-hide-sm-down';
-var CLASS_HIDE_XS_DOWN = NAMESPACE + '-hide-xs-down';
-var CLASS_IN = NAMESPACE + '-in';
-var CLASS_INVISIBLE = NAMESPACE + '-invisible';
-var CLASS_LOADING = NAMESPACE + '-loading';
-var CLASS_MOVE = NAMESPACE + '-move';
-var CLASS_OPEN = NAMESPACE + '-open';
-var CLASS_SHOW = NAMESPACE + '-show';
-var CLASS_TRANSITION = NAMESPACE + '-transition';
+var CLASS_ACTIVE = "".concat(NAMESPACE, "-active");
+var CLASS_CLOSE = "".concat(NAMESPACE, "-close");
+var CLASS_FADE = "".concat(NAMESPACE, "-fade");
+var CLASS_FIXED = "".concat(NAMESPACE, "-fixed");
+var CLASS_FULLSCREEN = "".concat(NAMESPACE, "-fullscreen");
+var CLASS_FULLSCREEN_EXIT = "".concat(NAMESPACE, "-fullscreen-exit");
+var CLASS_HIDE = "".concat(NAMESPACE, "-hide");
+var CLASS_HIDE_MD_DOWN = "".concat(NAMESPACE, "-hide-md-down");
+var CLASS_HIDE_SM_DOWN = "".concat(NAMESPACE, "-hide-sm-down");
+var CLASS_HIDE_XS_DOWN = "".concat(NAMESPACE, "-hide-xs-down");
+var CLASS_IN = "".concat(NAMESPACE, "-in");
+var CLASS_INVISIBLE = "".concat(NAMESPACE, "-invisible");
+var CLASS_LOADING = "".concat(NAMESPACE, "-loading");
+var CLASS_MOVE = "".concat(NAMESPACE, "-move");
+var CLASS_OPEN = "".concat(NAMESPACE, "-open");
+var CLASS_SHOW = "".concat(NAMESPACE, "-show");
+var CLASS_TRANSITION = "".concat(NAMESPACE, "-transition"); // Events
 
-// Events
 var EVENT_CLICK = 'click';
 var EVENT_DBLCLICK = 'dblclick';
 var EVENT_DRAG_START = 'dragstart';
@@ -58927,85 +58976,55 @@ var EVENT_VIEW = 'view';
 var EVENT_VIEWED = 'viewed';
 var EVENT_WHEEL = 'wheel mousewheel DOMMouseScroll';
 var EVENT_ZOOM = 'zoom';
-var EVENT_ZOOMED = 'zoomed';
+var EVENT_ZOOMED = 'zoomed'; // Data keys
 
-// Data keys
-var DATA_ACTION = NAMESPACE + 'Action';
-var BUTTONS = ['zoom-in', 'zoom-out', 'one-to-one', 'reset', 'prev', 'play', 'next', 'rotate-left', 'rotate-right', 'flip-horizontal', 'flip-vertical'];
+var DATA_ACTION = "".concat(NAMESPACE, "Action");
+var BUTTONS = ['zoom-in', 'zoom-out', 'one-to-one', 'reset', 'prev', 'play', 'next', 'rotate-left', 'rotate-right', 'flip-horizontal', 'flip-vertical']; // RegExps
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
+var REGEXP_SPACES = /\s\s*/;
 
 /**
  * Check if the given value is a string.
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if the given value is a string, else `false`.
  */
+
 function isString(value) {
   return typeof value === 'string';
 }
-
 /**
  * Check if the given value is not a number.
  */
-var isNaN = Number.isNaN || WINDOW.isNaN;
 
+var isNaN = Number.isNaN || WINDOW.isNaN;
 /**
  * Check if the given value is a number.
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if the given value is a number, else `false`.
  */
+
 function isNumber(value) {
   return typeof value === 'number' && !isNaN(value);
 }
-
 /**
  * Check if the given value is undefined.
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if the given value is undefined, else `false`.
  */
+
 function isUndefined(value) {
   return typeof value === 'undefined';
 }
-
 /**
  * Check if the given value is an object.
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if the given value is an object, else `false`.
  */
+
 function isObject(value) {
-  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null;
+  return _typeof(value) === 'object' && value !== null;
 }
-
 var hasOwnProperty = Object.prototype.hasOwnProperty;
-
 /**
  * Check if the given value is a plain object.
  * @param {*} value - The value to check.
@@ -59020,35 +59039,34 @@ function isPlainObject(value) {
   try {
     var _constructor = value.constructor;
     var prototype = _constructor.prototype;
-
-
     return _constructor && prototype && hasOwnProperty.call(prototype, 'isPrototypeOf');
   } catch (e) {
     return false;
   }
 }
-
 /**
  * Check if the given value is a function.
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if the given value is a function, else `false`.
  */
+
 function isFunction(value) {
   return typeof value === 'function';
 }
-
 /**
  * Iterate the given data.
  * @param {*} data - The data to iterate.
  * @param {Function} callback - The process function for each element.
  * @returns {*} The original data.
  */
+
 function forEach(data, callback) {
   if (data && isFunction(callback)) {
-    if (Array.isArray(data) || isNumber(data.length) /* array-like */) {
+    if (Array.isArray(data) || isNumber(data.length)
+    /* array-like */
+    ) {
         var length = data.length;
-
-        var i = void 0;
+        var i;
 
         for (i = 0; i < length; i += 1) {
           if (callback.call(data, data[i], i, data) === false) {
@@ -59064,15 +59082,15 @@ function forEach(data, callback) {
 
   return data;
 }
-
 /**
  * Extend the given object.
  * @param {*} obj - The object to be extended.
  * @param {*} args - The rest objects which will be merged to the first object.
  * @returns {Object} The extended object.
  */
+
 var assign = Object.assign || function assign(obj) {
-  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
   }
 
@@ -59088,18 +59106,15 @@ var assign = Object.assign || function assign(obj) {
 
   return obj;
 };
-
 var REGEXP_SUFFIX = /^(?:width|height|left|top|marginLeft|marginTop)$/;
-
 /**
  * Apply styles to the given element.
  * @param {Element} element - The target element.
  * @param {Object} styles - The styles for applying.
  */
+
 function setStyle(element, styles) {
   var style = element.style;
-
-
   forEach(styles, function (value, property) {
     if (REGEXP_SUFFIX.test(property) && isNumber(value)) {
       value += 'px';
@@ -59108,22 +59123,22 @@ function setStyle(element, styles) {
     style[property] = value;
   });
 }
-
 /**
  * Check if the given element has a special class.
  * @param {Element} element - The element to check.
  * @param {string} value - The class to search.
  * @returns {boolean} Returns `true` if the special class was found.
  */
+
 function hasClass(element, value) {
   return element.classList ? element.classList.contains(value) : element.className.indexOf(value) > -1;
 }
-
 /**
  * Add classes to the given element.
  * @param {Element} element - The target element.
  * @param {string} value - The classes to be added.
  */
+
 function addClass(element, value) {
   if (!value) {
     return;
@@ -59146,15 +59161,15 @@ function addClass(element, value) {
   if (!className) {
     element.className = value;
   } else if (className.indexOf(value) < 0) {
-    element.className = className + ' ' + value;
+    element.className = "".concat(className, " ").concat(value);
   }
 }
-
 /**
  * Remove classes from the given element.
  * @param {Element} element - The target element.
  * @param {string} value - The classes to be removed.
  */
+
 function removeClass(element, value) {
   if (!value) {
     return;
@@ -59176,13 +59191,13 @@ function removeClass(element, value) {
     element.className = element.className.replace(value, '');
   }
 }
-
 /**
  * Add or remove classes from the given element.
  * @param {Element} element - The target element.
  * @param {string} value - The classes to be toggled.
  * @param {boolean} added - Add only.
  */
+
 function toggleClass(element, value, added) {
   if (!value) {
     return;
@@ -59193,33 +59208,32 @@ function toggleClass(element, value, added) {
       toggleClass(elem, value, added);
     });
     return;
-  }
+  } // IE10-11 doesn't support the second parameter of `classList.toggle`
 
-  // IE10-11 doesn't support the second parameter of `classList.toggle`
+
   if (added) {
     addClass(element, value);
   } else {
     removeClass(element, value);
   }
 }
-
 var REGEXP_HYPHENATE = /([a-z\d])([A-Z])/g;
-
 /**
  * Transform the given string from camelCase to kebab-case
  * @param {string} value - The value to transform.
  * @returns {string} The transformed value.
  */
+
 function hyphenate(value) {
   return value.replace(REGEXP_HYPHENATE, '$1-$2').toLowerCase();
 }
-
 /**
  * Get data from the given element.
  * @param {Element} element - The target element.
  * @param {string} name - The data key to get.
  * @returns {string} The data value.
  */
+
 function getData(element, name) {
   if (isObject(element[name])) {
     return element[name];
@@ -59229,80 +59243,54 @@ function getData(element, name) {
     return element.dataset[name];
   }
 
-  return element.getAttribute('data-' + hyphenate(name));
+  return element.getAttribute("data-".concat(hyphenate(name)));
 }
-
 /**
  * Set data to the given element.
  * @param {Element} element - The target element.
  * @param {string} name - The data key to set.
  * @param {string} data - The data value.
  */
+
 function setData(element, name, data) {
   if (isObject(data)) {
     element[name] = data;
   } else if (element.dataset) {
     element.dataset[name] = data;
   } else {
-    element.setAttribute('data-' + hyphenate(name), data);
+    element.setAttribute("data-".concat(hyphenate(name)), data);
   }
 }
 
-/**
- * Remove data from the given element.
- * @param {Element} element - The target element.
- * @param {string} name - The data key to remove.
- */
-function removeData(element, name) {
-  if (isObject(element[name])) {
-    try {
-      delete element[name];
-    } catch (e) {
-      element[name] = undefined;
-    }
-  } else if (element.dataset) {
-    // #128 Safari not allows to delete dataset property
-    try {
-      delete element.dataset[name];
-    } catch (e) {
-      element.dataset[name] = undefined;
-    }
-  } else {
-    element.removeAttribute('data-' + hyphenate(name));
-  }
-}
-
-var REGEXP_SPACES = /\s\s*/;
 var onceSupported = function () {
   var supported = false;
 
   if (IN_BROWSER) {
     var once = false;
+
     var listener = function listener() {};
+
     var options = Object.defineProperty({}, 'once', {
-      get: function get$$1() {
+      get: function get() {
         supported = true;
         return once;
       },
-
 
       /**
        * This setter can fix a `TypeError` in strict mode
        * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Getter_only}
        * @param {boolean} value - The value to set
        */
-      set: function set$$1(value) {
+      set: function set(value) {
         once = value;
       }
     });
-
     WINDOW.addEventListener('test', listener, options);
     WINDOW.removeEventListener('test', listener, options);
   }
 
   return supported;
 }();
-
 /**
  * Remove event listener from the target element.
  * @param {Element} element - The event target.
@@ -59310,15 +59298,14 @@ var onceSupported = function () {
  * @param {Function} listener - The event listener.
  * @param {Object} options - The event options.
  */
+
+
 function removeListener(element, type, listener) {
   var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-
   var handler = listener;
-
   type.trim().split(REGEXP_SPACES).forEach(function (event) {
     if (!onceSupported) {
       var listeners = element.listeners;
-
 
       if (listeners && listeners[event] && listeners[event][listener]) {
         handler = listeners[event][listener];
@@ -59337,7 +59324,6 @@ function removeListener(element, type, listener) {
     element.removeEventListener(event, handler, options);
   });
 }
-
 /**
  * Add event listener to the target element.
  * @param {Element} element - The event target.
@@ -59345,24 +59331,23 @@ function removeListener(element, type, listener) {
  * @param {Function} listener - The event listener.
  * @param {Object} options - The event options.
  */
+
 function addListener(element, type, listener) {
   var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-
   var _handler = listener;
-
   type.trim().split(REGEXP_SPACES).forEach(function (event) {
     if (options.once && !onceSupported) {
       var _element$listeners = element.listeners,
-          listeners = _element$listeners === undefined ? {} : _element$listeners;
-
+          listeners = _element$listeners === void 0 ? {} : _element$listeners;
 
       _handler = function handler() {
-        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        delete listeners[event][listener];
+        element.removeEventListener(event, _handler, options);
+
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
           args[_key2] = arguments[_key2];
         }
 
-        delete listeners[event][listener];
-        element.removeEventListener(event, _handler, options);
         listener.apply(element, args);
       };
 
@@ -59381,7 +59366,6 @@ function addListener(element, type, listener) {
     element.addEventListener(event, _handler, options);
   });
 }
-
 /**
  * Dispatch event on the target element.
  * @param {Element} element - The event target.
@@ -59389,10 +59373,10 @@ function addListener(element, type, listener) {
  * @param {Object} data - The additional event data.
  * @returns {boolean} Indicate if the event is default prevented or not.
  */
-function dispatchEvent(element, type, data) {
-  var event = void 0;
 
-  // Event and CustomEvent on IE9-11 are global objects, not constructors
+function dispatchEvent(element, type, data) {
+  var event; // Event and CustomEvent on IE9-11 are global objects, not constructors
+
   if (isFunction(Event) && isFunction(CustomEvent)) {
     event = new CustomEvent(type, {
       detail: data,
@@ -59406,65 +59390,61 @@ function dispatchEvent(element, type, data) {
 
   return element.dispatchEvent(event);
 }
-
 /**
  * Get the offset base on the document.
  * @param {Element} element - The target element.
  * @returns {Object} The offset data.
  */
+
 function getOffset(element) {
   var box = element.getBoundingClientRect();
-
   return {
     left: box.left + (window.pageXOffset - document.documentElement.clientLeft),
     top: box.top + (window.pageYOffset - document.documentElement.clientTop)
   };
 }
-
 /**
  * Get transforms base on the given object.
  * @param {Object} obj - The target object.
  * @returns {string} A string contains transform values.
  */
+
 function getTransforms(_ref) {
   var rotate = _ref.rotate,
       scaleX = _ref.scaleX,
       scaleY = _ref.scaleY,
       translateX = _ref.translateX,
       translateY = _ref.translateY;
-
   var values = [];
 
   if (isNumber(translateX) && translateX !== 0) {
-    values.push('translateX(' + translateX + 'px)');
+    values.push("translateX(".concat(translateX, "px)"));
   }
 
   if (isNumber(translateY) && translateY !== 0) {
-    values.push('translateY(' + translateY + 'px)');
-  }
+    values.push("translateY(".concat(translateY, "px)"));
+  } // Rotate should come first before scale to match orientation transform
 
-  // Rotate should come first before scale to match orientation transform
+
   if (isNumber(rotate) && rotate !== 0) {
-    values.push('rotate(' + rotate + 'deg)');
+    values.push("rotate(".concat(rotate, "deg)"));
   }
 
   if (isNumber(scaleX) && scaleX !== 1) {
-    values.push('scaleX(' + scaleX + ')');
+    values.push("scaleX(".concat(scaleX, ")"));
   }
 
   if (isNumber(scaleY) && scaleY !== 1) {
-    values.push('scaleY(' + scaleY + ')');
+    values.push("scaleY(".concat(scaleY, ")"));
   }
 
   var transform = values.length ? values.join(' ') : 'none';
-
   return {
     WebkitTransform: transform,
     msTransform: transform,
     transform: transform
   };
 }
-
 /**
  * Get an image name from an image url.
  * @param {string} url - The target url.
@@ -59473,22 +59453,21 @@ function getTransforms(_ref) {
  * getImageNameFromURL('http://domain.com/path/to/picture.jpg?size=1280×960')
  * @returns {string} A string contains the image name.
  */
+
 function getImageNameFromURL(url) {
   return isString(url) ? url.replace(/^.*\//, '').replace(/[?&#].*$/, '') : '';
 }
-
 var IS_SAFARI = WINDOW.navigator && /(Macintosh|iPhone|iPod|iPad).*AppleWebKit/i.test(WINDOW.navigator.userAgent);
-
 /**
  * Get an image's natural sizes.
  * @param {string} image - The target image.
  * @param {Function} callback - The callback function.
  * @returns {HTMLImageElement} The new image.
  */
-function getImageNaturalSizes(image, callback) {
-  var newImage = document.createElement('img');
 
-  // Modern browsers (except Safari)
+function getImageNaturalSizes(image, callback) {
+  var newImage = document.createElement('img'); // Modern browsers (except Safari)
+
   if (image.naturalWidth && !IS_SAFARI) {
     callback(image.naturalWidth, image.naturalHeight);
     return newImage;
@@ -59504,10 +59483,9 @@ function getImageNaturalSizes(image, callback) {
     }
   };
 
-  newImage.src = image.src;
-
-  // iOS Safari will convert the image automatically
+  newImage.src = image.src; // iOS Safari will convert the image automatically
   // with its orientation once append it into DOM
+
   if (!IS_SAFARI) {
     newImage.style.cssText = 'left:0;' + 'max-height:none!important;' + 'max-width:none!important;' + 'min-height:0!important;' + 'min-width:0!important;' + 'opacity:0;' + 'position:absolute;' + 'top:0;' + 'z-index:-1;';
     body.appendChild(newImage);
@@ -59515,12 +59493,12 @@ function getImageNaturalSizes(image, callback) {
 
   return newImage;
 }
-
 /**
  * Get the related class name of a responsive type number.
  * @param {string} type - The responsive type.
  * @returns {string} The related class name.
  */
+
 function getResponsiveClass(type) {
   switch (type) {
     case 2:
@@ -59536,19 +59514,17 @@ function getResponsiveClass(type) {
       return '';
   }
 }
-
 /**
  * Get the max ratio of a group of pointers.
  * @param {string} pointers - The target pointers.
  * @returns {number} The result ratio.
  */
+
 function getMaxZoomRatio(pointers) {
   var pointers2 = assign({}, pointers);
   var ratios = [];
-
   forEach(pointers, function (pointer, pointerId) {
     delete pointers2[pointerId];
-
     forEach(pointers2, function (pointer2) {
       var x1 = Math.abs(pointer.startX - pointer2.startX);
       var y1 = Math.abs(pointer.startY - pointer2.startY);
@@ -59557,61 +59533,52 @@ function getMaxZoomRatio(pointers) {
       var z1 = Math.sqrt(x1 * x1 + y1 * y1);
       var z2 = Math.sqrt(x2 * x2 + y2 * y2);
       var ratio = (z2 - z1) / z1;
-
       ratios.push(ratio);
     });
   });
-
   ratios.sort(function (a, b) {
     return Math.abs(a) < Math.abs(b);
   });
-
   return ratios[0];
 }
-
 /**
  * Get a pointer from an event object.
  * @param {Object} event - The target event object.
  * @param {boolean} endOnly - Indicates if only returns the end point coordinate or not.
  * @returns {Object} The result pointer contains start and/or end point coordinates.
  */
+
 function getPointer(_ref2, endOnly) {
   var pageX = _ref2.pageX,
       pageY = _ref2.pageY;
-
   var end = {
     endX: pageX,
     endY: pageY
   };
-
   return endOnly ? end : assign({
     startX: pageX,
     startY: pageY
   }, end);
 }
-
 /**
  * Get the center point coordinate of a group of pointers.
  * @param {Object} pointers - The target pointers.
  * @returns {Object} The center point coordinate.
  */
+
 function getPointersCenter(pointers) {
   var pageX = 0;
   var pageY = 0;
   var count = 0;
-
   forEach(pointers, function (_ref3) {
     var startX = _ref3.startX,
         startY = _ref3.startY;
-
     pageX += startX;
     pageY += startY;
     count += 1;
   });
-
   pageX /= count;
   pageY /= count;
-
   return {
     pageX: pageX,
     pageY: pageY
@@ -59634,15 +59601,13 @@ var render = {
   initViewer: function initViewer() {
     var options = this.options,
         parent = this.parent;
-
-    var viewerData = void 0;
+    var viewerData;
 
     if (options.inline) {
       viewerData = {
         width: Math.max(parent.offsetWidth, options.minWidth),
         height: Math.max(parent.offsetHeight, options.minHeight)
       };
-
       this.parentData = viewerData;
     }
 
@@ -59663,15 +59628,11 @@ var render = {
     var element = this.element,
         options = this.options,
         list = this.list;
-
     var items = [];
-
     forEach(this.images, function (image, i) {
       var src = image.src;
-
       var alt = image.alt || getImageNameFromURL(src);
       var url = options.url;
-
 
       if (isString(url)) {
         url = image.getAttribute(url);
@@ -59680,15 +59641,13 @@ var render = {
       }
 
       if (src || url) {
-        items.push('<li>' + '<img' + (' src="' + (src || url) + '"') + ' role="button"' + ' data-viewer-action="view"' + (' data-index="' + i + '"') + (' data-original-url="' + (url || src) + '"') + (' alt="' + alt + '"') + '>' + '</li>');
+        items.push('<li>' + '<img' + " src=\"".concat(src || url, "\"") + ' role="button"' + ' data-viewer-action="view"' + " data-index=\"".concat(i, "\"") + " data-original-url=\"".concat(url || src, "\"") + " alt=\"".concat(alt, "\"") + '>' + '</li>');
       }
     });
-
     list.innerHTML = items.join('');
     this.items = list.getElementsByTagName('li');
     forEach(this.items, function (item) {
       var image = item.firstElementChild;
-
       setData(image, 'filled', true);
 
       if (options.loading) {
@@ -59718,8 +59677,8 @@ var render = {
     var i = index || this.index;
     var width = this.items[i].offsetWidth || 30;
     var outerWidth = width + 1; // 1 pixel of `margin-left` width
-
     // Place the active item in the center of the screen
+
     setStyle(this.list, assign({
       width: outerWidth * this.length
     }, getTransforms({
@@ -59728,8 +59687,6 @@ var render = {
   },
   resetList: function resetList() {
     var list = this.list;
-
-
     list.innerHTML = '';
     removeClass(list, CLASS_TRANSITION);
     setStyle(list, getTransforms({
@@ -59742,24 +59699,20 @@ var render = {
     var options = this.options,
         image = this.image,
         viewerData = this.viewerData;
-
     var footerHeight = this.footer.offsetHeight;
     var viewerWidth = viewerData.width;
     var viewerHeight = Math.max(viewerData.height - footerHeight, footerHeight);
     var oldImageData = this.imageData || {};
-    var sizingImage = void 0;
-
+    var sizingImage;
     this.imageInitializing = {
       abort: function abort() {
         sizingImage.onload = null;
       }
     };
-
     sizingImage = getImageNaturalSizes(image, function (naturalWidth, naturalHeight) {
       var aspectRatio = naturalWidth / naturalHeight;
       var width = viewerWidth;
       var height = viewerHeight;
-
       _this2.imageInitializing = false;
 
       if (viewerHeight * aspectRatio > viewerWidth) {
@@ -59770,7 +59723,6 @@ var render = {
 
       width = Math.min(width * 0.9, naturalWidth);
       height = Math.min(height * 0.9, naturalHeight);
-
       var imageData = {
         naturalWidth: naturalWidth,
         naturalHeight: naturalHeight,
@@ -59808,8 +59760,6 @@ var render = {
 
     var image = this.image,
         imageData = this.imageData;
-
-
     setStyle(image, assign({
       width: imageData.width,
       height: imageData.height,
@@ -59829,7 +59779,6 @@ var render = {
             removeListener(image, EVENT_TRANSITION_END, onTransitionEnd);
           }
         };
-
         addListener(image, EVENT_TRANSITION_END, onTransitionEnd, {
           once: true
         });
@@ -59842,7 +59791,6 @@ var render = {
     // this.image only defined after viewed
     if (this.viewing || this.viewed) {
       var image = this.image;
-
 
       if (this.viewing) {
         this.viewing.abort();
@@ -59859,8 +59807,6 @@ var events = {
     var canvas = this.canvas,
         element = this.element,
         viewer = this.viewer;
-
-
     addListener(viewer, EVENT_CLICK, this.onClick = this.click.bind(this));
     addListener(viewer, EVENT_WHEEL, this.onWheel = this.wheel.bind(this));
     addListener(viewer, EVENT_DRAG_START, this.onDragStart = this.dragstart.bind(this));
@@ -59879,8 +59825,6 @@ var events = {
     var canvas = this.canvas,
         element = this.element,
         viewer = this.viewer;
-
-
     removeListener(viewer, EVENT_CLICK, this.onClick);
     removeListener(viewer, EVENT_WHEEL, this.onWheel);
     removeListener(viewer, EVENT_DRAG_START, this.onDragStart);
@@ -59902,7 +59846,6 @@ var handlers = {
     var target = _ref.target;
     var options = this.options,
         imageData = this.imageData;
-
     var action = getData(target, DATA_ACTION);
 
     switch (action) {
@@ -59977,6 +59920,7 @@ var handlers = {
         if (this.played) {
           this.stop();
         }
+
     }
   },
   dblclick: function dblclick(event) {
@@ -59997,16 +59941,13 @@ var handlers = {
         image = this.image,
         index = this.index,
         viewerData = this.viewerData;
-
-
     removeClass(image, CLASS_INVISIBLE);
 
     if (options.loading) {
       removeClass(this.canvas, CLASS_LOADING);
     }
 
-    image.style.cssText = 'height:0;' + ('margin-left:' + viewerData.width / 2 + 'px;') + ('margin-top:' + viewerData.height / 2 + 'px;') + 'max-width:none!important;' + 'position:absolute;' + 'width:0;';
-
+    image.style.cssText = 'height:0;' + "margin-left:".concat(viewerData.width / 2, "px;") + "margin-top:".concat(viewerData.height / 2, "px;") + 'max-width:none!important;' + 'position:absolute;' + 'width:0;';
     this.initImage(function () {
       toggleClass(image, CLASS_MOVE, options.movable);
       toggleClass(image, CLASS_TRANSITION, options.transition);
@@ -60035,7 +59976,6 @@ var handlers = {
     var parentWidth = parent.offsetWidth || 30;
     var parentHeight = parent.offsetHeight || 50;
     var filled = !!getData(image, 'filled');
-
     getImageNaturalSizes(image, function (naturalWidth, naturalHeight) {
       var aspectRatio = naturalWidth / naturalHeight;
       var width = parentWidth;
@@ -60065,7 +60005,6 @@ var handlers = {
   keydown: function keydown(e) {
     var options = this.options;
 
-
     if (!this.fulled || !options.keyboard) {
       return;
     }
@@ -60084,49 +60023,46 @@ var handlers = {
         }
 
         break;
-
       // Space
+
       case 32:
         if (this.played) {
           this.stop();
         }
 
         break;
-
       // ArrowLeft
+
       case 37:
         this.prev(options.loop);
         break;
-
       // ArrowUp
+
       case 38:
         // Prevent scroll on Firefox
-        e.preventDefault();
+        e.preventDefault(); // Zoom in
 
-        // Zoom in
         this.zoom(options.zoomRatio, true);
         break;
-
       // ArrowRight
+
       case 39:
         this.next(options.loop);
         break;
-
       // ArrowDown
+
       case 40:
         // Prevent scroll on Firefox
-        e.preventDefault();
+        e.preventDefault(); // Zoom out
 
-        // Zoom out
         this.zoom(-options.zoomRatio, true);
         break;
-
       // Ctrl + 0
-      case 48:
-      // Fall through
 
+      case 48: // Fall through
       // Ctrl + 1
       // eslint-disable-next-line no-fallthrough
+
       case 49:
         if (e.ctrlKey) {
           e.preventDefault();
@@ -60147,12 +60083,11 @@ var handlers = {
     var options = this.options,
         pointers = this.pointers;
 
-
     if (!this.viewed || this.showing || this.viewing || this.hiding) {
       return;
-    }
+    } // This line is required for preventing page zooming in iOS browsers
 
-    // This line is required for preventing page zooming in iOS browsers
+
     e.preventDefault();
 
     if (e.changedTouches) {
@@ -60181,7 +60116,6 @@ var handlers = {
     var pointers = this.pointers,
         action = this.action;
 
-
     if (!this.viewed || !action) {
       return;
     }
@@ -60190,10 +60124,11 @@ var handlers = {
 
     if (e.changedTouches) {
       forEach(e.changedTouches, function (touch) {
-        assign(pointers[touch.identifier], getPointer(touch, true));
+        // // The first parameter should not be undefined in some browsers
+        assign(pointers[touch.identifier] || {}, getPointer(touch, true));
       });
     } else {
-      assign(pointers[e.pointerId || 0], getPointer(e, true));
+      assign(pointers[e.pointerId || 0] || {}, getPointer(e, true));
     }
 
     this.change(e);
@@ -60201,7 +60136,6 @@ var handlers = {
   pointerup: function pointerup(e) {
     var action = this.action,
         pointers = this.pointers;
-
 
     if (e.changedTouches) {
       forEach(e.changedTouches, function (touch) {
@@ -60262,19 +60196,16 @@ var handlers = {
       return;
     }
 
-    e.preventDefault();
+    e.preventDefault(); // Limit wheel speed to prevent zoom too fast
 
-    // Limit wheel speed to prevent zoom too fast
     if (this.wheeling) {
       return;
     }
 
     this.wheeling = true;
-
     setTimeout(function () {
       _this3.wheeling = false;
     }, 50);
-
     var ratio = Number(this.options.zoomRatio) || 0.1;
     var delta = 1;
 
@@ -60299,7 +60230,6 @@ var methods = {
     var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var element = this.element,
         options = this.options;
-
 
     if (options.inline || this.showing || this.isShown || this.showing) {
       return this;
@@ -60331,26 +60261,20 @@ var methods = {
 
     this.showing = true;
     this.open();
-
     var viewer = this.viewer;
-
-
     removeClass(viewer, CLASS_HIDE);
 
     if (options.transition && !immediate) {
       var shown = this.shown.bind(this);
-
       this.transitioning = {
         abort: function abort() {
           removeListener(viewer, EVENT_TRANSITION_END, shown);
           removeClass(viewer, CLASS_IN);
         }
       };
-
-      addClass(viewer, CLASS_TRANSITION);
-
-      // Force reflow to enable CSS3 transition
+      addClass(viewer, CLASS_TRANSITION); // Force reflow to enable CSS3 transition
       // eslint-disable-next-line
+
       viewer.offsetWidth;
       addListener(viewer, EVENT_TRANSITION_END, shown, {
         once: true
@@ -60364,7 +60288,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * Hide the viewer (only available in modal mode)
    * @param {boolean} [immediate=false] - Indicates if hide the viewer immediately or not.
@@ -60374,7 +60297,6 @@ var methods = {
     var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var element = this.element,
         options = this.options;
-
 
     if (options.inline || this.hiding || !(this.isShown || this.showing)) {
       return this;
@@ -60404,9 +60326,9 @@ var methods = {
 
     var viewer = this.viewer;
 
-
     if (options.transition && !immediate) {
       var hidden = this.hidden.bind(this);
+
       var hide = function hide() {
         addListener(viewer, EVENT_TRANSITION_END, hidden, {
           once: true
@@ -60440,7 +60362,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * View one of the images with image's index
    * @param {number} index - The index of the image to view.
@@ -60450,7 +60371,6 @@ var methods = {
     var _this = this;
 
     var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.options.initialViewIndex;
-
     index = Number(index) || 0;
 
     if (!this.isShown) {
@@ -60470,13 +60390,11 @@ var methods = {
         options = this.options,
         title = this.title,
         canvas = this.canvas;
-
     var item = this.items[index];
     var img = item.querySelector('img');
     var url = getData(img, 'originalUrl');
     var alt = img.getAttribute('alt');
     var image = document.createElement('img');
-
     image.src = url;
     image.alt = alt;
 
@@ -60507,28 +60425,22 @@ var methods = {
     }
 
     canvas.innerHTML = '';
-    canvas.appendChild(image);
+    canvas.appendChild(image); // Center current item
 
-    // Center current item
-    this.renderList();
+    this.renderList(); // Clear title
 
-    // Clear title
-    title.innerHTML = '';
+    title.innerHTML = ''; // Generate title after viewed
 
-    // Generate title after viewed
     var onViewed = function onViewed() {
       var imageData = _this.imageData;
-
       var render = Array.isArray(options.title) ? options.title[1] : options.title;
-
-      title.innerHTML = isFunction(render) ? render.call(_this, image, imageData) : alt + ' (' + imageData.naturalWidth + ' \xD7 ' + imageData.naturalHeight + ')';
+      title.innerHTML = isFunction(render) ? render.call(_this, image, imageData) : "".concat(alt, " (").concat(imageData.naturalWidth, " \xD7 ").concat(imageData.naturalHeight, ")");
     };
-    var onLoad = void 0;
 
+    var onLoad;
     addListener(element, EVENT_VIEWED, onViewed, {
       once: true
     });
-
     this.viewing = {
       abort: function abort() {
         removeListener(element, EVENT_VIEWED, onViewed);
@@ -60558,9 +60470,9 @@ var methods = {
 
       if (this.timeout) {
         clearTimeout(this.timeout);
-      }
+      } // Make the image visible if it fails to load within 1s
 
-      // Make the image visible if it fails to load within 1s
+
       this.timeout = setTimeout(function () {
         removeClass(image, CLASS_INVISIBLE);
         _this.timeout = false;
@@ -60570,7 +60482,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * View the previous image
    * @param {boolean} [loop=false] - Indicate if view the last one
@@ -60579,7 +60490,6 @@ var methods = {
    */
   prev: function prev() {
     var loop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
     var index = this.index - 1;
 
     if (index < 0) {
@@ -60590,7 +60500,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * View the next image
    * @param {boolean} [loop=false] - Indicate if view the first one
@@ -60599,7 +60508,6 @@ var methods = {
    */
   next: function next() {
     var loop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
     var maxIndex = this.length - 1;
     var index = this.index + 1;
 
@@ -60611,7 +60519,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * Move the image with relative offsets.
    * @param {number} offsetX - The relative offset distance on the x-axis.
@@ -60620,13 +60527,9 @@ var methods = {
    */
   move: function move(offsetX, offsetY) {
     var imageData = this.imageData;
-
-
     this.moveTo(isUndefined(offsetX) ? offsetX : imageData.left + Number(offsetX), isUndefined(offsetY) ? offsetY : imageData.top + Number(offsetY));
-
     return this;
   },
-
 
   /**
    * Move the image to an absolute point.
@@ -60637,8 +60540,6 @@ var methods = {
   moveTo: function moveTo(x) {
     var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
     var imageData = this.imageData;
-
-
     x = Number(x);
     y = Number(y);
 
@@ -60663,7 +60564,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * Zoom the image with a relative ratio.
    * @param {number} ratio - The target ratio.
@@ -60677,8 +60577,6 @@ var methods = {
     var _originalEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
     var imageData = this.imageData;
-
-
     ratio = Number(ratio);
 
     if (ratio < 0) {
@@ -60688,10 +60586,8 @@ var methods = {
     }
 
     this.zoomTo(imageData.width * ratio / imageData.naturalWidth, hasTooltip, _originalEvent);
-
     return this;
   },
-
 
   /**
    * Zoom the image to an absolute ratio.
@@ -60702,9 +60598,9 @@ var methods = {
    * @returns {Viewer} this
    */
   zoomTo: function zoomTo(ratio) {
-    var hasTooltip = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
     var _this2 = this;
+
+    var hasTooltip = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     var _originalEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
@@ -60714,15 +60610,12 @@ var methods = {
         options = this.options,
         pointers = this.pointers,
         imageData = this.imageData;
-
-
     ratio = Math.max(0, ratio);
 
     if (isNumber(ratio) && this.viewed && !this.played && (_zoomable || options.zoomable)) {
       if (!_zoomable) {
         var minZoomRatio = Math.max(0.01, options.minZoomRatio);
         var maxZoomRatio = Math.min(100, options.maxZoomRatio);
-
         ratio = Math.min(Math.max(ratio, minZoomRatio), maxZoomRatio);
       }
 
@@ -60755,9 +60648,8 @@ var methods = {
         var center = pointers && Object.keys(pointers).length ? getPointersCenter(pointers) : {
           pageX: _originalEvent.pageX,
           pageY: _originalEvent.pageY
-        };
+        }; // Zoom from the triggering point of the event
 
-        // Zoom from the triggering point of the event
         imageData.left -= (newWidth - imageData.width) * ((center.pageX - offset.left - imageData.left) / imageData.width);
         imageData.top -= (newHeight - imageData.height) * ((center.pageY - offset.top - imageData.top) / imageData.height);
       } else {
@@ -60793,7 +60685,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * Rotate the image with a relative degree.
    * @param {number} degree - The rotate degree.
@@ -60801,10 +60692,8 @@ var methods = {
    */
   rotate: function rotate(degree) {
     this.rotateTo((this.imageData.rotate || 0) + Number(degree));
-
     return this;
   },
-
 
   /**
    * Rotate the image to an absolute degree.
@@ -60813,8 +60702,6 @@ var methods = {
    */
   rotateTo: function rotateTo(degree) {
     var imageData = this.imageData;
-
-
     degree = Number(degree);
 
     if (isNumber(degree) && this.viewed && !this.played && this.options.rotatable) {
@@ -60825,7 +60712,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * Scale the image on the x-axis.
    * @param {number} scaleX - The scale ratio on the x-axis.
@@ -60833,10 +60719,8 @@ var methods = {
    */
   scaleX: function scaleX(_scaleX) {
     this.scale(_scaleX, this.imageData.scaleY);
-
     return this;
   },
-
 
   /**
    * Scale the image on the y-axis.
@@ -60845,10 +60729,8 @@ var methods = {
    */
   scaleY: function scaleY(_scaleY) {
     this.scale(this.imageData.scaleX, _scaleY);
-
     return this;
   },
-
 
   /**
    * Scale the image.
@@ -60859,8 +60741,6 @@ var methods = {
   scale: function scale(scaleX) {
     var scaleY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : scaleX;
     var imageData = this.imageData;
-
-
     scaleX = Number(scaleX);
     scaleY = Number(scaleY);
 
@@ -60885,7 +60765,6 @@ var methods = {
     return this;
   },
 
-
   /**
    * Play the images
    * @param {boolean} [fullscreen=false] - Indicate if request fullscreen or not.
@@ -60902,12 +60781,10 @@ var methods = {
 
     var options = this.options,
         player = this.player;
-
     var onLoad = this.loadImage.bind(this);
     var list = [];
     var total = 0;
     var index = 0;
-
     this.played = true;
     this.onLoadWhenPlay = onLoad;
 
@@ -60919,7 +60796,6 @@ var methods = {
     forEach(this.items, function (item, i) {
       var img = item.querySelector('img');
       var image = document.createElement('img');
-
       image.src = getData(img, 'originalUrl');
       image.alt = img.getAttribute('alt');
       total += 1;
@@ -60956,8 +60832,6 @@ var methods = {
 
     return this;
   },
-
-
   // Stop play
   stop: function stop() {
     var _this4 = this;
@@ -60967,8 +60841,6 @@ var methods = {
     }
 
     var player = this.player;
-
-
     this.played = false;
     clearTimeout(this.playing);
     forEach(player.getElementsByTagName('img'), function (image) {
@@ -60977,11 +60849,8 @@ var methods = {
     removeClass(player, CLASS_SHOW);
     player.innerHTML = '';
     this.exitFullscreen();
-
     return this;
   },
-
-
   // Enter modal mode (only available in inline mode)
   full: function full() {
     var _this5 = this;
@@ -60990,7 +60859,6 @@ var methods = {
         viewer = this.viewer,
         image = this.image,
         list = this.list;
-
 
     if (!this.isShown || this.played || this.fulled || !options.inline) {
       return this;
@@ -61013,7 +60881,6 @@ var methods = {
     setStyle(viewer, {
       zIndex: options.zIndex
     });
-
     this.initContainer();
     this.viewerData = assign({}, this.containerData);
     this.renderList();
@@ -61033,8 +60900,6 @@ var methods = {
 
     return this;
   },
-
-
   // Exit modal mode (only available in inline mode)
   exit: function exit() {
     var _this6 = this;
@@ -61043,7 +60908,6 @@ var methods = {
         viewer = this.viewer,
         image = this.image,
         list = this.list;
-
 
     if (!this.isShown || this.played || !this.fulled || !options.inline) {
       return this;
@@ -61065,7 +60929,6 @@ var methods = {
     setStyle(viewer, {
       zIndex: options.zIndexInline
     });
-
     this.viewerData = assign({}, this.parentData);
     this.renderViewer();
     this.renderList();
@@ -61085,8 +60948,6 @@ var methods = {
 
     return this;
   },
-
-
   // Show the current ratio of the image with percentage
   tooltip: function tooltip() {
     var _this7 = this;
@@ -61095,12 +60956,11 @@ var methods = {
         tooltipBox = this.tooltipBox,
         imageData = this.imageData;
 
-
     if (!this.viewed || this.played || !options.tooltip) {
       return this;
     }
 
-    tooltipBox.textContent = Math.round(imageData.ratio * 100) + '%';
+    tooltipBox.textContent = "".concat(Math.round(imageData.ratio * 100), "%");
 
     if (!this.tooltipping) {
       if (options.transition) {
@@ -61110,10 +60970,9 @@ var methods = {
 
         addClass(tooltipBox, CLASS_SHOW);
         addClass(tooltipBox, CLASS_FADE);
-        addClass(tooltipBox, CLASS_TRANSITION);
-
-        // Force reflow to enable CSS3 transition
+        addClass(tooltipBox, CLASS_TRANSITION); // Force reflow to enable CSS3 transition
         // eslint-disable-next-line
+
         tooltipBox.offsetWidth;
         addClass(tooltipBox, CLASS_IN);
       } else {
@@ -61133,7 +60992,6 @@ var methods = {
         }, {
           once: true
         });
-
         removeClass(tooltipBox, CLASS_IN);
         _this7.fading = true;
       } else {
@@ -61142,11 +61000,8 @@ var methods = {
 
       _this7.tooltipping = false;
     }, 1000);
-
     return this;
   },
-
-
   // Toggle the image size between its natural size and initial size
   toggle: function toggle() {
     if (this.imageData.ratio === 1) {
@@ -61157,8 +61012,6 @@ var methods = {
 
     return this;
   },
-
-
   // Reset the image to its initial state
   reset: function reset() {
     if (this.viewed && !this.played) {
@@ -61168,22 +61021,17 @@ var methods = {
 
     return this;
   },
-
-
   // Update viewer when images changed
   update: function update() {
     var element = this.element,
         options = this.options,
-        isImg = this.isImg;
-
-    // Destroy viewer if the target image was deleted
+        isImg = this.isImg; // Destroy viewer if the target image was deleted
 
     if (isImg && !element.parentNode) {
       return this.destroy();
     }
 
     var images = [];
-
     forEach(isImg ? [element] : element.querySelectorAll('img'), function (image) {
       if (options.filter) {
         if (options.filter(image)) {
@@ -61203,7 +61051,6 @@ var methods = {
 
     if (this.ready) {
       var indexes = [];
-
       forEach(this.items, function (item, i) {
         var img = item.querySelector('img');
         var image = images[i];
@@ -61216,11 +61063,9 @@ var methods = {
           indexes.push(i);
         }
       });
-
       setStyle(this.list, {
         width: 'auto'
       });
-
       this.initList();
 
       if (this.isShown) {
@@ -61250,15 +61095,12 @@ var methods = {
 
     return this;
   },
-
-
   // Destroy the viewer
   destroy: function destroy() {
     var element = this.element,
         options = this.options;
 
-
-    if (!getData(element, NAMESPACE)) {
+    if (!element[NAMESPACE]) {
       return this;
     }
 
@@ -61308,7 +61150,7 @@ var methods = {
       removeListener(element, EVENT_CLICK, this.onStart);
     }
 
-    removeData(element, NAMESPACE);
+    element[NAMESPACE] = undefined;
     return this;
   }
 };
@@ -61316,24 +61158,17 @@ var methods = {
 var others = {
   open: function open() {
     var body = this.body;
-
-
     addClass(body, CLASS_OPEN);
-
-    body.style.paddingRight = this.scrollbarWidth + (parseFloat(this.initialBodyPaddingRight) || 0) + 'px';
+    body.style.paddingRight = "".concat(this.scrollbarWidth + (parseFloat(this.initialBodyPaddingRight) || 0), "px");
   },
   close: function close() {
     var body = this.body;
-
-
     removeClass(body, CLASS_OPEN);
     body.style.paddingRight = this.initialBodyPaddingRight;
   },
   shown: function shown() {
     var element = this.element,
         options = this.options;
-
-
     this.fulled = true;
     this.isShown = true;
     this.render();
@@ -61357,8 +61192,6 @@ var others = {
   hidden: function hidden() {
     var element = this.element,
         options = this.options;
-
-
     this.fulled = false;
     this.viewed = false;
     this.isShown = false;
@@ -61384,7 +61217,6 @@ var others = {
 
     if (this.fulled && !document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
       var documentElement = document.documentElement;
-
 
       if (documentElement.requestFullscreen) {
         documentElement.requestFullscreen();
@@ -61415,7 +61247,6 @@ var others = {
   change: function change(e) {
     var options = this.options,
         pointers = this.pointers;
-
     var pointer = pointers[Object.keys(pointers)[0]];
     var offsetX = pointer.endX - pointer.startX;
     var offsetY = pointer.endY - pointer.startY;
@@ -61425,8 +61256,8 @@ var others = {
       case ACTION_MOVE:
         this.move(offsetX, offsetY);
         break;
-
       // Zoom the current image
+
       case ACTION_ZOOM:
         this.zoom(getMaxZoomRatio(pointers), false, e);
         break;
@@ -61434,7 +61265,6 @@ var others = {
       case ACTION_SWITCH:
         {
           this.action = 'switched';
-
           var absoluteOffsetX = Math.abs(offsetX);
 
           if (absoluteOffsetX > 1 && absoluteOffsetX > Math.abs(offsetY)) {
@@ -61452,9 +61282,9 @@ var others = {
         }
 
       default:
-    }
+    } // Override
 
-    // Override
+
     forEach(pointers, function (p) {
       p.startX = p.endX;
       p.startY = p.endY;
@@ -61463,15 +61293,15 @@ var others = {
   isSwitchable: function isSwitchable() {
     var imageData = this.imageData,
         viewerData = this.viewerData;
-
-
     return this.length > 1 && imageData.left >= 0 && imageData.top >= 0 && imageData.width <= viewerData.width && imageData.height <= viewerData.height;
   }
 };
 
 var AnotherViewer = WINDOW.Viewer;
 
-var Viewer = function () {
+var Viewer =
+/*#__PURE__*/
+function () {
   /**
    * Create a new Viewer.
    * @param {Element} element - The target element for viewing.
@@ -61479,7 +61309,8 @@ var Viewer = function () {
    */
   function Viewer(element) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    classCallCheck(this, Viewer);
+
+    _classCallCheck(this, Viewer);
 
     if (!element || element.nodeType !== 1) {
       throw new Error('The first argument is required and must be an element.');
@@ -61510,24 +61341,21 @@ var Viewer = function () {
     this.init();
   }
 
-  createClass(Viewer, [{
-    key: 'init',
+  _createClass(Viewer, [{
+    key: "init",
     value: function init() {
       var _this = this;
 
       var element = this.element,
           options = this.options;
 
-
-      if (getData(element, NAMESPACE)) {
+      if (element[NAMESPACE]) {
         return;
       }
 
-      setData(element, NAMESPACE, this);
-
+      element[NAMESPACE] = this;
       var isImg = element.tagName.toLowerCase() === 'img';
       var images = [];
-
       forEach(isImg ? [element] : element.querySelectorAll('img'), function (image) {
         if (isFunction(options.filter)) {
           if (options.filter.call(_this, image)) {
@@ -61545,38 +61373,34 @@ var Viewer = function () {
       this.isImg = isImg;
       this.length = images.length;
       this.images = images;
-
       var ownerDocument = element.ownerDocument;
-
       var body = ownerDocument.body || ownerDocument.documentElement;
-
       this.body = body;
       this.scrollbarWidth = window.innerWidth - ownerDocument.documentElement.clientWidth;
-      this.initialBodyPaddingRight = window.getComputedStyle(body).paddingRight;
+      this.initialBodyPaddingRight = window.getComputedStyle(body).paddingRight; // Override `transition` option if it is not supported
 
-      // Override `transition` option if it is not supported
       if (isUndefined(document.createElement(NAMESPACE).style.transition)) {
         options.transition = false;
       }
 
       if (options.inline) {
         var count = 0;
+
         var progress = function progress() {
           count += 1;
 
           if (count === _this.length) {
-            var timeout = void 0;
-
+            var timeout;
             _this.initializing = false;
             _this.delaying = {
               abort: function abort() {
                 clearTimeout(timeout);
               }
-            };
+            }; // build asynchronously to keep `this.viewer` is accessible in `ready` event handler.
 
-            // build asynchronously to keep `this.viewer` is accessible in `ready` event handler.
             timeout = setTimeout(function () {
               _this.delaying = false;
+
               _this.build();
             }, 0);
           }
@@ -61591,7 +61415,6 @@ var Viewer = function () {
             });
           }
         };
-
         forEach(images, function (image) {
           if (image.complete) {
             progress();
@@ -61605,14 +61428,14 @@ var Viewer = function () {
         addListener(element, EVENT_CLICK, this.onStart = function (_ref) {
           var target = _ref.target;
 
-          if (target.tagName.toLowerCase() === 'img') {
+          if (target.tagName.toLowerCase() === 'img' && (!isFunction(options.filter) || options.filter.call(_this, target))) {
             _this.view(_this.images.indexOf(target));
           }
         });
       }
     }
   }, {
-    key: 'build',
+    key: "build",
     value: function build() {
       if (this.ready) {
         return;
@@ -61620,19 +61443,15 @@ var Viewer = function () {
 
       var element = this.element,
           options = this.options;
-
       var parent = element.parentNode;
       var template = document.createElement('div');
-
       template.innerHTML = TEMPLATE;
-
-      var viewer = template.querySelector('.' + NAMESPACE + '-container');
-      var title = viewer.querySelector('.' + NAMESPACE + '-title');
-      var toolbar = viewer.querySelector('.' + NAMESPACE + '-toolbar');
-      var navbar = viewer.querySelector('.' + NAMESPACE + '-navbar');
-      var button = viewer.querySelector('.' + NAMESPACE + '-button');
-      var canvas = viewer.querySelector('.' + NAMESPACE + '-canvas');
-
+      var viewer = template.querySelector(".".concat(NAMESPACE, "-container"));
+      var title = viewer.querySelector(".".concat(NAMESPACE, "-title"));
+      var toolbar = viewer.querySelector(".".concat(NAMESPACE, "-toolbar"));
+      var navbar = viewer.querySelector(".".concat(NAMESPACE, "-navbar"));
+      var button = viewer.querySelector(".".concat(NAMESPACE, "-button"));
+      var canvas = viewer.querySelector(".".concat(NAMESPACE, "-canvas"));
       this.parent = parent;
       this.viewer = viewer;
       this.title = title;
@@ -61640,21 +61459,27 @@ var Viewer = function () {
       this.navbar = navbar;
       this.button = button;
       this.canvas = canvas;
-      this.footer = viewer.querySelector('.' + NAMESPACE + '-footer');
-      this.tooltipBox = viewer.querySelector('.' + NAMESPACE + '-tooltip');
-      this.player = viewer.querySelector('.' + NAMESPACE + '-player');
-      this.list = viewer.querySelector('.' + NAMESPACE + '-list');
-
+      this.footer = viewer.querySelector(".".concat(NAMESPACE, "-footer"));
+      this.tooltipBox = viewer.querySelector(".".concat(NAMESPACE, "-tooltip"));
+      this.player = viewer.querySelector(".".concat(NAMESPACE, "-player"));
+      this.list = viewer.querySelector(".".concat(NAMESPACE, "-list"));
       addClass(title, !options.title ? CLASS_HIDE : getResponsiveClass(Array.isArray(options.title) ? options.title[0] : options.title));
       addClass(navbar, !options.navbar ? CLASS_HIDE : getResponsiveClass(options.navbar));
       toggleClass(button, CLASS_HIDE, !options.button);
 
       if (options.backdrop) {
-        addClass(viewer, NAMESPACE + '-backdrop');
+        addClass(viewer, "".concat(NAMESPACE, "-backdrop"));
 
         if (!options.inline && options.backdrop === true) {
           setData(canvas, DATA_ACTION, 'hide');
         }
+      }
+
+      if (isString(options.className) && options.className) {
+        // In case there are multiple class names
+        options.className.split(REGEXP_SPACES).forEach(function (className) {
+          addClass(viewer, className);
+        });
       }
 
       if (options.toolbar) {
@@ -61680,9 +61505,8 @@ var Viewer = function () {
           var size = deep && !isUndefined(value.size) ? value.size : value;
           var click = deep && !isUndefined(value.click) ? value.click : value;
           var item = document.createElement('li');
-
           item.setAttribute('role', 'button');
-          addClass(item, NAMESPACE + '-' + name);
+          addClass(item, "".concat(NAMESPACE, "-").concat(name));
 
           if (!isFunction(click)) {
             setData(item, DATA_ACTION, name);
@@ -61693,9 +61517,9 @@ var Viewer = function () {
           }
 
           if (['small', 'large'].indexOf(size) !== -1) {
-            addClass(item, NAMESPACE + '-' + size);
+            addClass(item, "".concat(NAMESPACE, "-").concat(size));
           } else if (name === 'play') {
-            addClass(item, NAMESPACE + '-large');
+            addClass(item, "".concat(NAMESPACE, "-large"));
           }
 
           if (isFunction(click)) {
@@ -61704,7 +61528,6 @@ var Viewer = function () {
 
           list.appendChild(item);
         });
-
         toolbar.appendChild(list);
       } else {
         addClass(toolbar, CLASS_HIDE);
@@ -61712,7 +61535,6 @@ var Viewer = function () {
 
       if (!options.rotatable) {
         var rotates = toolbar.querySelectorAll('li[class*="rotate"]');
-
         addClass(rotates, CLASS_INVISIBLE);
         forEach(rotates, function (rotate) {
           toolbar.appendChild(rotate);
@@ -61737,13 +61559,10 @@ var Viewer = function () {
         addClass(viewer, CLASS_FIXED);
         addClass(viewer, CLASS_FADE);
         addClass(viewer, CLASS_HIDE);
-
         setStyle(viewer, {
           zIndex: options.zIndex
         });
-
         var container = options.container;
-
 
         if (isString(container)) {
           container = element.ownerDocument.querySelector(container);
@@ -61779,30 +61598,29 @@ var Viewer = function () {
         this.view(this.index);
       }
     }
-
     /**
      * Get the no conflict viewer class.
      * @returns {Viewer} The viewer class.
      */
 
   }], [{
-    key: 'noConflict',
+    key: "noConflict",
     value: function noConflict() {
       window.Viewer = AnotherViewer;
       return Viewer;
     }
-
     /**
      * Change the default options.
      * @param {Object} options - The new default options.
      */
 
   }, {
-    key: 'setDefaults',
+    key: "setDefaults",
     value: function setDefaults(options) {
       assign(DEFAULTS, isPlainObject(options) && options);
     }
   }]);
+
   return Viewer;
 }();
 
@@ -61812,14 +61630,14 @@ assign(Viewer.prototype, render, events, handlers, methods, others);
 
 
 /***/ }),
-/* 180 */
+/* 186 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 181 */,
-/* 182 */
+/* 187 */,
+/* 188 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

@@ -47,7 +47,7 @@
                             <p class="muted edit-has-changes">Unsaved changes</p>
 
                             <a href="#" class="btn btn-gray" id="cancelChanges">Cancel</a>
-                            <a href="#" class="btn btn-danger" id="save" data-form="#user-info">Save</a>
+                            <a href="#" class="btn btn-danger" id="save" data-form="#user-form">Save</a>
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                     </div>
                 </div>
 
-                <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-info" enctype="multipart/form-data">
+                <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-form" enctype="multipart/form-data">
                     {{csrf_field()}}
                     {{ method_field('PATCH') }}
 

@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\AwsHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Borough;
 use App\Models\Car;
+use App\Models\CarCategory;
+use App\Models\CarManufacturer;
 use Illuminate\Http\Request;
 use Woo\GridView\DataProviders\EloquentDataProvider;
 
@@ -64,6 +67,9 @@ class CarsController extends Controller
 
         return view('admin.cars.show', [
             'car' => $car,
+            'carCategories' => CarCategory::all(),
+            'carManufacturers' => CarManufacturer::all(),
+            'boroughs' => Borough::all(),
         ]);
     }
 
@@ -88,6 +94,14 @@ class CarsController extends Controller
             'owner' => 'required|string|max:255',
             'policy_number' => 'string|max:255|nullable',
             'image' => 'image|nullable',
+
+            'return_location_lat' => 'required|numeric',
+            'return_location_lon' => 'required|numeric',
+            'full_return_location' => 'required|string|max:255',
+
+            'pickup_location_lat' => 'required|numeric',
+            'pickup_location_lon' => 'required|numeric',
+            'full_pickup_location' => 'required|string|max:255',
         ]);
 
         $data = $request->all();
