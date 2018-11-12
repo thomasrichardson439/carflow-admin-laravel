@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $return_location_lon
  * @property string $booking_available_from
  * @property string $booking_available_to
+ * @property string $owner
+ * @property integer $seats
+ * @property string $policy_number
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -64,6 +67,9 @@ class Car extends Model
         'booking_available_from',
         'booking_available_to',
         'allowed_recurring',
+        'seats',
+        'policy_number',
+        'owner',
     ];
 
     protected $visible = [
