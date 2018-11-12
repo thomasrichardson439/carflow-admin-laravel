@@ -28,10 +28,10 @@
                     'title' => 'Year of production',
                     'value' => 'year',
                 ],
-                // [
-                    // 'title' => 'Car owner',
-                    // 'value' => 'car_owner',
-                // ],
+                [
+                    'title' => 'Car owner',
+                    'value' => 'owner',
+                ],
                 [
                     'class' => 'actions',
                     'value' => '{show} {edit} {delete}',

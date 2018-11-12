@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import 'jquery-sparkline';
 import { debounce } from 'lodash';
-import { COLORS } from '../../constants/colors';
+import { COLORS } from '../../../constants/colors';
 
 export default (function () {
   // ------------------------------------------------------

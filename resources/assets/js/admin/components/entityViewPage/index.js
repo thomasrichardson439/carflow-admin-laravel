@@ -43,9 +43,9 @@ export default (function () {
         $('.edit-has-changes').show();
     });
 
-    $('#save').click(function() {
-       let formSelector = $(this).data('form');
-       $(formSelector).submit();
+    $('#save').click(function () {
+        let formSelector = $(this).data('form');
+        $(formSelector).submit();
     });
 
     switchEdit(window.location.hash === '#edit');
