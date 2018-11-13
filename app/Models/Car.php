@@ -85,7 +85,6 @@ class Car extends Model
         'returnBorough',
         'allowed_recurring',
         'seats',
-        'owner',
         'availabilitySlots',
     ];
 
