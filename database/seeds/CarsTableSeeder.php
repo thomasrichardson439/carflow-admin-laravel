@@ -37,5 +37,25 @@ class CarsTableSeeder extends Seeder
             'image_s3_url' => 'http://cdn.motorpage.ru/Photos/800/4f7af586c1aee.jpg',
             'model' => '5',
         ]);
+
+        $factory = factory(\App\Models\CarAvailabilitySlot::class);
+
+        $day = now();
+
+        for ($i = 1; $i <= 7; $i++) {
+
+            $day->subDay();
+
+            for ($id = 1; $id <= 5; $id++) {
+                $factory->create([
+                    'car_id' => $id,
+                    'availability_type' => \App\Models\CarAvailabilitySlot::TYPE_RECURRING,
+                    'available_at' => null,
+                    'available_at_recurring' => strtolower($day->format('l')),
+                    'available_hour_from' => $day->setTime(rand(6, 10), 0, 0)->format('H:i:s'),
+                    'available_hour_to' => $day->setTime(rand(11, 22), 59, 0)->format('H:i:s'),
+                ]);
+            }
+        }
     }
 }

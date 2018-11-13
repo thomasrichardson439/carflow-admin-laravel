@@ -4,9 +4,12 @@ namespace App\Repositories;
 
 use App\Models\Booking;
 use App\Models\Car;
+use App\Models\CarAvailabilitySlot;
 use App\Models\CarCategory;
 use App\Models\CarManufacturer;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class CarsRepository extends BaseRepository
 {
@@ -24,6 +27,78 @@ class CarsRepository extends BaseRepository
     }
 
     /**
+     * Availability base query
+     * @param Carbon $from
+     * @return Builder
+     */
+    private function carAvailabilityQuery(Carbon $from) : Builder
+    {
+        return CarAvailabilitySlot::query()
+            ->where(function(Builder $query) use ($from) {
+                $query->where(function (Builder $query) use ($from) {
+                    $query->where([
+                        'availability_type' => CarAvailabilitySlot::TYPE_RECURRING,
+                        'available_at_recurring' => strtolower($from->format('l')),
+                    ]);
+                })
+                ->orWhere(function (Builder $query) use ($from) {
+                    $query->where([
+                        'availability_type' => CarAvailabilitySlot::TYPE_ONE_TIME,
+                        'available_at' => $from->format('Y-m-d'),
+                    ]);
+                });
+            });
+    }
+
+    /**
+     * Allows to check if car is available within needed hours
+     * @param int $carId
+     * @param Carbon $from
+     * @param Carbon $to
+     * @param Collection|null $slots
+     * @return bool
+     */
+    public function carIsAvailable(int $carId, Carbon $from, Carbon $to, $slots = null) : bool
+    {
+        if ($slots === null) {
+            $filteredSlots = $this->carAvailabilityQuery($from)->where('car_id', $carId)->get();
+        } else {
+            $filteredSlots = $slots->filter(function (CarAvailabilitySlot $item) use ($carId) {
+                return $item->car_id == $carId;
+            });
+        }
+
+        $hours = [];
+
+        foreach ($filteredSlots as $slot) {
+
+            $range = range(
+                strtotime($slot->available_hour_from),
+                strtotime($slot->available_hour_to),
+                60 * 60
+            );
+
+            foreach ($range as $hour) {
+                $hours[(int)date('H', $hour)] = 1;
+            }
+        }
+
+        $range = range(
+            $from->timestamp,
+            $to->timestamp,
+            60 * 60
+        );
+
+        foreach ($range as $hour) {
+            if (!isset($hours[(int)date('H', $hour)])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Allows to fetch formatted list of available for booking cars
      * @param array $filters
      * @return array
@@ -31,8 +106,10 @@ class CarsRepository extends BaseRepository
     public function availableForBooking(array $filters) : array
     {
         $query = $this->model
-            ->query()
-            ->orderBy('booking_available_from', 'DESC');
+            ->query();
+
+        $availableFrom = Carbon::parse($filters['available_from']);
+        $availableTo = Carbon::parse($filters['available_to']);
 
         $query->whereNotIn('id', Booking::query()
             ->select('car_id')
@@ -45,6 +122,10 @@ class CarsRepository extends BaseRepository
                 [$filters['available_from'], $filters['available_to']]
             )
         );
+
+        $carAvailabilitySlots = $this->carAvailabilityQuery($availableFrom)->get();
+
+        $query->whereIn('id', $carAvailabilitySlots->pluck('car_id'));
 
         if (isset($filters['categories'])) {
             $query->whereIn('category_id', $filters['categories']);
@@ -68,19 +149,17 @@ class CarsRepository extends BaseRepository
                   ->orderBy(\DB::raw($diff), 'ASC');
         }
 
-        $now = Carbon::now();
         $data = [];
 
         foreach ($query->get() as $car) {
 
             /** @var Car $car */
 
-            $bookingStartingAt = Carbon::parse($car->booking_available_from);
-
-            if ($bookingStartingAt->greaterThanOrEqualTo($now)) {
-                $availability = 'Available now';
-            } else {
-                $availability = 'in ' . $bookingStartingAt->diffForHumans($now, true);
+            /**
+             * If car is not available for picked hours, skip it
+             */
+            if (!$this->carIsAvailable($car->id, $availableFrom, $availableTo, $carAvailabilitySlots)) {
+                continue;
             }
 
             if (!empty($filters['pickup_location_lat'])) {
@@ -96,7 +175,6 @@ class CarsRepository extends BaseRepository
             $data[] = [
                 'car' => $this->show($car),
                 'distance_miles' => $distance,
-                'availability' => $availability,
             ];
         }
 

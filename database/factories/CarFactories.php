@@ -23,12 +23,17 @@ $factory->define(App\Models\Car::class, function (Faker $faker) {
         'return_borough_id' => $randomReturnBorough->id,
         'category_id' => $randomCategory->id,
         'manufacturer_id' => $randomManufacturer->id,
-        'booking_available_from' => $date->setTime($faker->numberBetween(6, 10), 00),
-        'booking_available_to' => (clone $date)->setTime($faker->numberBetween(11, 19), 59, 59),
         'pickup_location_lat' => $faker->numberBetween(33000, 35000) / 1000,
         'pickup_location_lon' => -1 * $faker->numberBetween(104000, 108000) / 1000,
         'return_location_lat' => $faker->numberBetween(33000, 35000) / 1000,
         'return_location_lon' => -1 * $faker->numberBetween(104000, 108000) / 1000,
         'allowed_recurring' => rand(0, 1),
+        'owner' => 'Car Flow',
+        'seats' => rand(2, 7),
+        'policy_number' => 'SN' . rand(10000, 99999) . rand(10000, 99999),
     ];
+});
+
+$factory->define(App\Models\CarAvailabilitySlot::class, function (Faker $faker) {
+    return [];
 });

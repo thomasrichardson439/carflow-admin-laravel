@@ -18,8 +18,12 @@
  *   @OA\Property(property="pickup_location_lon", format="float", type="float"),
  *   @OA\Property(property="return_location_lat", format="float", type="float"),
  *   @OA\Property(property="return_location_lon", format="float", type="float"),
+ *   @OA\Property(property="seats", format="int64", type="integer"),
+ *   @OA\Property(property="owner", format="string", type="string"),
+ *   @OA\Property(property="allowed_recurring", format="boolean", type="boolean"),
  *   @OA\Property(property="booking_starting_at", ref="#/components/schemas/ApiDate"),
  *   @OA\Property(property="booking_ending_at", ref="#/components/schemas/ApiDate"),
  *   @OA\Property(property="category", ref="#/components/schemas/CarCategory"),
+ *   @OA\Property(property="availabilitySlots", type="array", @OA\Items(ref="#/components/schemas/CarAvailabilitySlot")),
  * )
  */

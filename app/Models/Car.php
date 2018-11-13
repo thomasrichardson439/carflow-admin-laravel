@@ -25,17 +25,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $pickup_location_lon
  * @property float $return_location_lat
  * @property float $return_location_lon
- * @property string $booking_available_from
- * @property string $booking_available_to
  * @property string $owner
  * @property integer $seats
  * @property string $policy_number
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property Carbon $booking_available_from_carbon
- * @property Carbon $booking_available_to_carbon
- *
+ * @property CarAvailabilitySlot[] $availabilitySlots
  * @property CarManufacturer $manufacturer
  * @property CarCategory $category
  */
@@ -64,8 +60,6 @@ class Car extends Model
         'pickup_location_lon',
         'return_location_lat',
         'return_location_lon',
-        'booking_available_from',
-        'booking_available_to',
         'allowed_recurring',
         'seats',
         'policy_number',
@@ -87,11 +81,12 @@ class Car extends Model
         'pickup_location_lon',
         'return_location_lat',
         'return_location_lon',
-        'booking_available_from',
-        'booking_available_to',
         'pickupBorough',
         'returnBorough',
         'allowed_recurring',
+        'seats',
+        'owner',
+        'availabilitySlots',
     ];
 
     protected $casts = [
@@ -106,22 +101,15 @@ class Car extends Model
         'returnBorough',
         'manufacturer',
         'category',
+        'availabilitySlots',
     ];
 
     /**
-     * @return Carbon
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function getBookingAvailableFromCarbonAttribute() : Carbon
+    public function availabilitySlots()
     {
-        return Carbon::parse($this->booking_available_from);
-    }
-
-    /**
-     * @return Carbon
-     */
-    public function getBookingAvailableToCarbonAttribute() : Carbon
-    {
-        return Carbon::parse($this->booking_available_to);
+        return $this->hasMany(CarAvailabilitySlot::class);
     }
 
     /**

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             \App\Models\Booking::class,
 
             \App\Models\Car::class,
+            \App\Models\CarAvailabilitySlot::class,
 
             \App\Models\Borough::class,
             \App\Models\CarCategory::class,

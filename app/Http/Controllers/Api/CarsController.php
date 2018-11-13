@@ -36,8 +36,8 @@ class CarsController extends BaseApiController
     public function availableForBooking(Request $request)
     {
         $this->validate($request, [
-            'available_from' => 'date|date_format:"Y-m-d H:i"|required',
-            'available_to' => 'date|date_format:"Y-m-d H:i"|required',
+            'available_from' => 'date|date_format:"Y-m-d H:i"|required|after:now',
+            'available_to' => 'date|date_format:"Y-m-d H:i"|required|after:available_from',
             'categories' => 'array',
             'categories.*' => 'integer|exists:car_categories,id',
             'pickup_location_lat' => 'numeric',
@@ -45,6 +45,15 @@ class CarsController extends BaseApiController
             'allowed_range_miles' => 'integer|required_with:pickup_location_lat|min:1|max:100',
             'allowed_recurring' => 'boolean',
         ]);
+
+        $availableFrom = Carbon::parse($request->available_from);
+        $availableTo = Carbon::parse($request->available_to);
+
+        if ($availableFrom->format('Y-m-d') != $availableTo->format('Y-m-d')) {
+            return $this->validationErrors([
+                'available_from' => 'Available dates filters should be the same day',
+            ]);
+        }
 
         return $this->success(
             $this->carsRepository->availableForBooking($request->all())
@@ -95,12 +104,6 @@ class CarsController extends BaseApiController
         $startingAt = Carbon::parse($request->booking_starting_at);
         $endingAt = Carbon::parse($request->booking_ending_at);
 
-//        if ($startingAt->hour < $model->booking_available_from_carbon->hour) {
-//            return $this->validationErrors([
-//                'booking_starting_at' => 'Selected time is not available (too early)',
-//            ]);
-//        }
-
         /**
          * This conditions means that app should accept ending date without including next hour
          */
@@ -110,11 +113,12 @@ class CarsController extends BaseApiController
             ]);
         }
 
-//        if ($endingAt->hour > $model->booking_available_to_carbon->hour) {
-//            return $this->validationErrors([
-//                'booking_ending_at' => 'Selected time is not available (too late)',
-//            ]);
-//        }
+
+        if (!$this->carsRepository->carIsAvailable($model->id, $startingAt, $endingAt)) {
+            return $this->validationErrors([
+                'booking_starting_at' => 'Some of this hours are disabled for booking',
+            ]);
+        }
 
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
             $model->id, $startingAt, $endingAt
