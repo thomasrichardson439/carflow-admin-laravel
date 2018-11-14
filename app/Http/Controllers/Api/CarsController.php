@@ -46,15 +46,6 @@ class CarsController extends BaseApiController
             'allowed_recurring' => 'boolean',
         ]);
 
-        $availableFrom = Carbon::parse($request->available_from);
-        $availableTo = Carbon::parse($request->available_to);
-
-        if ($availableFrom->format('Y-m-d') != $availableTo->format('Y-m-d')) {
-            return $this->validationErrors([
-                'available_from' => 'Available dates filters should be the same day',
-            ]);
-        }
-
         return $this->success(
             $this->carsRepository->availableForBooking($request->all())
         );
@@ -63,18 +54,30 @@ class CarsController extends BaseApiController
     /**
      * Displays car booking preview
      * @param $id
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function bookGet($id)
+    public function bookPreview($id, Request $request)
     {
         /**
          * @var $model Car
          */
         $model = Car::query()->findOrFail($id);
 
+        $this->validate($request, [
+            'calendar_date_from' => 'date|date_format:"Y-m-d"|required|after:today',
+            'calendar_date_to' => 'date|date_format:"Y-m-d"|required|after:calendar_date_from',
+        ]);
+
+        $dateFrom = Carbon::parse($request->calendar_date_from);
+        $dateTo = Carbon::parse($request->calendar_date_to);
+
         return $this->success([
             'car' => $this->carsRepository->show($model),
-            'booked' => $this->bookingsRepository->bookedSlots($model)
+            'calendar' => $this->carsRepository->availabilityCalendar(
+                $model, $dateFrom, $dateTo,
+                $this->bookingsRepository->extractBookedHours($model, $dateFrom, $dateTo)
+            ),
         ]);
     }
 
@@ -84,7 +87,7 @@ class CarsController extends BaseApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function bookPost($id, Request $request)
+    public function book($id, Request $request)
     {
         if (auth()->user()->status != \ConstUserStatus::APPROVED) {
             return $this->error(403, 'Your account is not approved');
@@ -113,6 +116,11 @@ class CarsController extends BaseApiController
             ]);
         }
 
+        if ($startingAt->diffInHours($endingAt) > config('params.maxBookingInHours')) {
+            return $this->validationErrors([
+                'booking_ending_at' => 'Interval could not be more than ' . config('params.maxBookingInHours') . ' hours',
+            ]);
+        }
 
         if (!$this->carsRepository->carIsAvailable($model->id, $startingAt, $endingAt)) {
             return $this->validationErrors([

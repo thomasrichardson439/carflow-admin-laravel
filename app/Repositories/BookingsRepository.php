@@ -48,25 +48,25 @@ class BookingsRepository extends BaseRepository
     }
 
     /**
-     * Allows to get a list of slots which are already booked
      * @param Car $car
+     * @param Carbon $dateFrom
+     * @param Carbon $dateTo
      * @return array
      */
-    public function bookedSlots(Car $car) : array
+    public function extractBookedHours(Car $car, Carbon $dateFrom, Carbon $dateTo) : array
     {
         $bookings = $this->model->query()
-            ->where(['car_id' => $car->id])
+            ->where('car_id', $car->id)
             ->where('status', '!=', Booking::STATUS_CANCELED)
+            ->where('booking_starting_at', '>=', $dateFrom)
+            ->where('booking_ending_at', '<=', $dateTo)
             ->get();
-
+        
         if ($bookings->isEmpty()) {
             return [];
         }
 
-        /**
-         * Each slot is a timestamp with the beginning of booked hour (ex: 15:00:00)
-         */
-        $slots = [];
+        $results = [];
 
         foreach ($bookings as $booking) {
 
@@ -77,14 +77,12 @@ class BookingsRepository extends BaseRepository
 
             while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
 
-                $slots[] = $walkThroughDate->timestamp;
+                $results[$walkThroughDate->format('Y-m-d')][] = (int)$walkThroughDate->format('H');
                 $walkThroughDate->addHour();
             }
         }
 
-        sort($slots);
-
-        return $slots;
+        return $results;
     }
 
     /**

@@ -25,8 +25,8 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
 
         Route::group(['prefix' => 'cars'], function() {
             Route::post('available', 'CarsController@availableForBooking');
-            Route::get('{id}/book', 'CarsController@bookGet');
-            Route::post('{id}/book', 'CarsController@bookPost');
+            Route::post('{id}/book-preview', 'CarsController@bookPreview');
+            Route::post('{id}/book', 'CarsController@book');
 
             Route::get('categories', 'CarsController@categories');
             Route::get('manufacturers', 'CarsController@manufacturers');

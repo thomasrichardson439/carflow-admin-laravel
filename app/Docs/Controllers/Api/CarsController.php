@@ -48,9 +48,9 @@
  */
 
 /**
- * @OA\Get(
+ * @OA\Post(
  *  tags={"cars"},
- *  path="/api/cars/{id}/book",
+ *  path="/api/cars/{id}/book-preview",
  *  summary="Booking preview for a single car",
  *  security={
  *    {"api_key": {}}
@@ -64,15 +64,24 @@
  *      type="int"
  *    )
  *  ),
+ *  @OA\RequestBody(
+ *    required=true,
+ *    description="Preview",
+ *    @OA\MediaType(
+ *      mediaType="application/x-www-form-urlencoded",
+ *      @OA\Schema(
+ *        @OA\Property(property="calendar_date_from", example="2018-10-11", format="string", type="string"),
+ *        @OA\Property(property="calendar_date_to", example="2018-10-11", format="string", type="string")
+ *      ),
+ *    )
+ *  ),
  *  @OA\Response(
  *    response=200,
  *    description="successfully get the car",
  *    @OA\JsonContent(type="array", @OA\Items(
  *      @OA\Property(property="car", ref="#/components/schemas/Car"),
- *      @OA\Property(property="booking", type="array", @OA\Items(
- *          @OA\Property(property="booking", type="array", @OA\Items(
- *              @OA\Property(type="string"),
- *          ))
+ *      @OA\Property(property="calendar", type="array", @OA\Items(
+ *          @OA\Property(property="2018-01-01", type="array", @OA\Items(format="int64", type="integer"))
  *      )),
  *    ))
  *  ),
