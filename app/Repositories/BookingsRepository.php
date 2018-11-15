@@ -51,38 +51,16 @@ class BookingsRepository extends BaseRepository
      * @param Car $car
      * @param Carbon $dateFrom
      * @param Carbon $dateTo
-     * @return array
+     * @return Collection
      */
-    public function extractBookedHours(Car $car, Carbon $dateFrom, Carbon $dateTo) : array
+    public function carBookings(Car $car, Carbon $dateFrom, Carbon $dateTo) : Collection
     {
-        $bookings = $this->model->query()
+        return $this->model->query()
             ->where('car_id', $car->id)
             ->where('status', '!=', Booking::STATUS_CANCELED)
             ->where('booking_starting_at', '>=', $dateFrom)
             ->where('booking_ending_at', '<=', $dateTo)
             ->get();
-        
-        if ($bookings->isEmpty()) {
-            return [];
-        }
-
-        $results = [];
-
-        foreach ($bookings as $booking) {
-
-            /**
-             * @var Carbon $walkThroughDate
-             */
-            $walkThroughDate = clone $booking->booking_starting_at;
-
-            while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
-
-                $results[$walkThroughDate->format('Y-m-d')][] = (int)$walkThroughDate->format('H');
-                $walkThroughDate->addHour();
-            }
-        }
-
-        return $results;
     }
 
     /**

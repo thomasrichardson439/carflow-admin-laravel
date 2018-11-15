@@ -70,8 +70,8 @@
  *    @OA\MediaType(
  *      mediaType="application/x-www-form-urlencoded",
  *      @OA\Schema(
- *        @OA\Property(property="calendar_date_from", example="2018-10-11", format="string", type="string"),
- *        @OA\Property(property="calendar_date_to", example="2018-10-11", format="string", type="string")
+ *        @OA\Property(property="calendar_date_from", example="2018-10-11 10:00", format="string", type="string"),
+ *        @OA\Property(property="calendar_date_to", example="2018-10-12 10:00", format="string", type="string")
  *      ),
  *    )
  *  ),

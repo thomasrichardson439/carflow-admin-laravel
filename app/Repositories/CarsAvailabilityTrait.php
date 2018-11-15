@@ -89,19 +89,6 @@ trait CarsAvailabilityTrait
     }
 
     /**
-     * Check which cars are inside selected range with hours range checking
-     * @param Carbon $checkDate
-     * @return Builder
-     */
-    private function carAvailabilityQueryWithHours(Carbon $checkDate) : Builder
-    {
-        return $this->carAvailabilityQuery($checkDate)
-            ->select('car_id')
-            ->where('available_hour_from', '<=', $checkDate->format('H:i:s'))
-            ->where('available_hour_to', '>=', $checkDate->format('H:i:s'));
-    }
-
-    /**
      * Allows to extract array of available hours from slots
      * @param array|\Iterator $slots
      * @return array
@@ -127,57 +114,182 @@ trait CarsAvailabilityTrait
 
     /**
      * Allows to build availability calendar
-     * @param Car $car
+     * @param Collection $availabilitySlots
      * @param Carbon $dateFrom
      * @param Carbon $dateTo
-     * @param $bookedHours - date -> hours formatted array
+     * @param $bookedHours - car_id -> date -> hours formatted array
      * @return array
      */
-    public function availabilityCalendar(Car $car, Carbon $dateFrom, Carbon $dateTo, array $bookedHours) : array
+    public function availabilityCalendar(Collection $availabilitySlots, Carbon $dateFrom, Carbon $dateTo, array $bookedHours) : array
     {
         $calendar = [];
         $slots = [];
 
-        foreach ($car->availabilitySlots as $slot) {
+        foreach ($availabilitySlots as $slot) {
             switch ($slot->availability_type) {
                 case CarAvailabilitySlot::TYPE_RECURRING:
-                    $slots[$slot->available_at_recurring][] = $slot;
+                    $slots[$slot->car_id][$slot->available_at_recurring][] = $slot;
                     break;
 
                 case CarAvailabilitySlot::TYPE_ONE_TIME:
-                    $slots[$slot->available_at][] = $slot;
+                    $slots[$slot->car_id][$slot->available_at][] = $slot;
                     break;
             }
         }
 
         $date = clone $dateFrom;
 
-        for (; $date->dayOfYear != ($dateTo->dayOfYear + 1); $date->addDay()) {
+        for (; $date->timestamp <= $dateTo->timestamp; $date->addDay()) {
 
-            $key = $date->format('Y-m-d');
+            $dateFormatted = $date->format('Y-m-d');
+            $dayOfWeek = strtolower($date->format('l'));
 
-            $calendar[$key] = [];
+            foreach ($slots as $carId => $slotModels) {
 
-            if (isset($slots[strtolower($date->format('l'))])) {
-                $calendar[$key] = array_merge($calendar[$key],
-                    $this->extractHoursFromSlots($slots[strtolower($date->format('l'))])
-                );
-            }
+                $calendar[$carId][$dateFormatted] = [];
 
-            if (isset($slots[$date->format('Y-m-d')])) {
-                $calendar[$key] = array_merge($calendar[$key],
-                    $this->extractHoursFromSlots($slots[$date->format('Y-m-d')])
-                );
-            }
+                if (isset($slotModels[$dayOfWeek])) {
+                    $calendar[$carId][$dateFormatted] = array_merge(
+                        $calendar[$carId][$dateFormatted],
+                        $this->extractHoursFromSlots($slotModels[$dayOfWeek])
+                    );
+                }
 
-            $calendar[$key] = array_unique($calendar[$key]);
+                if (isset($slotModels[$dateFormatted])) {
+                    $calendar[$carId][$dateFormatted] = array_merge($calendar[$carId][$dateFormatted],
+                        $this->extractHoursFromSlots($slotModels[$dateFormatted])
+                    );
+                }
 
-            if (isset($bookedHours[$key])) {
-                $calendar[$key] = array_values(array_diff($calendar[$key], $bookedHours[$key]));
+                $calendar[$carId][$dateFormatted] = array_unique($calendar[$carId][$dateFormatted]);
+
+                if (isset($bookedHours[$carId][$dateFormatted])) {
+                    $calendar[$carId][$dateFormatted] = array_values(
+                        array_diff(
+                            $calendar[$carId][$dateFormatted],
+                            $bookedHours[$carId][$dateFormatted]
+                        )
+                    );
+                }
+
+                /**
+                 * Remove hours at the beginning day which are outside searched interval
+                 */
+                if ($date->dayOfYear == $dateFrom->dayOfYear) {
+                    $calendar[$carId][$dateFormatted] = array_filter(
+                        $calendar[$carId][$dateFormatted],
+                        function($hour) use ($dateFrom) {
+                            return $hour >= $dateFrom->hour;
+                        }
+                    );
+                }
+
+                /**
+                 * Remove hours at the end day which are outside searched interval
+                 */
+                if ($date->dayOfYear == $dateTo->dayOfYear) {
+                    $calendar[$carId][$dateFormatted] = array_filter(
+                        $calendar[$carId][$dateFormatted],
+                        function($hour) use ($dateTo) {
+                            return $hour <= $dateTo->hour;
+                        }
+                    );
+                }
             }
         }
 
         return $calendar;
+    }
+
+    /**
+     * Allows to build calendar of bookings for comparing to availability
+     * @param Collection $bookings
+     * @return array
+     */
+    public function bookingCalendar(Collection $bookings) : array
+    {
+        $results = [];
+
+        foreach ($bookings as $booking) {
+
+            /**
+             * @var Carbon $walkThroughDate
+             */
+            $walkThroughDate = clone $booking->booking_starting_at;
+
+            while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
+
+                $results[$booking->car_id][$walkThroughDate->format('Y-m-d')][] = (int)$walkThroughDate->format('H');
+                $walkThroughDate->addHour();
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Check if availability is not filled with bookings
+     * @param array $availability
+     * @param array $booked
+     * @return bool
+     */
+    public function checkAvailability(array $availability, array $booked)
+    {
+        if (empty($booked)) {
+            return true;
+        }
+
+        foreach ($availability as $date => $hours) {
+
+            if (!empty(array_diff($hours, $booked[$date] ?? []))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function filterCarAvailableBetweenDates(Carbon $from, Carbon $to)
+    {
+        $walkerDate = clone $from;
+
+        $daysOfWeek = [];
+        $dates = [];
+
+        for (;$walkerDate->timestamp <= $to->timestamp; $walkerDate->addHour()) {
+            $daysOfWeek[$walkerDate->format('Y-m-d')] = strtolower($walkerDate->format('l'));
+            $dates[] = $walkerDate->format('Y-m-d');
+        }
+
+        $availability = CarAvailabilitySlot::query()
+            ->whereIn('available_at_recurring', $daysOfWeek)
+            ->orWhere(function(Builder $query) use ($dates) {
+                $query->whereIn('available_at', $dates);
+            })
+            ->get();
+
+        $booked = Booking::query()
+            ->whereIn('car_id', $availability->pluck('car_id'))
+            ->where(function(Builder $query) use ($from, $to) {
+                $query->whereBetween('booking_starting_at', [$from, $to])
+                    ->orWhereBetween('booking_ending_at', [$from, $to]);
+            })
+            ->get();
+
+        $booked = $this->bookingCalendar($booked);
+        $available = $this->availabilityCalendar($availability, $from, $to, $booked);
+
+        //dd($available, $booked);
+
+        $filteredCarIds = [];
+
+        foreach ($available as $carId => $dates) {
+            if ($this->checkAvailability($dates, $booked[$carId] ?? [])) {
+                $filteredCarIds[] = $carId;
+            }
+        }
+
+        return $filteredCarIds;
     }
 
     /**
@@ -192,20 +304,7 @@ trait CarsAvailabilityTrait
         $availableFrom = Carbon::parse($filters['available_from']);
         $availableTo = Carbon::parse($filters['available_to']);
 
-        $query->whereNotIn('id', Booking::query()
-            ->select('car_id')
-            ->whereBetween(
-                'booking_starting_at',
-                [$filters['available_from'], $filters['available_to']]
-            )
-            ->orWhereBetween(
-                'booking_ending_at',
-                [$filters['available_from'], $filters['available_to']]
-            )
-        );
-
-        $query->whereIn('id', $this->carAvailabilityQueryWithHours($availableFrom))
-              ->whereIn('id', $this->carAvailabilityQueryWithHours($availableTo));
+        $query->whereIn('id', $this->filterCarAvailableBetweenDates($availableFrom, $availableTo));
 
         if (isset($filters['categories'])) {
             $query->whereIn('category_id', $filters['categories']);
@@ -230,8 +329,9 @@ trait CarsAvailabilityTrait
         }
 
         $data = [];
+        $cars = $query->get();
 
-        foreach ($query->get() as $car) {
+        foreach ($cars as $car) {
 
             /** @var Car $car */
 

@@ -36,7 +36,7 @@ class CarsController extends BaseApiController
     public function availableForBooking(Request $request)
     {
         $this->validate($request, [
-            'available_from' => 'date|date_format:"Y-m-d H:i"|required|after:now',
+            'available_from' => 'date|date_format:"Y-m-d H:i"|required|after:yesterday',
             'available_to' => 'date|date_format:"Y-m-d H:i"|required|after:available_from',
             'categories' => 'array',
             'categories.*' => 'integer|exists:car_categories,id',
@@ -65,8 +65,11 @@ class CarsController extends BaseApiController
         $model = Car::query()->findOrFail($id);
 
         $this->validate($request, [
-            'calendar_date_from' => 'date|date_format:"Y-m-d"|required|after:today',
-            'calendar_date_to' => 'date|date_format:"Y-m-d"|required|after:calendar_date_from',
+            // 'calendar_date_from' => 'date|date_format:"Y-m-d"|required|after:now',
+            // 'calendar_date_to' => 'date|date_format:"Y-m-d"|required|after:calendar_date_from',
+
+            'calendar_date_from' => 'date|required|after:now',
+            'calendar_date_to' => 'date|required|after:calendar_date_from',
         ]);
 
         $dateFrom = Carbon::parse($request->calendar_date_from);
@@ -75,9 +78,11 @@ class CarsController extends BaseApiController
         return $this->success([
             'car' => $this->carsRepository->show($model),
             'calendar' => $this->carsRepository->availabilityCalendar(
-                $model, $dateFrom, $dateTo,
-                $this->bookingsRepository->extractBookedHours($model, $dateFrom, $dateTo)
-            ),
+                $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+                $this->carsRepository->bookingCalendar(
+                    $this->bookingsRepository->carBookings($model, $dateFrom, $dateTo)
+                )
+            )[$model->id],
         ]);
     }
 
