@@ -176,24 +176,24 @@ trait CarsAvailabilityTrait
                  * Remove hours at the beginning day which are outside searched interval
                  */
                 if ($date->dayOfYear == $dateFrom->dayOfYear) {
-                    $calendar[$carId][$dateFormatted] = array_filter(
+                    $calendar[$carId][$dateFormatted] = array_values(array_filter(
                         $calendar[$carId][$dateFormatted],
                         function($hour) use ($dateFrom) {
                             return $hour >= $dateFrom->hour;
                         }
-                    );
+                    ));
                 }
 
                 /**
                  * Remove hours at the end day which are outside searched interval
                  */
                 if ($date->dayOfYear == $dateTo->dayOfYear) {
-                    $calendar[$carId][$dateFormatted] = array_filter(
+                    $calendar[$carId][$dateFormatted] = array_values(array_filter(
                         $calendar[$carId][$dateFormatted],
                         function($hour) use ($dateTo) {
                             return $hour <= $dateTo->hour;
                         }
-                    );
+                    ));
                 }
             }
         }
