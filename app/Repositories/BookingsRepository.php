@@ -9,6 +9,7 @@ use App\Models\BookingReceipt;
 use App\Models\Car;
 use App\Models\LateNotification;
 use Carbon\Carbon;
+use function foo\func;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
@@ -35,32 +36,69 @@ class BookingsRepository extends BaseRepository
      */
     public function checkIntervalIsNotBooked(int $carId, Carbon $start, Carbon $end) : bool
     {
-        return !($this->model->query()
+        $bookings = $this->model->query()
             ->where(['car_id' => $carId])
             ->where(function(Builder $query) use ($start, $end) {
-                $query->where('booking_starting_at', '<=', $start);
-                $query->where('booking_ending_at', '>=', $start);
+                $query->where(function (Builder $query) use ($start, $end) {
+                    $query->where('booking_starting_at', '<=', $start);
+                    $query->where('booking_ending_at', '>=', $start);
 
-                $query->orWhere('booking_starting_at', '<=', $end);
-                $query->where('booking_ending_at', '>=', $end);
+                    $query->orWhere('booking_starting_at', '<=', $end);
+                    $query->where('booking_ending_at', '>=', $end);
+                })
+                ->orWhere(function (Builder $query) use ($start, $end) {
+                    $query->where([
+                        'starting_at_weekday' => strtolower($start->format('l')),
+                    ]);
+
+                    $query->orWhere([
+                        'starting_at_weekday' => strtolower($end->format('l')),
+                    ]);
+
+                    $query->orWhere([
+                        'ending_at_weekday' => strtolower($start->format('l')),
+                    ]);
+
+                    $query->orWhere([
+                        'ending_at_weekday' => strtolower($end->format('l')),
+                    ]);
+                });
             })
-            ->exists());
-    }
-
-    /**
-     * @param Car $car
-     * @param Carbon $dateFrom
-     * @param Carbon $dateTo
-     * @return Collection
-     */
-    public function carBookings(Car $car, Carbon $dateFrom, Carbon $dateTo) : Collection
-    {
-        return $this->model->query()
-            ->where('car_id', $car->id)
-            ->where('status', '!=', Booking::STATUS_CANCELED)
-            ->where('booking_starting_at', '>=', $dateFrom)
-            ->where('booking_ending_at', '<=', $dateTo)
             ->get();
+
+        $walkerDate = clone $start;
+        $interval = [];
+
+        for (; $walkerDate->lessThanOrEqualTo($end); $walkerDate->addHour()) {
+            $interval[$walkerDate->dayOfWeek][$walkerDate->hour] = 1;
+        }
+
+        foreach ($bookings as $booking) {
+            /**
+             * @var Booking $booking
+             */
+
+            /**
+             * If booking is not recurring, that means that interfering booking found
+             */
+            if (!$booking->is_recurring) {
+                return false;
+            }
+
+            /**
+             * Recurring booking needs additional check
+             */
+            $walkerDate = clone $booking->booking_starting_at;
+
+            for (; $walkerDate->lessThanOrEqualTo($booking->booking_ending_at); $walkerDate->addHour()) {
+
+                if (isset($interval[$walkerDate->dayOfWeek][$walkerDate->hour])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

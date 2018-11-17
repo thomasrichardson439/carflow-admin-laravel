@@ -65,11 +65,8 @@ class CarsController extends BaseApiController
         $model = Car::query()->findOrFail($id);
 
         $this->validate($request, [
-            // 'calendar_date_from' => 'date|date_format:"Y-m-d"|required|after:now',
-            // 'calendar_date_to' => 'date|date_format:"Y-m-d"|required|after:calendar_date_from',
-
-            'calendar_date_from' => 'date|required|after:now',
-            'calendar_date_to' => 'date|required|after:calendar_date_from',
+            'calendar_date_from' => 'date|date_format:"Y-m-d H:i"|required|after:now',
+            'calendar_date_to' => 'date|date_format:"Y-m-d H:i"|required|after:calendar_date_from',
         ]);
 
         $dateFrom = Carbon::parse($request->calendar_date_from);
@@ -79,9 +76,7 @@ class CarsController extends BaseApiController
             'car' => $this->carsRepository->show($model),
             'calendar' => $this->carsRepository->availabilityCalendar(
                 $model->availabilitySlots()->get(), $dateFrom, $dateTo,
-                $this->carsRepository->bookingCalendar(
-                    $this->bookingsRepository->carBookings($model, $dateFrom, $dateTo)
-                )
+                $this->carsRepository->bookingCalendar($model->id, $dateFrom, $dateTo)
             )[$model->id],
         ]);
     }
@@ -136,7 +131,6 @@ class CarsController extends BaseApiController
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
             $model->id, $startingAt, $endingAt
         )) {
-
             return $this->validationErrors([
                 'booking_starting_at' => 'Picked range contains already booked hours',
             ]);
@@ -148,6 +142,8 @@ class CarsController extends BaseApiController
             'booking_starting_at' => $startingAt->timestamp,
             'booking_ending_at' => $endingAt->timestamp,
             'is_recurring' => $request->is_recurring,
+            'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
+            'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
         ]);
 
         return $this->success([

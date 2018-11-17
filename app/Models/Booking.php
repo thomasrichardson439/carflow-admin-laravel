@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  * @property string $status
  * @property string $photo_start_mileage_s3_link
+ * @property string $starting_at_weekday
+ * @property string $ending_at_weekday
  *
  * @property BookingIssueReport[] $issueReports
  * @property BookingReceipt[] $receipts
@@ -42,6 +44,8 @@ class Booking extends Model
         'booking_starting_at',
         'booking_ending_at',
         'photo_start_mileage_s3_link',
+        'starting_at_weekday',
+        'ending_at_weekday',
     ];
 
     protected $dates = [

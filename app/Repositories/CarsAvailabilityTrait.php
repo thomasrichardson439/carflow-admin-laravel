@@ -203,14 +203,36 @@ trait CarsAvailabilityTrait
 
     /**
      * Allows to build calendar of bookings for comparing to availability
-     * @param Collection $bookings
+     * @param array|int $carIds
+     * @param Carbon $from
+     * @param Carbon $to
      * @return array
      */
-    public function bookingCalendar(Collection $bookings) : array
+    public function bookingCalendar($carIds, Carbon $from, Carbon $to) : array
     {
-        $results = [];
+        $carIds = (array)$carIds;
 
+        $bookings = Booking::query()
+            ->whereIn('car_id', $carIds)
+            ->where('status', '!=', Booking::STATUS_CANCELED)
+            ->where(function(Builder $query) use ($from, $to) {
+
+                $query->where('booking_starting_at', '>=', $from)
+                      ->where('booking_ending_at', '<=', $to);
+
+                $query->orWhere('is_recurring', 1);
+            })
+            ->get();
+
+        $recurlyBookings = [];
+
+        /**
+         * Process recurred bookings to array [day of week] => [car id] => [hours]
+         */
         foreach ($bookings as $booking) {
+            if (!$booking->is_recurring) {
+                continue;
+            }
 
             /**
              * @var Carbon $walkThroughDate
@@ -219,9 +241,53 @@ trait CarsAvailabilityTrait
 
             while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
 
-                $results[$booking->car_id][$walkThroughDate->format('Y-m-d')][] = (int)$walkThroughDate->format('H');
+                $recurlyBookings[$walkThroughDate->format('l')][$booking->car_id][] = (int)$walkThroughDate->format('H');
                 $walkThroughDate->addHour();
             }
+        }
+
+        $results = [];
+
+        /**
+         * Process one-time bookings to array [car id] => [day of week] => [hours]
+         */
+        foreach ($bookings as $booking) {
+
+            if ($booking->is_recurring) {
+                continue;
+            }
+
+            /**
+             * @var Carbon $walkThroughDate
+             */
+            $walkThroughDate = clone $booking->booking_starting_at;
+
+            while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
+
+                $ymd = $walkThroughDate->format('Y-m-d');
+
+                $results[$booking->car_id][$ymd][] = (int)$walkThroughDate->format('H');
+                $walkThroughDate->addHour();
+            }
+        }
+
+        /**
+         * Merge recurring bookings with one-time into resulting calendar
+         */
+        $walkThroughDate = clone $from;
+
+        while ($walkThroughDate->lessThan($to)) {
+
+            $ymd = $walkThroughDate->format('Y-m-d');
+            $weekDay = $walkThroughDate->format('l');
+
+            if (isset($recurlyBookings[$weekDay])) {
+                foreach ($recurlyBookings[$weekDay] as $carId => $hours) {
+                    $results[$carId][$ymd] = array_merge($results[$carId][$ymd] ?? [], $hours);
+                }
+            }
+
+            $walkThroughDate->addDay();
         }
 
         return $results;
@@ -249,7 +315,13 @@ trait CarsAvailabilityTrait
         return false;
     }
 
-    public function filterCarAvailableBetweenDates(Carbon $from, Carbon $to)
+    /**
+     * Allows to find ids of cars which has at least one available hour within picked interval
+     * @param Carbon $from
+     * @param Carbon $to
+     * @return array
+     */
+    public function findCarsAvailableBetweenDates(Carbon $from, Carbon $to)
     {
         $walkerDate = clone $from;
 
@@ -268,18 +340,8 @@ trait CarsAvailabilityTrait
             })
             ->get();
 
-        $booked = Booking::query()
-            ->whereIn('car_id', $availability->pluck('car_id'))
-            ->where(function(Builder $query) use ($from, $to) {
-                $query->whereBetween('booking_starting_at', [$from, $to])
-                    ->orWhereBetween('booking_ending_at', [$from, $to]);
-            })
-            ->get();
-
-        $booked = $this->bookingCalendar($booked);
+        $booked = $this->bookingCalendar($availability->pluck('car_id')->toArray(), $from, $to);
         $available = $this->availabilityCalendar($availability, $from, $to, $booked);
-
-        //dd($available, $booked);
 
         $filteredCarIds = [];
 
@@ -304,7 +366,7 @@ trait CarsAvailabilityTrait
         $availableFrom = Carbon::parse($filters['available_from']);
         $availableTo = Carbon::parse($filters['available_to']);
 
-        $query->whereIn('id', $this->filterCarAvailableBetweenDates($availableFrom, $availableTo));
+        $query->whereIn('id', $this->findCarsAvailableBetweenDates($availableFrom, $availableTo));
 
         if (isset($filters['categories'])) {
             $query->whereIn('category_id', $filters['categories']);
