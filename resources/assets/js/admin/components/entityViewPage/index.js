@@ -18,12 +18,16 @@ export default (function () {
         if (on) {
             $('.edit-off').hide();
             $('.edit-on').show();
-            inputs.prop('disabled', false);
+
         } else {
             $('.edit-on').hide();
             $('.edit-off').show();
-            inputs.prop('disabled', true);
         }
+
+        inputs.prop('disabled', !on);
+        inputs.each(function() {
+            $(this).closest('.input-group, .form-group').toggleClass('disabled', !on);
+        });
 
         $('.edit-has-changes').hide();
     };

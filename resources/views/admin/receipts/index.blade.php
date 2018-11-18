@@ -47,9 +47,9 @@
                     ],
                     'actionsUrls' => function($model) {
                         return [
-                            'show' => url('admin/cars/' . $model->id),
-                            'edit' => url('admin/cars/' . $model->id . '#edit'),
-                            'delete' => url('admin/cars/' . $model->id . '/delete'),
+                            'show' => url('admin/receipts/' . $model->id),
+                            'edit' => url('admin/receipts/' . $model->id . '#edit'),
+                            'delete' => url('admin/receipts/' . $model->id . '/delete'),
                         ];
                     }
                 ]

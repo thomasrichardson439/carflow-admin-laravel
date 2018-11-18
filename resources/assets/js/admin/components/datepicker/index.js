@@ -5,4 +5,9 @@ import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
 export default (function () {
   $('.start-date').datepicker();
   $('.end-date').datepicker();
-}())
+
+  $('[data-datepicker]').each(function() {
+    $(this).datepicker($(this).data('datepicker-options') || {});
+  });
+
+}());
