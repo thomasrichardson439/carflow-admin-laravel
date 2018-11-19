@@ -2,8 +2,17 @@
 
 @section('content')
     <div class="container-fluid container-admin-list">
-        <h1 class="title">Cars</h1>
-        <h4 class="subtitle">Manage cars, see usage and get notified on any issues</h4>
+        <div class="row">
+            <div class="col-6">
+                <h1 class="title">Cars</h1>
+                <h4 class="subtitle">Manage cars, see usage and get notified on any issues</h4>
+            </div>
+            <div class="col-6 d-flex justify-content-end align-items-center">
+                <a href="{{ url('/admin/cars/create') }}" class="btn btn-danger">
+                    <i class="fa fa-plus"></i> Add new car
+                </a>
+            </div>
+        </div>
 
         {!! grid([
             'dataProvider' => $dataProvider,

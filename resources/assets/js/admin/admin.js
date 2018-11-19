@@ -13,8 +13,12 @@ import './components/googleMaps';
 import './components/utils';
 import './components/entityViewPage';
 import './components/select2';
-import carsShow from './pages/cars_show.js';
+import carsShowCreate from './pages/cars_show_create.js';
 
 if (/^\/admin\/cars\/\d+$/.test(window.location.pathname)) {
-    carsShow();
+    carsShowCreate(false);
+}
+
+if (/^\/admin\/cars\/create$/.test(window.location.pathname)) {
+    carsShowCreate(true);
 }

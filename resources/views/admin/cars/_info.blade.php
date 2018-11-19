@@ -39,6 +39,28 @@
                 <label>Number of seats</label>
                 <input type="text" name="seats" value="{{ old('seats', $car->seats) }}" class="form-control">
             </div>
+
+            <div class="form-group">
+                <label>Color</label>
+                <input type="text" name="color" value="{{ old('color', $car->color) }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Plate</label>
+                <input type="text" name="plate" value="{{ old('plate', $car->plate) }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label class="d-flex align-items-center">
+                    <input type="hidden" name="allowed_recurring" value="0">
+                    <input class="apple-switch mR-10"
+                           type="checkbox" name="allowed_recurring"
+                           value="1"
+                           @if ($car->allowed_recurring) checked @endif
+                    >
+                    Allowed recurring
+                </label>
+            </div>
         </div>
 
         <div class="form-card">

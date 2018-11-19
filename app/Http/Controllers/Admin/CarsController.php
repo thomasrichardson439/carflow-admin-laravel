@@ -41,18 +41,60 @@ class CarsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.cars.create', [
+            'carCategories' => CarCategory::all(),
+            'carManufacturers' => CarManufacturer::all(),
+            'boroughs' => Borough::all(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'category_id' => 'required|integer|exists:car_categories,id',
+            'manufacturer_id' => 'required|integer|exists:car_manufacturers,id',
+            'model' => 'required|string|max:255',
+            'year' => 'required|integer|min:1990|max:' . date('Y'),
+            'seats' => 'required|integer|max:10',
+            'owner' => 'required|string|max:255',
+            'policy_number' => 'string|max:255|nullable',
+            'image' => 'required|image',
+            'color' => 'required|string|max:255',
+            'plate' => 'required|string|max:255',
+            'allowed_recurring' => 'required|boolean',
+
+            'return_location_lat' => 'required|numeric',
+            'return_location_lon' => 'required|numeric',
+            'full_return_location' => 'required|string|max:255',
+
+            'pickup_location_lat' => 'required|numeric',
+            'pickup_location_lon' => 'required|numeric',
+            'full_pickup_location' => 'required|string|max:255',
+        ]);
+
+        $car = new Car();
+        $car->fill(array_merge(
+            $request->all(),
+            ['image_s3_url' => '']
+        ));
+
+        $car->saveOrFail();
+
+        $car->image_s3_url = $this->awsHelper->uploadToS3(
+            $request->file('image'),
+            'cars/' . $car->id
+        );
+
+        $car->save();
+
+        return redirect('/admin/cars/' . $car->id)->with('success', 'Car successfully created');
     }
 
     /**
@@ -94,6 +136,9 @@ class CarsController extends Controller
             'owner' => 'required|string|max:255',
             'policy_number' => 'string|max:255|nullable',
             'image' => 'image|nullable',
+            'color' => 'required|string|max:255',
+            'plate' => 'required|string|max:255',
+            'allowed_recurring' => 'required|boolean',
 
             'return_location_lat' => 'required|numeric',
             'return_location_lon' => 'required|numeric',

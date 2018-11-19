@@ -150,7 +150,7 @@ class UsersController extends Controller
             $user->save();
         });
 
-        return redirect()->back()->with('success', 'User successfully created');
+        return redirect('/admin/users/' . $user->id)->with('success', 'User successfully created');
     }
 
     /**
