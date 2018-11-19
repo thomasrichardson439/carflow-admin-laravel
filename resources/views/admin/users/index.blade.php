@@ -2,8 +2,18 @@
 
 @section('content')
     <div class="container-fluid container-admin-list">
-        <h1 class="title">Users</h1>
-        <h4 class="subtitle">Edit and manually add users</h4>
+
+        <div class="row">
+            <div class="col-6">
+                <h1 class="title">Users</h1>
+                <h4 class="subtitle">Edit and manually add users</h4>
+            </div>
+            <div class="col-6 d-flex justify-content-end align-items-center">
+                <a href="{{ url('/admin/users/create') }}" class="btn btn-danger">
+                    <i class="fa fa-plus"></i> Add new user
+                </a>
+            </div>
+        </div>
 
         {!! grid([
             'dataProvider' => $dataProvider,

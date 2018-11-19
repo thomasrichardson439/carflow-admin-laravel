@@ -8,50 +8,53 @@ export default (function () {
         return;
     }
 
-    const inputs = $('input, select, textarea').not('[type=hidden]');
+    if ($('#edit').length > 0) {
 
-    /**
-     * Allows to switch edit mode
-     * @param {bool} on
-     */
-    const switchEdit = (on) => {
-        if (on) {
-            $('.edit-off').hide();
-            $('.edit-on').show();
+        const inputs = $('input, select, textarea').not('[type=hidden]');
 
-        } else {
-            $('.edit-on').hide();
-            $('.edit-off').show();
-        }
+        /**
+         * Allows to switch edit mode
+         * @param {bool} on
+         */
+        const switchEdit = (on) => {
+            if (on) {
+                $('.edit-off').hide();
+                $('.edit-on').show();
 
-        inputs.prop('disabled', !on);
-        inputs.each(function() {
-            $(this).closest('.input-group, .form-group').toggleClass('disabled', !on);
+            } else {
+                $('.edit-on').hide();
+                $('.edit-off').show();
+            }
+
+            inputs.prop('disabled', !on);
+            inputs.each(function () {
+                $(this).closest('.input-group, .form-group').toggleClass('disabled', !on);
+            });
+
+            $('.edit-has-changes').hide();
+        };
+
+        $('#edit').click(() => {
+            switchEdit(true);
+
+            // Switch to info section
+            $('.nav-link[href="#user-info"]').click();
         });
 
-        $('.edit-has-changes').hide();
-    };
+        $('#cancelChanges').click(() => {
+            switchEdit(false);
+        });
 
-    $('#edit').click(() => {
-        switchEdit(true);
+        inputs.on('change keyup', () => {
+            $('.edit-has-changes').show();
+        });
 
-        // Switch to info section
-        $('.nav-link[href="#user-info"]').click();
-    });
+        $('#save').click(function () {
+            let formSelector = $(this).data('form');
+            $(formSelector).submit();
+        });
 
-    $('#cancelChanges').click(() => {
-        switchEdit(false);
-    });
-
-    inputs.on('change keyup', () => {
-        $('.edit-has-changes').show();
-    });
-
-    $('#save').click(function () {
-        let formSelector = $(this).data('form');
-        $(formSelector).submit();
-    });
-
-    switchEdit(window.location.hash === '#edit');
+        switchEdit(window.location.hash === '#edit');
+    }
 
 })();

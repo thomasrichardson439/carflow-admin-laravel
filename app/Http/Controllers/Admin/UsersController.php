@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AwsHelper;
 use App\Mail\UserProfileReviewNotification;
 use App\Models\Booking;
+use App\Models\DrivingLicense;
+use App\Models\TLCLicense;
 use App\Models\UserProfileUpdate;
+use DB;
 use Mail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Woo\GridView\DataProviders\EloquentDataProvider;
-use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\Mail\UserRegistrationReviewNotification;
 
@@ -19,6 +22,16 @@ use App\Mail\UserRegistrationReviewNotification;
  */
 class UsersController extends Controller
 {
+    /**
+     * @var AwsHelper
+     */
+    private $awsHelper;
+
+    public function __construct()
+    {
+        $this->awsHelper = new AwsHelper();
+    }
+
     /**
      * Display a listing of the users in admin.
      *
@@ -44,18 +57,100 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.users.create', [
+            'defaultApps' => [
+                'Uber',
+                'Lyft',
+                'VIA',
+                'Gett',
+                'Juno',
+                'Curb',
+                'Arro',
+            ]
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'full_name' => 'required|min:2|max:100',
+            'address' => 'required|min:2|max:255',
+            'phone' => 'required|min:9|max:19',
+            'ridesharing_apps' => 'array',
+            'ridesharing_apps.*' => 'string',
+            'ridesharing_app_additional' => 'string|nullable',
+
+            'driving_license_front' => 'required|image',
+            'driving_license_back' => 'required|image',
+            'tlc_license_front' => 'required|image',
+            'tlc_license_back' => 'required|image',
+        ]);
+
+        $user = new User;
+
+        DB::transaction(function () use ($request, &$user) {
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->full_name = $request->full_name;
+            $user->address = $request->address;
+            $user->phone = $request->phone;
+            $user->status = \ConstUserStatus::PENDING;
+            $user->save();
+
+            $apps = $request->ridesharing_apps ?? [];
+
+            if (!empty($request->ridesharing_app_additional)) {
+                $apps = array_merge(
+                    $apps,
+                    array_filter(array_map('trim', explode(',', $request->ridesharing_app_additional)))
+                );
+            }
+
+            $user->ridesharing_apps = implode(', ', $apps);
+            $user->ridesharing_approved = !empty($apps);
+
+            $drivingLicense = new DrivingLicense;
+
+            $drivingLicense->front = $this->awsHelper->uploadToS3(
+                $request->file('driving_license_front'),
+                'users/driving_license/front_' . $user->id
+            );
+
+            $drivingLicense->back = $this->awsHelper->uploadToS3(
+                $request->file('driving_license_back'),
+                'users/driving_license/back_' . $user->id
+            );
+
+            $tlcLicense = new TLCLicense;
+
+            $tlcLicense->front = $this->awsHelper->uploadToS3(
+                $request->file('tlc_license_front'),
+                'users/tlc_license/front_' . $user->id
+            );
+
+            $tlcLicense->back = $this->awsHelper->uploadToS3(
+                $request->file('tlc_license_back'),
+                'users/tlc_license/back_' . $user->id
+            );
+
+            $user->drivingLicense()->save($drivingLicense);
+            $user->tlcLicense()->save($tlcLicense);
+
+            $user->documents_uploaded = 1;
+
+            $user->save();
+        });
+
+        return redirect()->back()->with('success', 'User successfully created');
     }
 
     /**
@@ -107,10 +202,6 @@ class UsersController extends Controller
             'ridesharing_apps' => 'array',
             'ridesharing_apps.*' => 'string',
             'ridesharing_app_additional' => 'string|nullable',
-            'driving_license_front' => 'image',
-            'driving_license_back' => 'image',
-            'tlc_license_front' => 'image',
-            'tlc_license_back' => 'image',
         ]);
 
         $apps = $request->ridesharing_apps ?? [];

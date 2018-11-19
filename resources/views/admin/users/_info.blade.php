@@ -66,12 +66,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="edit-off">
-                        <p class="text-muted">No photo uploaded</p>
-                    </div>
-                    <div class="edit-on">
-                        <input type="file" name="driving_license_front">
-                    </div>
+                    <p class="text-muted">No photo uploaded</p>
                 @endif
             </div>
             <hr>
@@ -90,12 +85,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="edit-off">
-                        <p class="text-muted">No photo uploaded</p>
-                    </div>
-                    <div class="edit-on">
-                        <input type="file" name="driving_license_back">
-                    </div>
+                    <p class="text-muted">No photo uploaded</p>
                 @endif
             </div>
         </div>
@@ -130,12 +120,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="edit-off">
-                        <p class="text-muted">No photo uploaded</p>
-                    </div>
-                    <div class="edit-on">
-                        <input type="file" name="tlc_license_front">
-                    </div>
+                    <p class="text-muted">No photo uploaded</p>
                 @endif
             </div>
             <hr>
@@ -154,12 +139,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="edit-off">
-                        <p class="text-muted">No photo uploaded</p>
-                    </div>
-                    <div class="edit-on">
-                        <input type="file" name="tlc_license_back">
-                    </div>
+                    <p class="text-muted">No photo uploaded</p>
                 @endif
             </div>
         </div>
