@@ -247,7 +247,7 @@ class UsersController extends Controller
 
         Mail::to($update->user->email)->send(new UserProfileReviewNotification($update->status));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->back()->with('success', 'Changes were rejected');
     }
 
     /**
@@ -281,16 +281,16 @@ class UsersController extends Controller
 
         Mail::to($update->user->email)->send(new UserProfileReviewNotification($update->status));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->back()->with('success', 'Changes were approved');
     }
 
     /**
-     * Reject user documents
+     * Reject user registration
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function rejectDocuments($id)
+    public function reject($id)
     {
         $user = User::findOrFail($id);
         $user->status = \ConstUserStatus::REJECTED;
@@ -299,16 +299,16 @@ class UsersController extends Controller
 
         Mail::to($user->email)->send(new UserRegistrationReviewNotification($user->status));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->back()->with('success', 'User successfully rejected');
     }
 
     /**
-     * Approve user documents
+     * Approve user registration
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function approveDocuments($id)
+    public function approve($id)
     {
         $user = User::findOrFail($id);
         $user->status = \ConstUserStatus::APPROVED;
@@ -317,6 +317,6 @@ class UsersController extends Controller
 
         Mail::to($user->email)->send(new UserRegistrationReviewNotification($user->status));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->back()->with('success', 'User successfully approved');
     }
 }

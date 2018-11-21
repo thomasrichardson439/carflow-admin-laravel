@@ -13,11 +13,13 @@ Route::group([
 
     Route::resource('users', 'UsersController');
 
-    Route::post('/approve/{id}', 'UsersController@approveDocuments');
-    Route::post('/reject/{id}', 'UsersController@rejectDocuments');
+    Route::group(['prefix' => 'users'], function () {
+        Route::post('approve/{id}', 'UsersController@approve');
+        Route::post('reject/{id}', 'UsersController@reject');
 
-    Route::post('/approve-profile-changes/{id}', 'UsersController@approveProfileChanges');
-    Route::post('/reject-profile-changes/{id}', 'UsersController@rejectProfileChanges');
+        Route::post('approve-profile-changes/{id}', 'UsersController@approveProfileChanges');
+        Route::post('reject-profile-changes/{id}', 'UsersController@rejectProfileChanges');
+    });
 
     Route::resource('cars', 'CarsController');
     Route::resource('receipts', 'ReceiptsController');

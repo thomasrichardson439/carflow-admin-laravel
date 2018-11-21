@@ -88,6 +88,17 @@
     padding: 15px;
     margin-bottom: 30px;
 
+    .form-group.highlighted {
+      input.form-control {
+        border-color: #fcc419;
+        box-shadow: 0 0 5px #fef3d1;
+
+        &:disabled {
+          background: #fef3d1;
+        }
+      }
+    }
+
     & > h4 {
       font-size: 14px;
       font-weight: bold;

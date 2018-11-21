@@ -34,7 +34,7 @@ export default class MapHelper {
         return new Promise((resolve, reject) => {
 
             $.ajax({
-                url: 'https://nominatim.openstreetmap.org/search?q=' + lat + ',' + lon + '&format=json&addressdetails=1'
+                url: 'https://nominatim.openstreetmap.org/search?q=' + lat + ',' + lon + '&format=json&addressdetails=1&accept-language=EN_us'
             }).done(function (response) {
                 resolve(response[0].display_name);
             });
@@ -71,7 +71,12 @@ export default class MapHelper {
      * @param lon
      */
     addMarker(lat, lon) {
-        let marker = Map.marker([lat, lon]);
+
+        var icon = new Map.Icon.Default();
+        icon.options.shadowSize = [0,0];
+
+        let marker = Map.marker([lat, lon], {icon: icon});
+
         marker.addTo(this.map);
 
         this.markers.push(marker);

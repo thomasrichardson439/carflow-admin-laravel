@@ -8,9 +8,9 @@
     <div class="col-4">
         <div class="form-card">
             <h4>Name</h4>
-            <div class="form-group">
+            <div @if(!empty($updateRequest->full_name)) data-toggle="tooltip" title="Old value: {{ $user->full_name }}" class="form-group highlighted" @else class="form-group" @endif >
                 <label>Full name</label>
-                <input type="text" name="full_name" value="{{ old('full_name', $user->full_name) }}" class="form-control">
+                <input type="text" name="full_name" value="{{ old('full_name', !empty($updateRequest->full_name) ? $updateRequest->full_name : $user->full_name) }}" class="form-control">
             </div>
         </div>
     </div>
@@ -18,13 +18,13 @@
     <div class="col-4">
         <div class="form-card">
             <h4>Contact</h4>
-            <div class="form-group">
+            <div @if(!empty($updateRequest->email)) data-toggle="tooltip" title="Old value: {{ $user->email }}" class="form-group highlighted" @else class="form-group" @endif >
                 <label>Email</label>
-                <input type="text" name="email" value="{{ old('email', $user->email) }}" class="form-control">
+                <input type="text" name="email" value="{{ old('email', !empty($updateRequest->email) ? $updateRequest->email : $user->email) }}" class="form-control">
             </div>
-            <div class="form-group">
+            <div @if(!empty($updateRequest->phone)) data-toggle="tooltip" title="Old value: {{ $user->phone }}" class="form-group highlighted" @else class="form-group" @endif >
                 <label>Phone</label>
-                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
+                <input type="text" name="phone" value="{{ old('phone', !empty($updateRequest->phone) ? $updateRequest->phone : $user->phone) }}" class="form-control">
             </div>
         </div>
     </div>
@@ -32,9 +32,9 @@
     <div class="col-4">
         <div class="form-card">
             <h4>Address</h4>
-            <div class="form-group">
+            <div @if(!empty($updateRequest->address)) data-toggle="tooltip" title="Old value: {{ $user->address }}" class="form-group highlighted" @else class="form-group" @endif >
                 <label>Address</label>
-                <input type="text" name="address" value="{{ old('address', $user->address) }}" class="form-control">
+                <input type="text" name="address" value="{{ old('address', !empty($updateRequest->address) ? $updateRequest->address : $user->address) }}" class="form-control">
             </div>
         </div>
     </div>

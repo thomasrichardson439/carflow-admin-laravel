@@ -3,6 +3,13 @@
 /** @var $user \App\Models\User */
 /** @var $profileUpdateRequest \App\Models\UserProfileUpdate */
 
+
+if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\Models\UserProfileUpdate::STATUS_PENDING) {
+    $updateRequest = $user->profileUpdateRequest;
+} else {
+    $updateRequest = null;
+}
+
 @endphp
 
 @extends('layouts.admin')
@@ -68,30 +75,37 @@
                                 <p>Account was created {{ $user->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
                             </div>
                             <div class="col-6 d-flex justify-content-end align-items-center">
-                                <form action="/admin/approve/{{$user->id}}" method="post">
+                                <form action="/admin/users/approve/{{$user->id}}" method="post">
                                     @csrf
                                     <button type="submit" class="btn btn-success mR-10">Accept user</button>
                                 </form>
 
-                                <form action="/admin/reject/{{$user->id}}" method="post">
+                                <form action="/admin/users/reject/{{$user->id}}" method="post">
                                     @csrf
-                                    <button type="submit" class="btn btn-default">Reject user</button>
+                                    <button type="submit" class="btn btn-light-gray">Reject user</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 @endif
 
-                @if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\Models\UserProfileUpdate::STATUS_PENDING)
+                @if (!empty($updateRequest))
                     <div class="alert alert-soft-danger mb-3">
                         <div class="row">
                             <div class="col-6">
                                 <h3>Pending profile changes approval</h3>
-                                <p>Request was made {{ $user->profileUpdateRequest->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
+                                <p>Request was made {{ $updateRequest->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
                             </div>
                             <div class="col-6 d-flex justify-content-end align-items-center">
-                                <a href="#" class="btn btn-success">Approve changes</a>
-                                <a href="#" class="btn btn-default">Reject changes</a>
+                                <form action="/admin/users/approve-profile-changes/{{$updateRequest->id}}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success mR-10">Approve changes</button>
+                                </form>
+
+                                <form action="/admin/users/reject-profile-changes/{{$updateRequest->id}}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-light-gray">Reject changes</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -153,5 +167,4 @@
             });
         });
     </script>
-
 @endpush
