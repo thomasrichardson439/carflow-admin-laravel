@@ -56,6 +56,8 @@ export default function carsShow(create) {
 
         map.locateAddress(e.lat, e.lon).then(function(address) {
             inputs.full_location.val(address);
+        }, function() {
+            inputs.full_location.val('Unable to fetch address. Please pick another location');
         });
     });
 

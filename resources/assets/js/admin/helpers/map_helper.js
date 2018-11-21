@@ -36,6 +36,16 @@ export default class MapHelper {
             $.ajax({
                 url: 'https://nominatim.openstreetmap.org/search?q=' + lat + ',' + lon + '&format=json&addressdetails=1&accept-language=EN_us'
             }).done(function (response) {
+
+                if (!response[0].address) {
+                    reject();
+                    return;
+                }
+
+                let address = response[0].address;
+
+                resolve(address.house_number + ' ' + address.road + ', ' + address.city + ', ' + address.state + ', ' + address.postcode);
+
                 resolve(response[0].display_name);
             });
         });
@@ -90,6 +100,4 @@ export default class MapHelper {
             marker.removeFrom(this.map);
         });
     }
-
-
 }
