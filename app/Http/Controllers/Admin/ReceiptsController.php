@@ -110,7 +110,10 @@ class ReceiptsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $receipt = BookingReceipt::query()->findOrFail($id);
+        $receipt->delete();
+
+        return redirect('/admin/receipts')->with('success', 'Receipt successfully deleted');
     }
 
 }

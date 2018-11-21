@@ -5,6 +5,8 @@
         <h1 class="title">Receipts</h1>
         <h4 class="subtitle">Review and manually add receipts</h4>
 
+        @include('admin._alerts')
+
         {!! grid([
             'dataProvider' => $dataProvider,
             'rowsPerPage' => 20,
@@ -49,7 +51,7 @@
                         return [
                             'show' => url('admin/receipts/' . $model->id),
                             'edit' => url('admin/receipts/' . $model->id . '#edit'),
-                            'delete' => url('admin/receipts/' . $model->id . '/delete'),
+                            'delete' => url('admin/receipts/' . $model->id),
                         ];
                     }
                 ]

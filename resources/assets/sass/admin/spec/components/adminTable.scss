@@ -30,6 +30,18 @@
           color: #ccd1d6;
           margin-left: 5px;
         }
+
+        .deleteForm {
+          display: inline;
+
+          .deleteButton {
+            background: none;
+            border: 0;
+            color: #f14449;
+            display: inline;
+            padding: 0;
+          }
+        }
       }
     }
   }

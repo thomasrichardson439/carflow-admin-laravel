@@ -228,9 +228,11 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $user = User::query()->findOrFail($id);
+        $user->delete();
 
+        return redirect('/admin/users')->with('success', 'User successfully deleted');
+    }
 
     /**
      * Reject profile changes

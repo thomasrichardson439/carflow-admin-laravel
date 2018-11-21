@@ -18,6 +18,153 @@ use Illuminate\Database\Eloquent\Collection;
 trait CarsAvailabilityTrait
 {
     /**
+     * Updates car availabilities
+     * @param int $carId
+     * @param array $recurring
+     * @param array $onetime
+     * @param array $deleted
+     */
+    public function updateAvailabilities(int $carId, array $recurring, array $onetime, array $deleted)
+    {
+        foreach ($recurring as $id => $slot) {
+            if ($id < 0) {
+                $model = new CarAvailabilitySlot();
+                $model->fill([
+                    'car_id' => $carId,
+                    'availability_type' => CarAvailabilitySlot::TYPE_RECURRING,
+                ]);
+
+            } else {
+                $model = CarAvailabilitySlot::query()->where('id', $id)->firstOrFail();
+            }
+
+            $model->fill([
+                'available_at_recurring' => $slot['day'],
+                'available_hour_from' => $slot['hour_from'] . ':00',
+                'available_hour_to' => $slot['hour_to'] . ':00',
+            ]);
+
+            $model->save();
+        }
+
+        foreach ($onetime as $id => $slot) {
+            if ($id < 0) {
+                $model = new CarAvailabilitySlot();
+                $model->fill([
+                    'car_id' => $carId,
+                    'availability_type' => CarAvailabilitySlot::TYPE_ONE_TIME,
+                ]);
+
+            } else {
+                $model = CarAvailabilitySlot::query()->where('id', $id)->firstOrFail();
+            }
+
+            $model->fill([
+                'available_at' => Carbon::parse($slot['date']),
+                'available_hour_from' => $slot['hour_from'] . ':00',
+                'available_hour_to' => $slot['hour_to'] . ':00',
+            ]);
+
+            $model->save();
+        }
+
+        CarAvailabilitySlot::query()
+            ->whereIn('id', $deleted)
+            ->where('car_id', $carId)
+            ->delete();
+    }
+
+    /**
+     * Preparing availability view for admin
+     * @param Car $car
+     * @return array
+     */
+    public function prepareAvailabilityView(Car $car)
+    {
+        $availability = [
+            'recurring' => [],
+            'onetime' => [],
+        ];
+
+        foreach ($car->availabilitySlots as $slot) {
+            $result = [
+                'id' => $slot->id,
+                'hourFrom' => Carbon::parse($slot->available_hour_from)->hour,
+                'hourTo' => Carbon::parse($slot->available_hour_to)->hour,
+            ];
+
+            switch ($slot->availability_type) {
+                case CarAvailabilitySlot::TYPE_RECURRING:
+                    $result['day'] = $slot->available_at_recurring;
+                    $availability['recurring'][] = $result;
+                    break;
+
+                case CarAvailabilitySlot::TYPE_ONE_TIME:
+                    $result['date'] = $slot->available_at->format('m/d/Y');
+                    $availability['onetime'][] = $result;
+                    break;
+            }
+        }
+
+        return $availability;
+    }
+
+    /**
+     * Allows to check if slots intersects
+     * @param array $slots
+     * @return bool
+     */
+    private function hoursAreIntersect(array $slots)
+    {
+        if (count($slots) == 1) {
+            false;
+        }
+
+        $tmp = [];
+
+        foreach ($slots as $slot) {
+            $tmp = array_merge($tmp, $slot);
+        }
+
+        $unique = array_unique($tmp);
+
+        return count($unique) != count($tmp);
+    }
+
+    /**
+     * Validates availability list
+     * @return bool
+     */
+    public function validateAvailabilityList(array $recurring, array $onetime) : bool
+    {
+        $tmp = [];
+
+        foreach ($recurring as $slot) {
+            $tmp[$slot['day']][] = range($slot['hour_from'], $slot['hour_to']);
+        }
+
+        foreach ($onetime as $slot) {
+
+            $key = strtolower(Carbon::parse($slot['date'])->format('l'));
+
+            $tmp[$key][] = range($slot['hour_from'], $slot['hour_to']);
+        }
+
+        foreach ($tmp as $hourSlots) {
+
+            if (count($hourSlots) == 1) {
+                continue;
+            }
+
+            if ($this->hoursAreIntersect($hourSlots)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Allows to check if car is available within needed hours
      * It also sticks together intervals which has no breaks between
      * @param int $carId

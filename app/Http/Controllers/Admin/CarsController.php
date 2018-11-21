@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\AwsHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Borough;
 use App\Models\Car;
+use App\Models\CarAvailabilitySlot;
 use App\Models\CarCategory;
 use App\Models\CarManufacturer;
+use App\Repositories\CarsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Woo\GridView\DataProviders\EloquentDataProvider;
 
@@ -18,9 +22,15 @@ class CarsController extends Controller
      */
     private $awsHelper;
 
+    /**
+     * @var CarsRepository
+     */
+    private $carsRepository;
+
     public function __construct()
     {
         $this->awsHelper = new AwsHelper();
+        $this->carsRepository = new CarsRepository();
     }
 
     public function index()
@@ -105,13 +115,26 @@ class CarsController extends Controller
      */
     public function show($id)
     {
+        /**
+         * @var Car $car
+         */
         $car = Car::query()->findOrFail($id);
+
+        $availability = [
+            'recurring' => old('recurring', []),
+            'onetime' => old('onetime', []),
+        ];
+
+        if (empty($availability['recurring'] && empty($availability['onetime']))) {
+            $availability = $this->carsRepository->prepareAvailabilityView($car);
+        }
 
         return view('admin.cars.show', [
             'car' => $car,
             'carCategories' => CarCategory::all(),
             'carManufacturers' => CarManufacturer::all(),
             'boroughs' => Borough::all(),
+            'availability' => $availability,
         ]);
     }
 
@@ -147,7 +170,27 @@ class CarsController extends Controller
             'pickup_location_lat' => 'required|numeric',
             'pickup_location_lon' => 'required|numeric',
             'full_pickup_location' => 'required|string|max:255',
+
+            'recurring' => 'required|array',
+            'onetime' => 'array',
+            'deletedAvailability' => 'array',
+
+            'recurring.*.day' => 'required|string',
+            'recurring.*.hour_from' => 'required|string',
+            'recurring.*.hour_to' => 'required|string',
+
+            'onetime.*.date' => 'required|date|date_format:"m/d/Y"',
+            'onetime.*.hour_from' => 'required|string',
+            'onetime.*.hour_to' => 'required|string',
         ]);
+
+        if (!$this->carsRepository->validateAvailabilityList($request->recurring, $request->get('onetime', []))) {
+            $error = \Illuminate\Validation\ValidationException::withMessages([
+                'recurring' => ['Please check availability intervals. Seem to be some of them are interfering'],
+            ]);
+
+            throw $error;
+        }
 
         $data = $request->all();
 
@@ -162,18 +205,36 @@ class CarsController extends Controller
         $car->fill($data);
         $car->saveOrFail();
 
+        $this->carsRepository->updateAvailabilities(
+            $car->id,
+            $request->recurring,
+            $request->get('onetime', []),
+            $request->get('deletedAvailability', [])
+        );
+
         return redirect()->back()->with('success', 'Car successfully updated');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy($id)
     {
-        //
+        /**
+         * @var Car $car
+         */
+        $car = Car::query()->findOrFail($id);
+        $car->delete();
+
+        $car->bookings()->where('status', Booking::STATUS_PENDING)->update([
+            'status' => Booking::STATUS_CANCELED
+        ]);
+
+        return redirect('/admin/cars')->with('success', 'Car successfully deleted');
     }
 
 }

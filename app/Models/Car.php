@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Car
@@ -34,9 +35,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property CarAvailabilitySlot[] $availabilitySlots
  * @property CarManufacturer $manufacturer
  * @property CarCategory $category
+ * @property Booking[] $bookings
  */
 class Car extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'cars';
 
     protected $dates = [
@@ -102,6 +106,14 @@ class Car extends Model
         'category',
         'availabilitySlots',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

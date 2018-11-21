@@ -15,6 +15,8 @@
             </div>
         </div>
 
+        @include('admin._alerts')
+
         {!! grid([
             'dataProvider' => $dataProvider,
             'rowsPerPage' => 20,
@@ -92,7 +94,7 @@
                         return [
                             'show' => url('admin/users/' . $model->id),
                             'edit' => url('admin/users/' . $model->id . '#edit'),
-                            'delete' => url('admin/users/' . $model->id . '/delete'),
+                            'delete' => url('admin/users/' . $model->id),
                         ];
                     }
                 ]

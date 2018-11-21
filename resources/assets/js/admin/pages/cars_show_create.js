@@ -4,6 +4,33 @@ import MapHelper from "../helpers/map_helper";
 import Vue from 'vue';
 import moment from 'moment';
 
+function generateTimeSlots(minute) {
+
+    let slots = {0: '12:' + minute + ' AM'}
+
+    for (let i = 1; i <= 23; i++) {
+
+        let _i = i;
+
+        if (i === 12) {
+            slots[12] = '12:' + minute + ' PM';
+            continue;
+        }
+
+        if (_i > 12) {
+            _i -= 12;
+        }
+
+        if (_i < 10) {
+            _i = '0' + _i.toString();
+        }
+
+        slots[i] = _i + ':' + minute + ' ' + (i > 12 ? 'PM' : 'AM');
+    }
+
+    return slots;
+}
+
 export default function carsShow(create) {
 
     let map = new MapHelper('locationMap');
@@ -56,29 +83,29 @@ export default function carsShow(create) {
     if (!create) {
 
         let data = {
-            recurring: [
-                {
-                    id: 1,
-                    day: 'Monday',
-                    hourFrom: '12:00AM',
-                    hourTo: '00:00PM',
-                },
-                {
-                    id: 2,
-                    day: 'Tuesday',
-                    hourFrom: '12:00AM',
-                    hourTo: '00:00PM',
-                }
-            ],
-            onetime: [
-                {
-                    id: 2,
-                    date: '2010-10-10',
-                    hourFrom: '12:00AM',
-                    hourTo: '00:00PM',
-                }
-            ]
+            recurring: window.carAvailabilitySlots.recurring,
+            onetime: window.carAvailabilitySlots.onetime,
+            editOn: false,
+
+            timeSlots: generateTimeSlots('00'),
+            timeSlotsTo: generateTimeSlots('59'),
+
+            daysOfWeek: {
+                monday: 'Monday',
+                tuesday: 'Tuesday',
+                wednesday: 'Wednesday',
+                thursday: 'Thursday',
+                friday: 'Friday',
+                saturday: 'Saturday',
+                sunday: 'Sunday',
+            },
+
+            deletedAvailability: [],
         };
+
+        $('#edit').on('edit-mode-changed', function(event, editOn) {
+            data.editOn = editOn;
+        });
 
         let extraId = -1;
 
@@ -91,21 +118,25 @@ export default function carsShow(create) {
                         id: extraId--,
                         day: 'monday',
                         hourFrom: '12:00AM',
-                        hourTo: '12:00PM',
+                        hourTo: '11:59:PM',
                     });
                 },
                 addOneTime: function() {
                     data.onetime.push({
                         id: extraId--,
-                        date: moment().format('YYYY-MM-DD'),
+                        date: moment().format('MM/DD/YYYY'),
                         hourFrom: '12:00AM',
-                        hourTo: '12:00PM',
+                        hourTo: '11:59PM',
                     });
                 },
                 removeRecurring: function(index) {
+
+                    data.deletedAvailability.push(data.recurring[index].id);
                     data.recurring.splice(index, 1);
                 },
                 removeOnetime: function(index) {
+
+                    data.deletedAvailability.push(data.onetime[index].id);
                     data.onetime.splice(index, 1);
                 }
             }

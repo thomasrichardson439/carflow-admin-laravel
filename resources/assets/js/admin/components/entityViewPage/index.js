@@ -4,13 +4,25 @@ import * as $ from 'jquery';
 
 export default (function () {
 
-    if ($('.container-admin-form').length == 0) {
+    const editButton = $('#edit');
+    const deleteButton = $('#delete');
+    const formPageContainer = $('.container-admin-form');
+
+    if (formPageContainer.length === 0) {
         return;
     }
 
-    if ($('#edit').length > 0) {
+    if (deleteButton.length > 0) {
+        deleteButton.click(function(e) {
+            if (!confirm('Are you sure want to delete this item?')) {
+                e.preventDefault();
+            }
+        });
+    }
 
-        const inputs = $('input, select, textarea').not('[type=hidden]');
+    if (editButton.length > 0) {
+
+        const inputs = $('input, select, textarea').not('[type=hidden]').not('.non-disabling');
 
         /**
          * Allows to switch edit mode
@@ -32,9 +44,11 @@ export default (function () {
             });
 
             $('.edit-has-changes').hide();
+
+            editButton.trigger('edit-mode-changed', on);
         };
 
-        $('#edit').click(() => {
+        editButton.click(() => {
             switchEdit(true);
 
             // Switch to info section

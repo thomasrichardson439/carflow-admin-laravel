@@ -14,6 +14,8 @@
             </div>
         </div>
 
+        @include('admin._alerts')
+
         {!! grid([
             'dataProvider' => $dataProvider,
             'rowsPerPage' => 20,
@@ -51,7 +53,7 @@
                         return [
                             'show' => url('admin/cars/' . $model->id),
                             'edit' => url('admin/cars/' . $model->id . '#edit'),
-                            'delete' => url('admin/cars/' . $model->id . '/delete'),
+                            'delete' => url('admin/cars/' . $model->id),
                         ];
                     }
                 ]

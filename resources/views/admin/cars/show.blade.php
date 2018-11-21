@@ -25,7 +25,13 @@
                     <div class="col-6 d-flex justify-content-end">
                         <div class="edit-off edit-buttons">
                             <a href="#" class="btn btn-gray" id="edit">Edit</a>
-                            <a href="#" class="btn btn-gray">Delete</a>
+
+                            <form action="{{ url('/admin/cars/' . $car->id) }}" method="post">
+                                {{csrf_field()}}
+                                {{ method_field('DELETE') }}
+
+                                <button type="submit" class="btn btn-gray" id="delete">Delete</button>
+                            </form>
                         </div>
                         <div class="edit-on edit-buttons">
                             <p class="muted edit-has-changes">Unsaved changes</p>
