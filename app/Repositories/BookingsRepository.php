@@ -40,11 +40,8 @@ class BookingsRepository extends BaseRepository
             ->where(['car_id' => $carId])
             ->where(function(Builder $query) use ($start, $end) {
                 $query->where(function (Builder $query) use ($start, $end) {
-                    $query->where('booking_starting_at', '<=', $start);
-                    $query->where('booking_ending_at', '>=', $start);
-
-                    $query->orWhere('booking_starting_at', '<=', $end);
-                    $query->where('booking_ending_at', '>=', $end);
+                    $query->orWhereBetween('booking_starting_at', [$start, $end]);
+                    $query->orWhereBetween('booking_ending_at', [$start, $end]);
                 })
                 ->orWhere(function (Builder $query) use ($start, $end) {
                     $query->where([

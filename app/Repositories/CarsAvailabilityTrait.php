@@ -279,7 +279,7 @@ trait CarsAvailabilityTrait
                     break;
 
                 case CarAvailabilitySlot::TYPE_ONE_TIME:
-                    $slots[$slot->car_id][$slot->available_at][] = $slot;
+                    $slots[$slot->car_id][$slot->available_at->format('Y-m-d')][] = $slot;
                     break;
             }
         }
@@ -351,21 +351,23 @@ trait CarsAvailabilityTrait
     /**
      * Allows to build calendar of bookings for comparing to availability
      * @param array|int $carIds
-     * @param Carbon $from
-     * @param Carbon $to
+     * @param Carbon $start
+     * @param Carbon $end
      * @return array
      */
-    public function bookingCalendar($carIds, Carbon $from, Carbon $to) : array
+    public function bookingCalendar($carIds, Carbon $start, Carbon $end) : array
     {
         $carIds = (array)$carIds;
 
         $bookings = Booking::query()
             ->whereIn('car_id', $carIds)
             ->where('status', '!=', Booking::STATUS_CANCELED)
-            ->where(function(Builder $query) use ($from, $to) {
+            ->where(function(Builder $query) use ($start, $end) {
 
-                $query->where('booking_starting_at', '>=', $from)
-                      ->where('booking_ending_at', '<=', $to);
+                $query->where(function (Builder $query) use ($start, $end) {
+                    $query->orWhereBetween('booking_starting_at', [$start, $end]);
+                    $query->orWhereBetween('booking_ending_at', [$start, $end]);
+                });
 
                 $query->orWhere('is_recurring', 1);
             })
@@ -421,9 +423,9 @@ trait CarsAvailabilityTrait
         /**
          * Merge recurring bookings with one-time into resulting calendar
          */
-        $walkThroughDate = clone $from;
+        $walkThroughDate = clone $start;
 
-        while ($walkThroughDate->lessThan($to)) {
+        while ($walkThroughDate->lessThan($end)) {
 
             $ymd = $walkThroughDate->format('Y-m-d');
             $weekDay = $walkThroughDate->format('l');
@@ -448,6 +450,12 @@ trait CarsAvailabilityTrait
      */
     public function checkAvailability(array $availability, array $booked)
     {
+        $sum = array_sum(array_map('count', $availability));
+
+        if ($sum == 0) {
+            return false;
+        }
+
         if (empty($booked)) {
             return true;
         }
@@ -493,6 +501,7 @@ trait CarsAvailabilityTrait
         $filteredCarIds = [];
 
         foreach ($available as $carId => $dates) {
+
             if ($this->checkAvailability($dates, $booked[$carId] ?? [])) {
                 $filteredCarIds[] = $carId;
             }
