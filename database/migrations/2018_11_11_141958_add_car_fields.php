@@ -14,7 +14,7 @@ class AddCarFields extends Migration
     public function up()
     {
         Schema::table('cars', function(Blueprint $table) {
-            $table->string('owner')->notNull()->default('Car flow');
+            $table->string('owner')->notNull()->default('Car flo');
             $table->integer('seats')->notNull()->default(5);
             $table->string('policy_number')->nullable();
         });

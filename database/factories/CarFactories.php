@@ -28,7 +28,7 @@ $factory->define(App\Models\Car::class, function (Faker $faker) {
         'return_location_lat' => $faker->numberBetween(33000, 35000) / 1000,
         'return_location_lon' => -1 * $faker->numberBetween(104000, 108000) / 1000,
         'allowed_recurring' => rand(0, 1),
-        'owner' => 'Car Flow',
+        'owner' => 'Car Flo',
         'seats' => rand(2, 7),
         'policy_number' => 'SN' . rand(10000, 99999) . rand(10000, 99999),
     ];

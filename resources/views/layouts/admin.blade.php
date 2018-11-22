@@ -6,7 +6,7 @@
     <link rel="shortcut icon" type="image/ico" href="/favicon.ico">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@stack('title', 'Car Flow')</title>
+    <title>@stack('title', 'Car Flo')</title>
 
     <link rel="stylesheet" href="{{ asset('/css/admin.css') }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -97,7 +97,7 @@
                 </main>
 
                 <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
-                  <span>Copyright © 2018 Car Flow. All rights reserved.</span>
+                  <span>Copyright © 2018 Car Flo. All rights reserved.</span>
                 </footer>
               </div>
          @endguest

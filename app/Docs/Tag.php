@@ -1,6 +1,6 @@
 <?php
 /**
- * @OA\Info(title="Car Flow", version="0.1")
+ * @OA\Info(title="Car Flo", version="0.1")
  *
  * @OA\Tag(
  *   name="auth",
