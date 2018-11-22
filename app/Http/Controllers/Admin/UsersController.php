@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\AwsHelper;
+use App\Mail\UserPolicyNotification;
 use App\Mail\UserProfileReviewNotification;
 use App\Models\Booking;
 use App\Models\DrivingLicense;
@@ -297,7 +298,9 @@ class UsersController extends Controller
         $user->documents_uploaded = 0;
         $user->save();
 
-        Mail::to($user->email)->send(new UserRegistrationReviewNotification($user->status));
+        Mail::to($user->email)->send(
+            new UserRegistrationReviewNotification($user->status)
+        );
 
         return redirect()->back()->with('success', 'User successfully rejected');
     }
@@ -311,12 +314,39 @@ class UsersController extends Controller
     public function approve($id)
     {
         $user = User::findOrFail($id);
+
         $user->status = \ConstUserStatus::APPROVED;
         $user->documents_uploaded = 1;
         $user->save();
 
-        Mail::to($user->email)->send(new UserRegistrationReviewNotification($user->status));
+        Mail::to($user->email)->send(
+            new UserRegistrationReviewNotification($user->status)
+        );
 
         return redirect()->back()->with('success', 'User successfully approved');
+    }
+
+    /**
+     * Sends policy email
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function policy($id, Request $request)
+    {
+        $user = User::findOrFail($id);
+
+        $this->validate($request, [
+            'policy_number' => 'required|string|max:255',
+        ]);
+
+        Mail::to(config('params.userPolicyManagerEmail'))->send(
+            new UserPolicyNotification($request->policy_number, $user)
+        );
+
+        $user->policy_number = $request->policy_number;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Policy number added. Notification sent.');
     }
 }

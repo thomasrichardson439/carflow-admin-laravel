@@ -75,12 +75,12 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
                                 <p>Account was created {{ $user->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
                             </div>
                             <div class="col-6 d-flex justify-content-end align-items-center">
-                                <form action="/admin/users/approve/{{$user->id}}" method="post">
+                                <form action="/admin/users/{{$user->id}}/approve" method="post">
                                     @csrf
                                     <button type="submit" class="btn btn-success mR-10">Accept user</button>
                                 </form>
 
-                                <form action="/admin/users/reject/{{$user->id}}" method="post">
+                                <form action="/admin/users/{{$user->id}}/reject" method="post">
                                     @csrf
                                     <button type="submit" class="btn btn-light-gray">Reject user</button>
                                 </form>
@@ -97,12 +97,12 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
                                 <p>Request was made {{ $updateRequest->created_at->diffForHumans(now(), true) }} ago and waiting for your approval</p>
                             </div>
                             <div class="col-6 d-flex justify-content-end align-items-center">
-                                <form action="/admin/users/approve-profile-changes/{{$updateRequest->id}}" method="post">
+                                <form action="/admin/users/{{$updateRequest->id}}/approve-profile-changes" method="post">
                                     @csrf
                                     <button type="submit" class="btn btn-success mR-10">Approve changes</button>
                                 </form>
 
-                                <form action="/admin/users/reject-profile-changes/{{$updateRequest->id}}" method="post">
+                                <form action="/admin/users/{{$updateRequest->id}}/reject-profile-changes" method="post">
                                     @csrf
                                     <button type="submit" class="btn btn-light-gray">Reject changes</button>
                                 </form>
@@ -124,21 +124,18 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
                     </div>
                 </div>
 
-                <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-form" enctype="multipart/form-data">
-                    {{csrf_field()}}
-                    {{ method_field('PATCH') }}
 
-                    <div class="tab-content">
+                <div class="tab-content">
 
-                        <div class="tab-pane" id="user-bookings">
-                            @include('admin.users._bookings')
-                        </div>
-
-                        <div class="tab-pane active" id="user-info">
-                            @include('admin.users._info')
-                        </div>
+                    <div class="tab-pane" id="user-bookings">
+                        @include('admin.users._bookings')
                     </div>
-                </form>
+
+                    <div class="tab-pane active" id="user-info">
+                        @include('admin.users._form')
+                        @include('admin.users._info')
+                    </div>
+                </div>
             </div>
         </div>
     </div>

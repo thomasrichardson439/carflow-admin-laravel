@@ -60,6 +60,11 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'appOwner' => [
+        'address' => 'kylef@carflo.co',
+        'name' => 'Carl Nowicki',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol

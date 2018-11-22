@@ -41,6 +41,7 @@ use Laravel\Passport\HasApiTokens;
  * @property int $documents_uploaded
  * @property int $ridesharing_approved
  * @property string|null $remember_token
+ * @property string $policy_number
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -89,7 +90,8 @@ class User extends Authenticatable
         'step',
         'status',
         'uber_approved',
-        'photo'
+        'photo',
+        'policy_number',
     ];
 
     /**
