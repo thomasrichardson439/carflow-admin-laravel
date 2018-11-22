@@ -45,7 +45,7 @@ export default (function () {
 
             $('.edit-has-changes').hide();
 
-            editButton.trigger('edit-mode-changed', on);
+            editButton.trigger('edit-mode-changed', on).attr('edit-on', on ? 1 : 0);
         };
 
         editButton.click(() => {

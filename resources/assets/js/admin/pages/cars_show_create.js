@@ -84,10 +84,12 @@ export default function carsShow(create) {
 
     if (!create) {
 
+        let editButton = $('#edit');
+
         let data = {
             recurring: window.carAvailabilitySlots.recurring,
             onetime: window.carAvailabilitySlots.onetime,
-            editOn: false,
+            editOn: editButton.attr('edit-on') === '1',
 
             timeSlots: generateTimeSlots('00'),
             timeSlotsTo: generateTimeSlots('59'),
@@ -105,7 +107,7 @@ export default function carsShow(create) {
             deletedAvailability: [],
         };
 
-        $('#edit').on('edit-mode-changed', function(event, editOn) {
+        editButton.on('edit-mode-changed', function(event, editOn) {
             data.editOn = editOn;
         });
 
