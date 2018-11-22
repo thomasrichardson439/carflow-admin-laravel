@@ -240,13 +240,19 @@ class UsersController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function rejectProfileChanges($id)
+    public function rejectProfileChanges($id, Request $request)
     {
         $update = UserProfileUpdate::query()->findOrFail($id);
 
+        $this->validate($request, [
+            'reject_reason' => 'required',
+        ]);
+
         $update->setAttribute('status', UserProfileUpdate::STATUS_REJECTED)->save();
 
-        Mail::to($update->user->email)->send(new UserProfileReviewNotification($update->status));
+        Mail::to($update->user->email)->send(
+            new UserProfileReviewNotification($update->user, $update->status, $request->reject_reason)
+        );
 
         return redirect()->back()->with('success', 'Changes were rejected');
     }
@@ -280,7 +286,9 @@ class UsersController extends Controller
 
         $update->user->save();
 
-        Mail::to($update->user->email)->send(new UserProfileReviewNotification($update->status));
+        Mail::to($update->user->email)->send(
+            new UserProfileReviewNotification($update->user, $update->status)
+        );
 
         return redirect()->back()->with('success', 'Changes were approved');
     }
@@ -291,15 +299,20 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function reject($id)
+    public function reject($id, Request $request)
     {
         $user = User::findOrFail($id);
+
+        $this->validate($request, [
+            'reject_reason' => 'required',
+        ]);
+
         $user->status = \ConstUserStatus::REJECTED;
         $user->documents_uploaded = 0;
         $user->save();
 
         Mail::to($user->email)->send(
-            new UserRegistrationReviewNotification($user->status)
+            new UserRegistrationReviewNotification($user, $user->status, $request->reject_reason)
         );
 
         return redirect()->back()->with('success', 'User successfully rejected');
@@ -320,7 +333,7 @@ class UsersController extends Controller
         $user->save();
 
         Mail::to($user->email)->send(
-            new UserRegistrationReviewNotification($user->status)
+            new UserRegistrationReviewNotification($user, $user->status, 'Dummy reason')
         );
 
         return redirect()->back()->with('success', 'User successfully approved');

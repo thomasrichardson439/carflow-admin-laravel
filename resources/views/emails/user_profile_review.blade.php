@@ -1,25 +1,17 @@
-@component('mail::message')
+@component('layouts.email-carflow')
 
-    Hello!<br>
-    <br>
+    <h4 class="subtitle">ACCOUNT STATUS</h4>
 
     @if ($newUpdateStatus == \App\Models\UserProfileUpdate::STATUS_APPROVED)
-        Your profile changes were approved!
-        Profile data is updated.
+        <p>Congrats Kevin!<br>
+            You're account changes was approved. Your profile is now updated.
+        </p>
     @endif
 
     @if ($newUpdateStatus == \App\Models\UserProfileUpdate::STATUS_REJECTED)
-        Your profile changes were rejected!
-        Old profile data was restored.
+        <p>Hello Kevin!<br>
+            Unfortunately, your account changes was denided. Reason: <i>{{ $rejectReason }}</i></p>
     @endif
-
-    <br>
-    <br>
-    <br>
-    Best regards,<br>
-    <br>
-    CarFlow<br>
-    <br>
 
 @endcomponent
 

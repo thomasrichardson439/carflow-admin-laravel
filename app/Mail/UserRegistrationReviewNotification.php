@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,16 +12,30 @@ class UserRegistrationReviewNotification extends Mailable
     use Queueable, SerializesModels;
 
     /**
+     * @var User
+     */
+    private $user;
+
+    /**
      * @var string
      */
-    protected $newUserStatus;
+    private $newUserStatus;
+
+    /**
+     * @var string
+     */
+    private $rejectReason;
 
     /**
      * Create a new message instance.
+     * @param string $newUserStatus
+     * @param string $rejectReason
      */
-    public function __construct(string $newUserStatus)
+    public function __construct(User $user, string $newUserStatus, string $rejectReason = '')
     {
+        $this->user = $user;
         $this->newUserStatus = $newUserStatus;
+        $this->rejectReason = $rejectReason;
     }
 
     /**
@@ -32,9 +47,13 @@ class UserRegistrationReviewNotification extends Mailable
     {
         return $this->from(config('mail.from.address'), config('mail.from.name'))
             ->subject('CarFlow - Account registration status')
-            ->markdown(
+            ->view(
                 'emails.user_review',
-                ['newUserStatus' => $this->newUserStatus]
+                [
+                    'user' => $this->user,
+                    'newUserStatus' => $this->newUserStatus,
+                    'rejectReason' => $this->rejectReason,
+                ]
             );
     }
 }

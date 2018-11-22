@@ -82,7 +82,8 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
 
                                 <form action="/admin/users/{{$user->id}}/reject" method="post">
                                     @csrf
-                                    <button type="submit" class="btn btn-light-gray">Reject user</button>
+                                    <a href="#" class="btn btn-light-gray" data-toggle="modal" data-target="#reject-registration">Reject user</a>
+                                    @include('admin.users.modals._reject', ['modalId' => 'reject-registration'])
                                 </form>
                             </div>
                         </div>
@@ -104,7 +105,8 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
 
                                 <form action="/admin/users/{{$updateRequest->id}}/reject-profile-changes" method="post">
                                     @csrf
-                                    <button type="submit" class="btn btn-light-gray">Reject changes</button>
+                                    <a href="#" class="btn btn-light-gray" data-toggle="modal" data-target="#reject-changes">Reject changes</a>
+                                    @include('admin.users.modals._reject', ['modalId' => 'reject-changes'])
                                 </form>
                             </div>
                         </div>

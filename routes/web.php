@@ -18,7 +18,7 @@ Route::group([
         Route::post('{id}/reject', 'UsersController@reject');
 
         Route::post('{id}/approve-profile-changes', 'UsersController@approveProfileChanges');
-        Route::post('{id}reject-profile-changes', 'UsersController@rejectProfileChanges');
+        Route::post('{id}/reject-profile-changes', 'UsersController@rejectProfileChanges');
 
         Route::post('{id}/policy', 'UsersController@policy');
     });

@@ -1,25 +1,19 @@
-@component('mail::message')
+@component('layouts.email-carflow')
 
-    Hello!<br>
-    <br>
+    <h4 class="subtitle">ACCOUNT STATUS</h4>
 
-    @if ($newUserStatus == \ConstUserStatus::APPROVED)
-        Your account was approved!<br>
-        Now you can use all functions from CarFlow application!<br>
+    @if ($newUserStatus == ConstUserStatus::APPROVED)
+        <p>Congrats Kevin!<br>
+            You're account was approved. Welcome to Car Flo! We look forward to having you as part of our community. The next step is to log in into our mobile app and
+            start booking the hours you would like to drive/manage your reservations.
+        </p>
     @endif
 
-    @if ($newUserStatus == \ConstUserStatus::REJECTED)
-        Your documents was rejected!<br>
-        Please provide valid drive documents!<br>
+    @if ($newUserStatus == ConstUserStatus::REJECTED)
+        <p>Hello Kevin!<br>
+            Unfortunately, your account was denided. Reason: <i>{{ $rejectReason }}</i>
+        </p>
     @endif
-
-    <br>
-    <br>
-    <br>
-    Best regards,<br>
-    <br>
-    CarFlow<br>
-    <br>
 
 @endcomponent
 

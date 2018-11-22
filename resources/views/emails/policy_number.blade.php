@@ -5,7 +5,7 @@
 
     <br>
 
-    <p>Sinceresly,</p>
+    <p>Sincerely,</p>
     <p>Carl Nowicky</p>
     <p>Car Flo Inc.</p>
     <p>Cheaf Operating Officer</p>
