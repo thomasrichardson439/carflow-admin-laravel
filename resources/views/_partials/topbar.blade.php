@@ -8,7 +8,7 @@
             </li>
         </ul>
         <ul class="nav-right">
-            <li class="notifications dropdown">
+            <li class="notifications dropdown" style="display: none">
                 <span class="counter bgc-red">0</span>
                 <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
                     <i class="ti-bell"></i>
@@ -34,7 +34,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="notifications dropdown">
+            <li class="notifications dropdown" style="display: none">
                 <span class="counter bgc-blue">0</span>
                 <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
                     <i class="ti-email"></i>
