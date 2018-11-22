@@ -4,8 +4,8 @@
             <div class="peers">
                 <div class="peer peer-logo">
                     <a href="/admin">
-                        <h5 class="collapsed">CF</h5>
-                        <h5 class="expanded">Car Flow <span class="admin-label label-logo">ADMIN</span></h5>
+                        <h5 class="collapsed"><img src="/images/logo_small.png"></h5>
+                        <h5 class="expanded"><img src="/images/logo.svg"> <span class="admin-label label-logo">ADMIN</span></h5>
                     </a>
                 </div>
                 <div class="peer">
