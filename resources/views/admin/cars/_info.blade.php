@@ -74,8 +74,8 @@
                                  data-high-res-src="{{$car->image_s3_url}}"
                                  class="img-thumbnail gallery-items" alt="">
                         </div>
-                        <div class="text">
-                            <a href="{{ $car->image_s3_url }}">{{ basename($car->image_s3_url) }}</a>
+                        <div class="text ellipsis">
+                            <a href="{{ $car->image_s3_url }}">{{ str_limit(basename($car->image_s3_url), 40) }}</a>
                         </div>
                     </div>
                 @else
