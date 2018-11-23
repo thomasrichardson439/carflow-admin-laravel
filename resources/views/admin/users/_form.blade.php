@@ -66,7 +66,7 @@
                                      class="img-thumbnail gallery-items" alt="">
                             </div>
                             <div class="text">
-                                <a href="{{ $user->drivingLicense->front }}">{{ basename($user->drivingLicense->front) }}</a>
+                                <a href="{{ $user->drivingLicense->front }}">{{ str_limit(basename($user->drivingLicense->front), 40) }}</a>
                             </div>
                         </div>
                     @else
@@ -85,7 +85,7 @@
                                      class="img-thumbnail gallery-items" alt="">
                             </div>
                             <div class="text">
-                                <a href="{{ $user->drivingLicense->back }}">{{ basename($user->drivingLicense->back) }}</a>
+                                <a href="{{ $user->drivingLicense->back }}">{{ str_limit(basename($user->drivingLicense->back), 40) }}</a>
                             </div>
                         </div>
                     @else
@@ -109,8 +109,8 @@
                                      data-high-res-src="{{$user->tlcLicense->front}}"
                                      class="img-thumbnail gallery-items" alt="">
                             </div>
-                            <div class="text">
-                                <a href="{{ $user->tlcLicense->front }}">{{ basename($user->tlcLicense->front) }}</a>
+                            <div class="text ellipsis">
+                                <a href="{{ $user->tlcLicense->front }}">{{ str_limit(basename($user->tlcLicense->front), 40) }}</a>
                             </div>
                         </div>
                     @else
@@ -128,8 +128,8 @@
                                      data-high-res-src="{{$user->tlcLicense->back}}"
                                      class="img-thumbnail gallery-items" alt="">
                             </div>
-                            <div class="text">
-                                <a href="{{ $user->tlcLicense->back }}">{{ basename($user->tlcLicense->back) }}</a>
+                            <div class="text ellipsis">
+                                <a href="{{ $user->tlcLicense->back }}">{{ str_limit(basename($user->tlcLicense->back), 40) }}</a>
                             </div>
                         </div>
                     @else

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-4">
         <div class="form-card">
-            <h4>Maker and model</h4>
+            <h4>Make and model</h4>
 
             <div class="form-group">
                 <label>Category</label>

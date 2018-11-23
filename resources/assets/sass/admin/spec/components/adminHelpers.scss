@@ -24,3 +24,9 @@
     z-index: 10000;
   }
 }
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
