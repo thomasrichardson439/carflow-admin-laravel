@@ -53,7 +53,7 @@
                                 <h4>Password</h4>
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input type="text" name="password" value="{{ old('password') }}" class="form-control">
+                                    <input type="password" name="password" value="{{ old('password') }}" class="form-control">
                                 </div>
                             </div>
                         </div>
