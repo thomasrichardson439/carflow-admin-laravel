@@ -1,4 +1,3 @@
-import * as Map from 'leaflet';
 import * as $ from 'jquery';
 import MapHelper from "../helpers/map_helper";
 import Vue from 'vue';
@@ -33,8 +32,7 @@ function generateTimeSlots(minute) {
 
 export default function carsShow(create) {
 
-    let map = new MapHelper('locationMap');
-    map.moveTo(40.6917969, -74.0360951, 10);
+    let map = new MapHelper('locationMap', 40.6917969, -74.0360951, 10);
 
     let marker = null;
 

@@ -1,16 +1,25 @@
-import * as Map from "leaflet";
 import * as $ from "jquery";
+
+const KEY = 'AIzaSyDPNrlqn7EGKcoP7O5AYOrfjbfCRwhtzA4';
 
 export default class MapHelper {
 
     constructor(containerId, lat, lon, zoom) {
-        this.map =  Map.map(containerId);
+
+        $('body').append(
+            '<script async defer src="https://maps.googleapis.com/maps/api/js?key=' + KEY + '&callback=initMap" type="text/javascript"></script>'
+        );
+
+        window.initMap = () => {
+
+            let center = {lat: lat, lng: lon};
+
+            this.map = new window.google.maps.Map(
+                document.getElementById(containerId), {zoom: zoom, center: center}
+            );
+        };
 
         this.markers = [];
-
-        Map.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
     }
 
     /**
@@ -20,7 +29,7 @@ export default class MapHelper {
      * @param {int} zoom
      */
     moveTo(lat, lon, zoom) {
-        this.map.setView([lat, lon], zoom);
+        this.map.panTo(new google.maps.LatLng(lat, lon));
     }
 
     /**
@@ -51,6 +60,23 @@ export default class MapHelper {
         });
     }
 
+    mapInitialized() {
+        return new Promise((resolve, reject) => {
+
+            let interval = null;
+
+            interval = setInterval(() => {
+
+                if (this.map) {
+                    clearInterval(interval);
+                    resolve();
+                }
+
+            }, 500);
+
+        });
+    }
+
 
     /**
      * Allows to subscribe for event
@@ -58,20 +84,23 @@ export default class MapHelper {
      * @param callback
      */
     subscribe(eventName, callback) {
-        this.map.on(eventName, function(e) {
 
-            let event = e;
+        this.mapInitialized().then(() => {
+            this.map.addListener(eventName, function (e) {
 
-            switch (eventName) {
-                case 'click':
-                    event = {
-                        lat: e.latlng.lat,
-                        lon: e.latlng.lng,
-                    };
-                    break;
-            }
+                let event = e;
 
-            callback(event);
+                switch (eventName) {
+                    case 'click':
+                        event = {
+                            lat: e.latLng.lat(),
+                            lon: e.latLng.lng(),
+                        };
+                        break;
+                }
+
+                callback(event);
+            });
         });
     }
 
@@ -82,12 +111,10 @@ export default class MapHelper {
      */
     addMarker(lat, lon) {
 
-        var icon = new Map.Icon.Default();
-        icon.options.shadowSize = [0,0];
-
-        let marker = Map.marker([lat, lon], {icon: icon});
-
-        marker.addTo(this.map);
+        let marker = new window.google.maps.Marker({
+            position: {lat: lat, lng: lon},
+            map: this.map
+        });
 
         this.markers.push(marker);
     }
@@ -97,7 +124,7 @@ export default class MapHelper {
      */
     removeMarkers() {
         this.markers.forEach((marker) => {
-            marker.removeFrom(this.map);
+            marker.setMap(null);
         });
     }
 }
