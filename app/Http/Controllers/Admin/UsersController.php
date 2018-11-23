@@ -85,7 +85,7 @@ class UsersController extends Controller
             'password' => 'required|min:6',
             'full_name' => 'required|min:2|max:100',
             'address' => 'required|min:2|max:255',
-            'phone' => 'required|min:9|max:19',
+            'phone' => 'required|string|max:255',
             'ridesharing_apps' => 'array',
             'ridesharing_apps.*' => 'string',
             'ridesharing_app_additional' => 'string|nullable',
@@ -198,7 +198,7 @@ class UsersController extends Controller
         $this->validate($request, [
             'full_name' => 'required|string|max:255',
             'email' => 'required|unique:users,email,' . $user->id . '|email',
-            'phone' => 'required|numeric',
+            'phone' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'ridesharing_apps' => 'array',
             'ridesharing_apps.*' => 'string',
