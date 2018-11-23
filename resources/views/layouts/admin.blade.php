@@ -60,6 +60,10 @@
         }
       }
     </style>
+
+    <script>
+      window.googleMapsKey = '{{ config('params.googleMapsKey') }}';
+    </script>
     <script type="text/javascript" src="/js/app.js"></script>
   </head>
   <body class="app">

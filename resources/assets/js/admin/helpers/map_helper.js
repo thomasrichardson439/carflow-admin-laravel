@@ -1,13 +1,11 @@
 import * as $ from "jquery";
 
-const KEY = 'AIzaSyDPNrlqn7EGKcoP7O5AYOrfjbfCRwhtzA4';
-
 export default class MapHelper {
 
     constructor(containerId, lat, lon, zoom) {
 
         $('body').append(
-            '<script async defer src="https://maps.googleapis.com/maps/api/js?key=' + KEY + '&callback=initMap" type="text/javascript"></script>'
+            '<script async defer src="https://maps.googleapis.com/maps/api/js?key=' + window.googleMapsKey + '&callback=initMap" type="text/javascript"></script>'
         );
 
         window.initMap = () => {
