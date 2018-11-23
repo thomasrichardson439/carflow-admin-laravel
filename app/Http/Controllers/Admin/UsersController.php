@@ -94,6 +94,11 @@ class UsersController extends Controller
             'driving_license_back' => 'required|image',
             'tlc_license_front' => 'required|image',
             'tlc_license_back' => 'required|image',
+        ], [
+            'driving_license_front.required' => 'Driver license front is required',
+            'driving_license_front.image' => 'Driver license front should be an image',
+            'driving_license_back.required' => 'Driver license back is required',
+            'driving_license_back.image' => 'Driver license back should be an image',
         ]);
 
         $user = new User;
