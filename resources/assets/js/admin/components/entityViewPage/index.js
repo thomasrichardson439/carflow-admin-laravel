@@ -68,7 +68,7 @@ export default (function () {
             $(formSelector).submit();
         });
 
-        switchEdit(window.location.hash === '#edit');
+        switchEdit(window.location.hash === '#edit' || $('#validation-errors').length > 0);
     }
 
 })();
