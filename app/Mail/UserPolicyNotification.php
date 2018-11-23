@@ -35,15 +35,24 @@ class UserPolicyNotification extends Mailable
      */
     public function build()
     {
-        return $this->from(config('mail.appOwner.address'), config('mail.appOwner.name'))
+        $settings = $this->from(config('mail.appOwner.address'), config('mail.appOwner.name'))
             ->subject('CarFlo - ' . $this->user->full_name . ' ' . $this->policyNumber)
             ->view(
                 'emails.policy_number',
                 ['user' => $this->user, 'policyNumber' => $this->policyNumber]
-            )
-            ->attach($this->user->drivingLicense->front)
-            ->attach($this->user->drivingLicense->back)
-            ->attach($this->user->tlcLicense->front)
-            ->attach($this->user->tlcLicense->back);
+            );
+
+        if (!empty($this->user->drivingLicense)) {
+            $settings->attach($this->user->drivingLicense->front)
+                ->attach($this->user->drivingLicense->back);
+        }
+
+
+        if (!empty($this->user->tlcLicense)) {
+            $settings->attach($this->user->tlcLicense->front)
+                ->attach($this->user->tlcLicense->back);
+        }
+
+        return $settings;
     }
 }
