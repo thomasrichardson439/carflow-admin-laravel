@@ -5,7 +5,7 @@
       <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv" style='background-image: url("/images/bg.jpg")'>
         <div class="pos-a centerXY">
           <div class="bgc-white bdrs-50p pos-r" style='width: 120px; height: 120px;'>
-            <img class="pos-a centerXY site-logo" src="/images/main_logo.png" alt="">
+            <img class="pos-a centerXY site-logo" src="/images/logo.svg" alt="">
           </div>
         </div>
       </div>
