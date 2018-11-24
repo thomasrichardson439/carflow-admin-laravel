@@ -121,11 +121,11 @@ class CarsController extends Controller
         $car = Car::query()->findOrFail($id);
 
         $availability = [
-            'recurring' => old('recurring', []),
-            'onetime' => old('onetime', []),
+            'recurring' => array_values(old('recurring', [])),
+            'onetime' => array_values(old('onetime', [])),
         ];
 
-        if (empty($availability['recurring'] && empty($availability['onetime']))) {
+        if (empty($availability['recurring']) && empty($availability['onetime'])) {
             $availability = $this->carsRepository->prepareAvailabilityView($car);
         }
 
@@ -182,6 +182,14 @@ class CarsController extends Controller
             'onetime.*.date' => 'required|date|date_format:"m/d/Y"',
             'onetime.*.hour_from' => 'required|string',
             'onetime.*.hour_to' => 'required|string',
+        ], [
+            'recurring.*.day.required' => 'Please check if all availability groups has filled day of week',
+            'recurring.*.hour_from.required' => 'Please check if all availability groups has filled hour from',
+            'recurring.*.hour_to.required' => 'Please check if all availability groups has filled hour to',
+
+            'onetime.*.date.required' => 'Please check if all availability groups has filled date',
+            'onetime.*.hour_from.required' => 'Please check if all availability groups has filled hour from',
+            'onetime.*.hour_to.required' => 'Please check if all availability groups has filled hour to',
         ]);
 
         if (!$this->carsRepository->validateAvailabilityList($request->recurring, $request->get('onetime', []))) {

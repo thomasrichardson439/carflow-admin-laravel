@@ -79,7 +79,7 @@ export default (function () {
         }
 
         for (let key in window.validationErrors) {
-            let input = $('[name=' + key + ']');
+            let input = $('[name="' + key + '"]');
 
             input.addClass('is-invalid');
 

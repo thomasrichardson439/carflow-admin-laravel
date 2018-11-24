@@ -89,8 +89,8 @@ trait CarsAvailabilityTrait
         foreach ($car->availabilitySlots as $slot) {
             $result = [
                 'id' => $slot->id,
-                'hourFrom' => Carbon::parse($slot->available_hour_from)->hour,
-                'hourTo' => Carbon::parse($slot->available_hour_to)->hour,
+                'hour_from' => Carbon::parse($slot->available_hour_from)->hour,
+                'hour_to' => Carbon::parse($slot->available_hour_to)->hour,
             ];
 
             switch ($slot->availability_type) {

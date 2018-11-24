@@ -1,4 +1,4 @@
-<script> window.carAvailabilitySlots = {!! json_encode($availability) !!}; </script>
+<script> window.carAvailabilitySlots = @json($availability); </script>
 
 <div id="vue-availability">
 
@@ -16,18 +16,19 @@
             </div>
 
             <div class="row mB-20" v-for="(item, index) in recurring">
+                <input type="hidden" v-bind:value="item.id" v-bind:name="'recurring[' + item.id + '][id]'">
                 <div class="col-4">
                     <select class="form-control non-disabling" v-model="item.day" v-bind:name="'recurring[' + item.id + '][day]'" :disabled="!editOn">
                         <option v-for="(day, key) in daysOfWeek" v-bind:value="key">@{{ day }}</option>
                     </select>
                 </div>
                 <div class="col-3">
-                    <select class="form-control non-disabling" v-model="item.hourFrom" v-bind:name="'recurring[' + item.id + '][hour_from]'" :disabled="!editOn">
+                    <select class="form-control non-disabling" v-model="item.hour_from" v-bind:name="'recurring[' + item.id + '][hour_from]'" :disabled="!editOn">
                         <option v-for="(slot, key) in timeSlots" v-bind:value="key">@{{ slot }}</option>
                     </select>
                 </div>
                 <div class="col-3">
-                    <select class="form-control non-disabling" v-model="item.hourTo" v-bind:name="'recurring[' + item.id + '][hour_to]'" :disabled="!editOn">
+                    <select class="form-control non-disabling" v-model="item.hour_to" v-bind:name="'recurring[' + item.id + '][hour_to]'" :disabled="!editOn">
                         <option v-for="(slot, key) in timeSlotsTo" v-bind:value="key">@{{ slot }}</option>
                     </select>
                 </div>
@@ -58,16 +59,17 @@
             </div>
 
             <div class="row mB-20" v-for="(item, index) in onetime">
+                <input type="hidden" v-bind:value="item.id" v-bind:name="'onetime[' + item.id + '][id]'">
                 <div class="col-4">
                     <input type="text" class="form-control non-disabling" v-model="item.date" v-bind:name="'onetime[' + item.id + '][date]'" :disabled="!editOn">
                 </div>
                 <div class="col-3">
-                    <select class="form-control non-disabling" v-model="item.hourFrom" v-bind:name="'onetime[' + item.id + '][hour_from]'" :disabled="!editOn">
+                    <select class="form-control non-disabling" v-model="item.hour_from" v-bind:name="'onetime[' + item.id + '][hour_from]'" :disabled="!editOn">
                         <option v-for="(slot, key) in timeSlots" v-bind:value="key">@{{ slot }}</option>
                     </select>
                 </div>
                 <div class="col-3">
-                    <select class="form-control non-disabling" v-model="item.hourTo" v-bind:name="'onetime[' + item.id + '][hour_to]'" :disabled="!editOn">
+                    <select class="form-control non-disabling" v-model="item.hour_to" v-bind:name="'onetime[' + item.id + '][hour_to]'" :disabled="!editOn">
                         <option v-for="(slot, key) in timeSlotsTo" v-bind:value="key">@{{ slot }}</option>
                     </select>
                 </div>
