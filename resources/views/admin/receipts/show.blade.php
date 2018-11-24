@@ -71,14 +71,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Location</label>
+                                    <label>Address</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
                                                 <i class="fa fa-map-marker-alt"></i>
                                             </span>
                                         </div>
-                                        <input type="text" name="location" value="{{ old('location', $receipt->location) }}" class="form-control">
+                                        <input type="text" name="location" value="{{ old('location', $receipt->location) }}" class="form-control" id="address-autocomplete">
                                     </div>
                                 </div>
 

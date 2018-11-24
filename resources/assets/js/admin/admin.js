@@ -14,6 +14,7 @@ import './components/utils';
 import './components/entityViewPage';
 import './components/select2';
 import carsShowCreate from './pages/cars_show_create.js';
+import receiptsShow from './pages/receipts_show.js';
 
 if (/^\/admin\/cars\/\d+$/.test(window.location.pathname)) {
     carsShowCreate(false);
@@ -21,4 +22,8 @@ if (/^\/admin\/cars\/\d+$/.test(window.location.pathname)) {
 
 if (/^\/admin\/cars\/create$/.test(window.location.pathname)) {
     carsShowCreate(true);
+}
+
+if (/^\/admin\/receipts\/\d+$/.test(window.location.pathname)) {
+    receiptsShow();
 }

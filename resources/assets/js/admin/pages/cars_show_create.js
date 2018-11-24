@@ -30,7 +30,7 @@ function generateTimeSlots(minute) {
     return slots;
 }
 
-export default function carsShow(create) {
+export default function carsShowCreate(create) {
 
     let map = new MapHelper('locationMap', 40.6917969, -74.0360951, 10);
 
