@@ -1,3 +1,7 @@
+<script>
+    window.validationErrors = @json($errors->getMessages());
+</script>
+
 @if(Session::has('success'))
     <div class="alert alert-success">
         {{ Session::get('success')}}

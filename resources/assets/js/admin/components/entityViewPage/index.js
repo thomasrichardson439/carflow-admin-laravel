@@ -12,63 +12,84 @@ export default (function () {
         return;
     }
 
-    if (deleteButton.length > 0) {
-        deleteButton.click(function(e) {
-            if (!confirm('Are you sure want to delete this item?')) {
-                e.preventDefault();
-            }
-        });
-    }
+    const initButtons = () => {
+        if (deleteButton.length > 0) {
+            deleteButton.click(function (e) {
+                if (!confirm('Are you sure want to delete this item?')) {
+                    e.preventDefault();
+                }
+            });
+        }
 
-    if (editButton.length > 0) {
+        if (editButton.length > 0) {
 
-        const inputs = $('input, select, textarea').not('[type=hidden]').not('.non-disabling');
+            const inputs = $('input, select, textarea').not('[type=hidden]').not('.non-disabling');
 
-        /**
-         * Allows to switch edit mode
-         * @param {bool} on
-         */
-        const switchEdit = (on) => {
-            if (on) {
-                $('.edit-off').hide();
-                $('.edit-on').show();
+            /**
+             * Allows to switch edit mode
+             * @param {bool} on
+             */
+            const switchEdit = (on) => {
+                if (on) {
+                    $('.edit-off').hide();
+                    $('.edit-on').show();
 
-            } else {
-                $('.edit-on').hide();
-                $('.edit-off').show();
-            }
+                } else {
+                    $('.edit-on').hide();
+                    $('.edit-off').show();
+                }
 
-            inputs.prop('disabled', !on);
-            inputs.each(function () {
-                $(this).closest('.input-group, .form-group').toggleClass('disabled', !on);
+                inputs.prop('disabled', !on);
+                inputs.each(function () {
+                    $(this).closest('.input-group, .form-group').toggleClass('disabled', !on);
+                });
+
+                $('.edit-has-changes').hide();
+
+                editButton.trigger('edit-mode-changed', on).attr('edit-on', on ? 1 : 0);
+            };
+
+            editButton.click(() => {
+                switchEdit(true);
+
+                // Switch to info section
+                $('.nav-link[href="#user-info"]').click();
             });
 
-            $('.edit-has-changes').hide();
+            $('#cancelChanges').click(() => {
+                switchEdit(false);
+            });
 
-            editButton.trigger('edit-mode-changed', on).attr('edit-on', on ? 1 : 0);
-        };
+            inputs.on('change keyup', () => {
+                $('.edit-has-changes').show();
+            });
 
-        editButton.click(() => {
-            switchEdit(true);
+            $('#save').click(function () {
+                let formSelector = $(this).data('form');
+                $(formSelector).submit();
+            });
 
-            // Switch to info section
-            $('.nav-link[href="#user-info"]').click();
-        });
+            switchEdit(window.location.hash === '#edit' || $('#validation-errors').length > 0);
+        }
+    };
 
-        $('#cancelChanges').click(() => {
-            switchEdit(false);
-        });
+    const initErrorsHighlight = () => {
+        if (!window.validationErrors) {
+            return;
+        }
 
-        inputs.on('change keyup', () => {
-            $('.edit-has-changes').show();
-        });
+        for (let key in window.validationErrors) {
+            let input = $('[name=' + key + ']');
 
-        $('#save').click(function () {
-            let formSelector = $(this).data('form');
-            $(formSelector).submit();
-        });
+            input.addClass('is-invalid');
 
-        switchEdit(window.location.hash === '#edit' || $('#validation-errors').length > 0);
-    }
+            input.after(
+                $('<div/>').addClass('invalid-feedback').html(window.validationErrors[key].join('<br>'))
+            );
+        }
+    };
+
+    initButtons();
+    initErrorsHighlight();
 
 })();
