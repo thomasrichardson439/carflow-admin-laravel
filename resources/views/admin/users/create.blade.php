@@ -106,7 +106,6 @@
                                                 <input class="apple-switch mR-10"
                                                        type="checkbox" name="ridesharing_apps[{{ $app }}]"
                                                        value="{{ $app }}"
-                                                       checked
                                                 >
                                                 {{ $app }}
                                             </label>

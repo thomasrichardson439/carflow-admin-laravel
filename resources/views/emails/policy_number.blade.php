@@ -6,10 +6,10 @@
     <br>
 
     <p>Sincerely,</p>
-    <p>Carl Nowicky</p>
+    <p>Carl Nowicki</p>
     <p>Car Flo Inc.</p>
-    <p>Cheaf Operating Officer</p>
-    <p>T: (516)650-8604</p>
-    <p>www.carflo.co</p>
+    <p>Chief Operating Officer</p>
+    <p>T: (516) 650-8604</p>
+    <p><a href="http://www.carflo.co">www.carflo.co</a></p>
 @endcomponent
 
