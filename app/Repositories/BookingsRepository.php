@@ -140,7 +140,7 @@ class BookingsRepository extends BaseRepository
     public function history(int $userId) : array
     {
         $rows = $this->model->query()
-            ->where('status', Booking::STATUS_ENDED)
+            ->whereIn('status', [Booking::STATUS_ENDED, Booking::STATUS_CANCELED])
             ->where('user_id', $userId)
             ->orderBy('booking_ending_at', 'ASC')
             ->get();
