@@ -76,7 +76,7 @@ class CarsController extends BaseApiController
             'car' => $this->carsRepository->show($model),
             'calendar' => $this->carsRepository->availabilityCalendar(
                 $model->availabilitySlots()->get(), $dateFrom, $dateTo,
-                $this->carsRepository->bookingCalendar($model->id, $dateFrom, $dateTo)
+                $this->carsRepository->bookingCalendar(auth()->user()->id, $model->id, $dateFrom, $dateTo)
             )[$model->id],
         ]);
     }
@@ -129,7 +129,7 @@ class CarsController extends BaseApiController
         }
 
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
-            $model->id, $startingAt, $endingAt
+            auth()->user()->id, $model->id, $startingAt, $endingAt
         )) {
             return $this->validationErrors([
                 'booking_starting_at' => 'Picked range contains already booked hours',

@@ -310,11 +310,26 @@ trait CarsAvailabilityTrait
 
                 $calendar[$carId][$dateFormatted] = array_unique($calendar[$carId][$dateFormatted]);
 
+                /**
+                 * Remove booked hours from calendar
+                 */
                 if (isset($bookedHours[$carId][$dateFormatted])) {
                     $calendar[$carId][$dateFormatted] = array_values(
                         array_diff(
                             $calendar[$carId][$dateFormatted],
                             $bookedHours[$carId][$dateFormatted]
+                        )
+                    );
+                }
+
+                /**
+                 * Remove hours in which user booked other cars
+                 */
+                if (isset($bookedHours['*'][$dateFormatted])) {
+                    $calendar[$carId][$dateFormatted] = array_values(
+                        array_diff(
+                            $calendar[$carId][$dateFormatted],
+                            $bookedHours['*'][$dateFormatted]
                         )
                     );
                 }
@@ -350,17 +365,21 @@ trait CarsAvailabilityTrait
 
     /**
      * Allows to build calendar of bookings for comparing to availability
+     * @param int $userId
      * @param array|int $carIds
      * @param Carbon $start
      * @param Carbon $end
      * @return array
      */
-    public function bookingCalendar($carIds, Carbon $start, Carbon $end) : array
+    public function bookingCalendar(int $userId, $carIds, Carbon $start, Carbon $end) : array
     {
         $carIds = (array)$carIds;
 
         $bookings = Booking::query()
-            ->whereIn('car_id', $carIds)
+            ->where(function(Builder $query) use ($userId, $carIds) {
+                $query->whereIn('car_id', $carIds)
+                    ->orWhere('user_id', $userId);
+            })
             ->where('status', '!=', Booking::STATUS_CANCELED)
             ->where(function(Builder $query) use ($start, $end) {
 
@@ -390,7 +409,12 @@ trait CarsAvailabilityTrait
 
             while ($walkThroughDate->lessThan($booking->booking_ending_at)) {
 
-                $recurlyBookings[$walkThroughDate->format('l')][$booking->car_id][] = (int)$walkThroughDate->format('H');
+                $recurlyBookings[$walkThroughDate->format('l')][$booking->car_id][] = (int)$walkThroughDate->hour;
+
+                if ($booking->user_id == $userId) {
+                    $recurlyBookings[$walkThroughDate->format('l')]['*'][] = (int)$walkThroughDate->hour;
+                }
+
                 $walkThroughDate->addHour();
             }
         }
@@ -415,7 +439,12 @@ trait CarsAvailabilityTrait
 
                 $ymd = $walkThroughDate->format('Y-m-d');
 
-                $results[$booking->car_id][$ymd][] = (int)$walkThroughDate->format('H');
+                $results[$booking->car_id][$ymd][] = (int)$walkThroughDate->hour;
+
+                if ($booking->user_id == $userId) {
+                    $results['*'][$ymd][] = (int)$walkThroughDate->hour;
+                }
+
                 $walkThroughDate->addHour();
             }
         }
@@ -495,7 +524,7 @@ trait CarsAvailabilityTrait
             })
             ->get();
 
-        $booked = $this->bookingCalendar($availability->pluck('car_id')->toArray(), $from, $to);
+        $booked = $this->bookingCalendar(auth()->user()->id, $availability->pluck('car_id')->toArray(), $from, $to);
         $available = $this->availabilityCalendar($availability, $from, $to, $booked);
 
         $filteredCarIds = [];

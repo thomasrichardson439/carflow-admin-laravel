@@ -34,10 +34,13 @@ class BookingsRepository extends BaseRepository
      * @param Carbon $end
      * @return bool
      */
-    public function checkIntervalIsNotBooked(int $carId, Carbon $start, Carbon $end) : bool
+    public function checkIntervalIsNotBooked(int $userId, int $carId, Carbon $start, Carbon $end) : bool
     {
         $bookings = $this->model->query()
-            ->where(['car_id' => $carId])
+            ->where(function(Builder $query) use ($userId, $carId) {
+                $query->where('car_id', $carId)
+                    ->orWhere('user_id', $userId);
+            })
             ->where(function(Builder $query) use ($start, $end) {
                 $query->where(function (Builder $query) use ($start, $end) {
                     $query->orWhereBetween('booking_starting_at', [$start, $end]);
