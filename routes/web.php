@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'MainController@index');
 
 Route::get('/main', 'MainController@index');
 Route::get('/drivers', 'MainController@drivers');
