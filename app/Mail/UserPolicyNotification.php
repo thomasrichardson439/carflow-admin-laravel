@@ -36,7 +36,7 @@ class UserPolicyNotification extends Mailable
     public function build()
     {
         $settings = $this->from(config('mail.appOwner.address'), config('mail.appOwner.name'))
-            ->subject('CarFlo - ' . $this->user->full_name . ' ' . $this->policyNumber)
+            ->subject('Car Flo - ' . $this->user->full_name . ' ' . $this->policyNumber)
             ->view(
                 'emails.policy_number',
                 ['user' => $this->user, 'policyNumber' => $this->policyNumber]

@@ -46,7 +46,7 @@ class UserProfileReviewNotification extends Mailable
     public function build()
     {
         return $this->from(config('mail.from.address'), config('mail.from.name'))
-            ->subject('CarFlo - Profile update status')
+            ->subject('Car Flo - Profile update status')
             ->view(
                 'emails.user_profile_review',
                 [

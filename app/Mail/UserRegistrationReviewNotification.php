@@ -46,7 +46,7 @@ class UserRegistrationReviewNotification extends Mailable
     public function build()
     {
         return $this->from(config('mail.from.address'), config('mail.from.name'))
-            ->subject('CarFlo - Account registration status')
+            ->subject('Car Flo - Account registration status')
             ->view(
                 'emails.user_review',
                 [
