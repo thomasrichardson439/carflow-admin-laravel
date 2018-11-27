@@ -2,6 +2,7 @@ import * as $ from 'jquery';
 import MapHelper from "../helpers/map_helper";
 import Vue from 'vue';
 import moment from 'moment';
+import AutocompleteHelper from "../helpers/autocomplete_helper";
 
 function generateTimeSlots(minute) {
 
@@ -42,7 +43,7 @@ export default function carsShowCreate(create) {
         full_location: $('[name=full_pickup_location]'),
     };
 
-    map.subscribe('click', function (e) {
+    map.onMapClicked(function (e) {
 
         map.removeMarkers();
         map.addMarker(e.lat, e.lon);
@@ -56,6 +57,20 @@ export default function carsShowCreate(create) {
             inputs.full_location.val(address);
         }, function() {
             inputs.full_location.val('Unable to fetch address. Please pick another location');
+        });
+    });
+
+    $('.autocomplete').each(function() {
+        new AutocompleteHelper($(this)[0]).onAutocompleteChanged((coordinates) => {
+            if ($(this).is(':not(:visible)')) {
+                return;
+            }
+
+            inputs.location_lat.val(coordinates.lat);
+            inputs.location_lon.val(coordinates.lon);
+
+            map.removeMarkers();
+            map.addMarker(coordinates.lat, coordinates.lon);
         });
     });
 

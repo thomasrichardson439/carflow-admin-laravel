@@ -146,7 +146,7 @@
                             <div class="row">
                                 <div class="form-group col-8">
                                     <label>Full address</label>
-                                    <input type="text" name="full_pickup_location" value="{{ old('full_pickup_location', $car->full_pickup_location) }}" class="form-control">
+                                    <input type="text" name="full_pickup_location" value="{{ old('full_pickup_location', $car->full_pickup_location) }}" class="form-control autocomplete">
                                 </div>
 
                                 <div class="form-group col-4">
@@ -178,7 +178,7 @@
                             <div class="row">
                                 <div class="form-group col-8">
                                     <label>Full address</label>
-                                    <input type="text" name="full_return_location" value="{{ old('full_return_location', $car->full_return_location) }}" class="form-control">
+                                    <input type="text" name="full_return_location" value="{{ old('full_return_location', $car->full_return_location) }}" class="form-control autocomplete">
                                 </div>
 
                                 <div class="form-group col-4">

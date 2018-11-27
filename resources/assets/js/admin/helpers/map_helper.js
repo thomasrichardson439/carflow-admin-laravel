@@ -4,20 +4,19 @@ export default class MapHelper {
 
     constructor(containerId, lat, lon, zoom) {
 
-        $('body').append(
-            '<script async defer src="https://maps.googleapis.com/maps/api/js?key=' + window.googleMapsKey + '&callback=initMap" type="text/javascript"></script>'
-        );
-
-        window.initMap = () => {
-
-            let center = {lat: lat, lng: lon};
-
-            this.map = new window.google.maps.Map(
-                document.getElementById(containerId), {zoom: zoom, center: center}
-            );
-        };
-
         this.markers = [];
+        this.map = null;
+
+        this.initialized(() => window.google).then(() => {
+
+            if (containerId) {
+                let center = {lat: lat, lng: lon};
+
+                this.map = new window.google.maps.Map(
+                    document.getElementById(containerId), {zoom: zoom, center: center}
+                );
+            }
+        });
     }
 
     /**
@@ -58,14 +57,18 @@ export default class MapHelper {
         });
     }
 
-    mapInitialized() {
+    /**
+     * Allows to wait for component initalization
+     * @returns {Promise<any>}
+     */
+    initialized(callback) {
         return new Promise((resolve, reject) => {
 
             let interval = null;
 
             interval = setInterval(() => {
 
-                if (this.map) {
+                if (callback()) {
                     clearInterval(interval);
                     resolve();
                 }
@@ -75,29 +78,18 @@ export default class MapHelper {
         });
     }
 
-
     /**
-     * Allows to subscribe for event
-     * @param eventName
+     * Allows to subscribe for click event
      * @param callback
      */
-    subscribe(eventName, callback) {
+    onMapClicked(callback) {
 
-        this.mapInitialized().then(() => {
-            this.map.addListener(eventName, function (e) {
-
-                let event = e;
-
-                switch (eventName) {
-                    case 'click':
-                        event = {
-                            lat: e.latLng.lat(),
-                            lon: e.latLng.lng(),
-                        };
-                        break;
-                }
-
-                callback(event);
+        this.initialized(() => this.map).then(() => {
+            this.map.addListener('click', function (e) {
+                callback({
+                    lat: e.latLng.lat(),
+                    lon: e.latLng.lng(),
+                });
             });
         });
     }

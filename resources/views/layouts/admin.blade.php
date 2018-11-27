@@ -61,9 +61,7 @@
       }
     </style>
 
-    <script>
-      window.googleMapsKey = '{{ config('params.googleMapsKey') }}';
-    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&libraries=places" type="text/javascript"></script>
     <script type="text/javascript" src="/js/app.js"></script>
   </head>
   <body class="app">
