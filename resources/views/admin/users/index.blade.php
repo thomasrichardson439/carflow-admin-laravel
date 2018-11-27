@@ -86,9 +86,14 @@
                 'ridesharing_apps',
                 [
                     'class' => 'actions',
-                    'value' => '{show} {edit} {delete}',
+                    'value' => '{send-query} {show} {edit} {delete}',
                     'contentHtmlOptions' => [
                         'class' => 'actionsColumn',
+                    ],
+                    'additionalActions' => [
+                        'send-query' => function($model) {
+                            return '<a href="' . url('/admin/users/' . $model->id . '/#edit') . '">Send query</a>';
+                        }
                     ],
                     'actionsUrls' => function($model) {
                         return [

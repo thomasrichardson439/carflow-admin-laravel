@@ -9,7 +9,7 @@ Route::group([
     'as' => 'admin.'
 ], function () {
 
-    Route::get('/', 'DashboardController@index')->name('home');
+    Route::get('/', 'UsersController@index');
 
     Route::resource('users', 'UsersController');
 
