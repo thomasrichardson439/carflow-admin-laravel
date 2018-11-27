@@ -12,13 +12,13 @@
                     <p class="mt-4">
                         Are you suffering from too many costs and too few ways to make rideshare money? Car Flo solves these problems.
                     </p>
-                    <div class="row">
-                        <div class="col-12 col-md-8 offset-md-0 offset-0">
-                            <div class="buttons mt-2">
-                                <a class="btn btn-primary btn-lg btn-block" href="#" role="button" target="_blank">Join Car Flo today</a>
-                            </div>
-                        </div>
-                    </div>
+                    {{--<div class="row">--}}
+                        {{--<div class="col-12 col-md-8 offset-md-0 offset-0">--}}
+                            {{--<div class="buttons mt-2">--}}
+                                {{--<a class="btn btn-primary btn-lg btn-block" href="#" role="button" target="_blank">Join Car Flo today</a>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div>
                 <div class="col-md-6 order-2">
                     <div class="row">
