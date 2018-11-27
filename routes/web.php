@@ -1,6 +1,18 @@
 <?php
 
-Route::get('/', 'Admin\DashboardController@index')->middleware('auth.admin');
+Route::get('/', 'MainController@index');
+
+Route::get('/main', 'MainController@index');
+Route::get('/drivers', 'MainController@drivers');
+Route::get('/owners', 'MainController@owners');
+Route::get('/how-it-works', 'MainController@how_it_works');
+Route::get('/about-us', 'MainController@about_us');
+Route::get('/faq', 'MainController@faq');
+Route::get('/register-car', 'MainController@register_car');
+Route::get('/register-driver', 'MainController@register_driver');
+Route::get('/welcome', 'MainController@welcome');
+
+//Route::get('/', 'Admin\DashboardController@index')->middleware('auth.admin');
 
 Route::group([
     'namespace' => 'Admin',
