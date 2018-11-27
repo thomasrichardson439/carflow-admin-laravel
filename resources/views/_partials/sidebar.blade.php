@@ -20,11 +20,6 @@
 
         <ul class="sidebar-menu scrollable pos-r">
             <li class="nav-item mT-30 active">
-                <a class="sidebar-link" href="/admin">
-                    <span class="title">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class='sidebar-link' href="{{ route('admin.users.index') }}">
                     <span class="title">Users</span>
                 </a>
