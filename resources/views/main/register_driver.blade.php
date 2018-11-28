@@ -165,7 +165,6 @@
 
         </div>
     </div>
-
 @endsection
 
 @section('add_custom_script')
