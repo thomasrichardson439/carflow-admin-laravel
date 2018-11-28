@@ -57,7 +57,7 @@ $columns = [
         'class' => \Woo\GridView\Columns\RawColumn::class,
         'title' => 'End Time',
         'value' => function(\App\Models\Booking $model) {
-            return $model->booking_starting_at->format('h:i A');
+            return $model->booking_ending_at->format('h:i A');
         }
     ],
     [
@@ -68,8 +68,8 @@ $columns = [
         ],
         'actionsUrls' => function($model) {
             return [
-                'edit' => url('admin/users/' . $model->id . '#edit'),
-                'delete' => url('admin/users/' . $model->id . '/delete'),
+                'edit' => url('admin/bookings/' . $model->id . '#edit'),
+                'delete' => url('admin/bookings/' . $model->id . '/delete'),
             ];
         }
     ]
