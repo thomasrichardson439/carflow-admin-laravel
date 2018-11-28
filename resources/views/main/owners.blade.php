@@ -68,7 +68,7 @@
                         <ol class="mt-2">
                             <li>Complete our simple <a href="https://goo.gl/forms/kZBYHB96tcVJrfRk2">signup form</a>.</li>
                             <li>Decide which days and hours you want to make your car available for renting.</li>
-                            <li>Leave your car in one of Car Flo’s convenient drop-off zones.</li>
+                            <li>Set your own pickup and drop-off locations.</li>
                             <li>Get paid for every hour your car is being used and <strong>get it back when you want it.</strong></li>
                         </ol>
                     </div>
@@ -101,7 +101,7 @@
                 <div class="col-md-6 offset-md-2 offset-0">
                     <div class="about_text">
                         <h1>The assurance you need</h1>
-                        <p class="mt-2">Car Flo checks the credentials of every Car Flo driver and requires drivers to have at least three years of licensed driving experience behind the wheel and have held a TLC license for at least one year.</p>
+                        <p class="mt-2">Car Flo checks the credentials of every Car Flo driver and requires drivers to have requires drivers to submit their licenses and checks their driving record's before approving them to drive your car behind the wheel and have held a TLC license for at least one year.</p>
                     </div>
                 </div>
 
@@ -203,7 +203,7 @@
                 <div class="col-md-6 order-2 order-md-1">
                     <div class="about_text">
                         <h1>More information</h1>
-                        <p>You set the rental rate for your vehicle. Car Flo charges just 20% to facilitate the rental. Owners are responsible for proper Martinez insurance.</p>
+                        <p>You set the rental rate for your vehicle. Car Flo charges just 20% to facilitate the rental. Owners are responsible for proper maintenance insurance.</p>
                     </div>
 
                 </div>

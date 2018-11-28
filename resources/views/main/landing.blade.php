@@ -28,12 +28,13 @@
                                 <p class="help-text text-center mt-4">
                                     What type of account do you want to create?
                                 </p>
+                                <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>
                                 <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_car1" name="account_type">
+                                    <input type="radio" id="opt_car1" name="account_type" value="car">
                                     <label for="opt_car1">Car owner account</label>
                                 </p>
                                 <p class="mt-1">
-                                    <input type="radio" id="opt_driver1" name="account_type" checked>
+                                    <input type="radio" id="opt_driver1" name="account_type" checked  value="driver">
                                     <label for="opt_driver1">Driver account</label>
                                 </p>
                                 <p class="mt-1 mb-0">
@@ -276,12 +277,13 @@
                                 <p class="help-text text-center mt-4">
                                     What type of account do you want to create?
                                 </p>
+                                <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors1"></div>
                                 <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_car2" name="account_type2">
+                                    <input type="radio" id="opt_car2" name="account_type2" value="car">
                                     <label for="opt_car2">Car owner account</label>
                                 </p>
                                 <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_driver2" name="account_type2" checked>
+                                    <input type="radio" id="opt_driver2" name="account_type2" checked value="driver">
                                     <label for="opt_driver2">Driver account</label>
                                 </p>
                                 <p class="mt-1 mb-0">
@@ -312,20 +314,75 @@
 @section('add_custom_script')
     <script>
         $('document').ready(function () {
+            sessionStorage.clear();
             $('#form1').submit(function (e) {
                 e.preventDefault();
                 var email = $("#email1").val();
                 var password = $("#password1").val();
-                console.log(email);
-                console.log(password);
+                $("#custom-validation-errors").hide();
+                if(password.length < 6){
+                    $("#custom-validation-errors").show();
+                    $("#custom-validation-errors").html('Minimum password length is 6 characters.');
+                    return false;
+                }
+                $.post(
+                    "{{route('validate-email')}}",
+                    {
+                        _token: "{{csrf_token()}}",
+                        email: email
+                    },
+                    function (response) {
+                        if(response.status == "ok"){
+                            var sel_user_type = $("input[name='account_type']:checked").val();
+                            sessionStorage.setItem("email", email);
+                            sessionStorage.setItem("password", password);
+                            if(sel_user_type == "driver"){
+                                document.location.href = "{{route('register_driver')}}";
+                            }else if(sel_user_type == "car"){
+                                document.location.href = "{{route('register_car')}}";
+                            }
+                        }else{
+                            $("#custom-validation-errors").show();
+                            $("#custom-validation-errors").html(response.message);
+                        }
+                    },"json"
+                );
+
                 return false;
             });
             $('#form2').submit(function (e) {
                 e.preventDefault();
                 var email = $("#email2").val();
                 var password = $("#password2").val();
-                console.log(email);
-                console.log(password);
+                $("#custom-validation-errors1").hide();
+                if(password.length < 6){
+                    $("#custom-validation-errors1").show();
+                    $("#custom-validation-errors1").html('Minimum password length is 6 characters.');
+                    return false;
+                }
+                $.post(
+                    "{{route('validate-email')}}",
+                    {
+                        _token: "{{csrf_token()}}",
+                        email: email
+                    },
+                    function (response) {
+                        if(response.status == "ok"){
+                            var sel_user_type = $("input[name='account_type2']:checked" ).val();
+                            sessionStorage.setItem("email", email);
+                            sessionStorage.setItem("password", password);
+                            if(sel_user_type == "driver"){
+                                document.location.href = "{{route('register_driver')}}";
+                            }else if(sel_user_type == "car"){
+                                document.location.href = "{{route('register_car')}}";
+                            }
+                        }else{
+                            $("#custom-validation-errors1").show();
+                            $("#custom-validation-errors1").html(response.message);
+                        }
+                    },"json"
+                );
+
                 return false;
             });
         });
