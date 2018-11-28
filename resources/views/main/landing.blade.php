@@ -309,6 +309,19 @@
 
         </div>
     </div>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url={{asset('docs/Car_Flow_Terms_Of_Use.docx')}}&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('add_custom_script')
