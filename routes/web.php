@@ -2,14 +2,16 @@
 
 Route::get('/', 'MainController@index');
 
-Route::get('/main', 'MainController@index');
+Route::get('/main', 'MainController@index')->name('home-page');
 Route::get('/drivers', 'MainController@drivers');
 Route::get('/owners', 'MainController@owners');
 Route::get('/how-it-works', 'MainController@how_it_works');
 Route::get('/about-us', 'MainController@about_us');
 Route::get('/faq', 'MainController@faq');
-Route::get('/register-car', 'MainController@register_car');
-Route::get('/register-driver', 'MainController@register_driver');
+Route::get('/register-car', 'MainController@register_car')->name('register_car');
+Route::get('/register-driver', 'MainController@register_driver')->name('register_driver');
+Route::post('/user/store/driver', 'UsersController@store');
+Route::post('/user/validate-email', 'UsersController@validateEmail')->name('validate-email');
 Route::get('/welcome', 'MainController@welcome');
 
 //Route::get('/', 'Admin\DashboardController@index')->middleware('auth.admin');
