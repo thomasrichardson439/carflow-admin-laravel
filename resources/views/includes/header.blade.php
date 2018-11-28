@@ -1,3 +1,6 @@
+<div id='indicator'>
+    <img id="loading-image" src="{{asset('images/ajax-loading.gif')}}" width="64" height="64">
+</div>
 <div class="logo-bar">
     <div class="container">
         <div class="row">

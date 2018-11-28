@@ -36,7 +36,8 @@ class MainController extends Controller
     }
     public function register_driver()
     {
-        return view('main/register_driver');
+        $data['defaultApps'] = ['Uber','Lyft','Via','Juno','Gett','Other'];
+        return view('main/register_driver', $data);
     }
     public function welcome()
     {
