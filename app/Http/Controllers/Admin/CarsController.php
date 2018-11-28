@@ -33,14 +33,48 @@ class CarsController extends Controller
         $this->carsRepository = new CarsRepository();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $dataProvider = new EloquentDataProvider(
-            Car::query()->orderBy('id', 'ASC')
-        );
+        $this->validate($request, [
+            'manufacturer_id' => 'array',
+            'manufacturer_id.*' => 'integer',
+
+            'year' => 'array',
+            'year.*' => 'integer',
+
+            'seats' => 'array',
+            'seats.*' => 'integer',
+        ]);
+
+        $query = Car::query()->orderBy('id', 'ASC');
+
+        if (!empty($request->manufacturer_id)) {
+            $query->whereIn('manufacturer_id', $request->manufacturer_id);
+        }
+
+        if (!empty($request->model)) {
+            $query->where('model', 'LIKE', '%' . $request->model . '%');
+        }
+
+        if (!empty($request->year)) {
+            $query->whereIn('year', $request->year);
+        }
+
+        if (!empty($request->seats)) {
+            $query->whereIn('seats', $request->seats);
+        }
+
+        if (!empty($request->owner)) {
+            $query->where('owner', 'LIKE', '%' . $request->owner . '%');
+        }
+
+        $dataProvider = new EloquentDataProvider($query);
 
         return view('admin.cars.index', [
             'dataProvider' => $dataProvider,
+            'carManufacturers' => CarManufacturer::all(),
+            'years' => range((int)date('Y'), 2000),
+            'seats' => range(2, 7),
         ]);
     }
 

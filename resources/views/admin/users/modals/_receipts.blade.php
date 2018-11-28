@@ -14,6 +14,7 @@
 
             <div class="modal-body">
                 {!! grid([
+                    'rowsPerPage' => 0,
                     'tableHtmlOptions' => [
                         'class' => 'table admin-table table-modal',
                     ],

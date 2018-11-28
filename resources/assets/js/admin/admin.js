@@ -15,6 +15,11 @@ import './components/entityViewPage';
 import './components/select2';
 import carsShowCreate from './pages/cars_show_create.js';
 import receiptsShow from './pages/receipts_show.js';
+import carsIndex from "./pages/cars_index";
+
+if (/^\/admin\/cars$/.test(window.location.pathname)) {
+    carsIndex();
+}
 
 if (/^\/admin\/cars\/\d+$/.test(window.location.pathname)) {
     carsShowCreate(false);

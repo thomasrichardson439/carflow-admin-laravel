@@ -14,6 +14,8 @@
             </div>
         </div>
 
+        @include('admin.cars._filters')
+
         @include('admin._alerts')
 
         {!! grid([
@@ -42,6 +44,48 @@
                 [
                     'title' => 'Car owner',
                     'value' => 'owner',
+                ],
+                [
+                    'title' => 'Total miles',
+                    'class' => 'raw',
+                    'value' => function() {
+                        return '&mdash;';
+                    },
+                ],
+                [
+                    'title' => 'Avg speed   ',
+                    'class' => 'raw',
+                    'value' => function() {
+                        return '&mdash;';
+                    },
+                ],
+                [
+                    'title' => 'Ignition',
+                    'class' => 'raw',
+                    'value' => function() {
+                        return '<span class="text-muted">Unkn.</span>';
+                    },
+                ],
+                [
+                    'title' => 'Oil change',
+                    'class' => 'raw',
+                    'value' => function() {
+                        return '<span class="text-muted">Unkn.</span>';
+                    },
+                ],
+                [
+                    'title' => 'Tire change',
+                    'class' => 'raw',
+                    'value' => function() {
+                        return '<span class="text-muted">Unkn.</span>';
+                    },
+                ],
+                [
+                    'title' => 'GPS Tracking',
+                    'class' => 'raw',
+                    'value' => function() {
+                        return '<a href="#">Track</a>';
+                    },
                 ],
                 [
                     'class' => 'actions',

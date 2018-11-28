@@ -85,7 +85,7 @@ $columns = [
 
 {!! grid([
     'dataProvider' => $recurringBookingsProvider,
-    'rowsPerPage' => 20,
+    'rowsPerPage' => 0,
     'tableHtmlOptions' => [
         'class' => 'table admin-table',
     ],
@@ -101,7 +101,7 @@ $columns = [
 
 {!! grid([
     'dataProvider' => $oneTimeBookingsProvider,
-    'rowsPerPage' => 20,
+    'rowsPerPage' => 0,
     'tableHtmlOptions' => [
         'class' => 'table admin-table',
     ],

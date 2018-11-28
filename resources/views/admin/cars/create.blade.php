@@ -183,7 +183,7 @@
                     <div class="row">
                         <div class="col-12 text-right">
                             <a href="{{ url('/admin/cars') }}" class="btn btn-gray">Cancel</a>
-                            <button type="submit" class="btn btn-danger">Add new user</button>
+                            <button type="submit" class="btn btn-danger">Add new car</button>
                         </div>
                     </div>
                 </div>

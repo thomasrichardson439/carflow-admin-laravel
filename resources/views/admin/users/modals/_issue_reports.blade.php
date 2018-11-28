@@ -17,6 +17,7 @@
                     'tableHtmlOptions' => [
                         'class' => 'table admin-table table-modal',
                     ],
+                    'rowsPerPage' => 0,
                     'dataProvider' => new \Woo\GridView\DataProviders\EloquentDataProvider($user->malfunctions()->getQuery()),
                     'columns' => [
                         [
@@ -50,6 +51,7 @@
                     'tableHtmlOptions' => [
                         'class' => 'table admin-table table-modal',
                     ],
+                    'rowsPerPage' => 0,
                     'dataProvider' => new \Woo\GridView\DataProviders\EloquentDataProvider($user->accidents()->getQuery()),
                     'columns' => [
                         [
