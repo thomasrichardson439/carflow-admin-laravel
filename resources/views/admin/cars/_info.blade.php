@@ -147,6 +147,7 @@
                                 <div class="form-group col-8">
                                     <label>Full address</label>
                                     <input type="text" name="full_pickup_location" value="{{ old('full_pickup_location', $car->full_pickup_location) }}" class="form-control autocomplete">
+                                    <p class="text-muted">Please pick location on map or one of address autocomplete results</p>
                                 </div>
 
                                 <div class="form-group col-4">
@@ -179,6 +180,7 @@
                                 <div class="form-group col-8">
                                     <label>Full address</label>
                                     <input type="text" name="full_return_location" value="{{ old('full_return_location', $car->full_return_location) }}" class="form-control autocomplete">
+                                    <p class="text-muted">Please pick location on map or one of address autocomplete results</p>
                                 </div>
 
                                 <div class="form-group col-4">

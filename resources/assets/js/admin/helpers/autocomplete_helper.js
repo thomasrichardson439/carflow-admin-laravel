@@ -9,7 +9,7 @@ export default class AutocompleteHelper {
         this.initialized(() => window.google).then(() => {
             this.autocomplete = new window.google.maps.places.Autocomplete(
                 autocompleteInput,
-                {types: ['geocode']}
+                {types: ['address']}
             );
         });
     }

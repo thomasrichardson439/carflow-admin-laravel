@@ -60,7 +60,24 @@ export default function carsShowCreate(create) {
         });
     });
 
-    $('.autocomplete').each(function() {
+    $('.autocomplete').each(function(index) {
+
+        let locationUnpicked = false;
+        let $self = $(this);
+
+        $(this).keyup(function() {
+            locationUnpicked = true;
+            $('#save').addClass('disabled').prop('disabled', true);
+        });
+
+        $(this).focusout(function() {
+            setTimeout(() => {
+                if (locationUnpicked) {
+                    $(this).addClass('is-invalid');
+                }
+            }, 1000);
+        });
+
         new AutocompleteHelper($(this)[0]).onAutocompleteChanged((coordinates) => {
             if ($(this).is(':not(:visible)')) {
                 return;
@@ -71,6 +88,10 @@ export default function carsShowCreate(create) {
 
             map.removeMarkers();
             map.addMarker(coordinates.lat, coordinates.lon);
+
+            locationUnpicked = false;
+            $('#save').removeClass('disabled').prop('disabled', false);
+            $self.removeClass('is-invalid');
         });
     });
 
