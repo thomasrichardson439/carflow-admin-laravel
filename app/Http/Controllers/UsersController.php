@@ -40,7 +40,7 @@ class UsersController extends Controller
     {
         $this->validate($request, [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
             'full_name' => 'required|min:2|max:100',
             'address' => 'required|min:2|max:255',
             'phone' => 'required|string|max:255',
@@ -122,7 +122,7 @@ class UsersController extends Controller
 
         $this->validate($request, [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
             'full_name' => 'required|min:2|max:100',
             'category_id' => 'required|integer|exists:car_categories,id',
             'manufacturer_id' => 'required|integer|exists:car_manufacturers,id',
