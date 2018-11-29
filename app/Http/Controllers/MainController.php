@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Borough;
+use App\Models\CarCategory;
+use App\Models\CarManufacturer;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
@@ -32,7 +35,11 @@ class MainController extends Controller
     }
     public function register_car()
     {
-        return view('main/register_car');
+        return view('main/register_car',[
+            'carCategories' => CarCategory::all(),
+            'carManufacturers' => CarManufacturer::all(),
+            'boroughs' => Borough::all(),
+        ]);
     }
     public function register_driver()
     {

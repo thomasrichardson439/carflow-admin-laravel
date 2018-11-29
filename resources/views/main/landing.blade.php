@@ -12,13 +12,6 @@
                     <p class="mt-4">
                         Are you suffering from too many costs and too few ways to make rideshare money? Car Flo solves these problems.
                     </p>
-                    {{--<div class="row">--}}
-                        {{--<div class="col-12 col-md-8 offset-md-0 offset-0">--}}
-                            {{--<div class="buttons mt-2">--}}
-                                {{--<a class="btn btn-primary btn-lg btn-block" href="#" role="button" target="_blank">Join Car Flo today</a>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
                 </div>
                 <div class="col-md-6 order-2">
                     <div class="row">
@@ -49,7 +42,20 @@
                                 <p>
                                     <input type="password" class="form-control" name="password1" id="password1" placeholder="" required autocomplete="off">
                                 </p>
-
+                                <ul class="unstyled terms-area1">
+                                    <li>
+                                        <input class="styled-checkbox" id="chk_terms1" type="checkbox" >
+                                        <label for="chk_terms1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
+                                    </li>
+                                    <li class="accept-driver">
+                                        <input class="styled-checkbox" id="chk_terms_driver1" type="checkbox" >
+                                        <label for="chk_terms_driver1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
+                                    </li>
+                                    <li class="accept-owner">
+                                        <input class="styled-checkbox" id="chk_terms_owner1" type="checkbox" >
+                                        <label for="chk_terms_owner1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
+                                    </li>
+                                </ul>
                                 <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form1">Create account</button>
                             </div>
                             </form>
@@ -298,7 +304,20 @@
                                 <p>
                                     <input type="password" class="form-control" name="password2" id="password2" placeholder="" required autocomplete="off">
                                 </p>
-
+                                <ul class="unstyled terms-area2">
+                                    <li>
+                                        <input class="styled-checkbox" id="chk_terms2" type="checkbox" >
+                                        <label for="chk_terms2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
+                                    </li>
+                                    <li class="accept-driver2">
+                                        <input class="styled-checkbox" id="chk_terms_driver2" type="checkbox" >
+                                        <label for="chk_terms_driver2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
+                                    </li>
+                                    <li class="accept-owner2">
+                                        <input class="styled-checkbox" id="chk_terms_owner2" type="checkbox" >
+                                        <label for="chk_terms_owner2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
+                                    </li>
+                                </ul>
                                 <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Create account</button>
                             </div>
                             </form>
@@ -309,15 +328,38 @@
 
         </div>
     </div>
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal fade" id="modal_terms" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url={{asset('docs/Car_Flow_Terms_Of_Use.docx')}}&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flow_Terms_Of_Use.docx&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_terms_driver" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.docx&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_terms_owner" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.docx&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -327,6 +369,30 @@
 @section('add_custom_script')
     <script>
         $('document').ready(function () {
+            $(".accept-owner").hide();
+            $(".accept-owner2").hide();
+            $("input[name='account_type']").click(function () {
+                var sel_user_type = $("input[name='account_type']:checked").val();
+                if(sel_user_type == "driver"){
+                    // show driver license
+                    $(".accept-driver").show();
+                    $(".accept-owner").hide();
+                }else{
+                    $(".accept-driver").hide();
+                    $(".accept-owner").show();
+                }
+            });
+            $("input[name='account_type2']").click(function () {
+                var sel_user_type = $("input[name='account_type2']:checked").val();
+                if(sel_user_type == "driver"){
+                    // show driver license
+                    $(".accept-driver2").show();
+                    $(".accept-owner2").hide();
+                }else{
+                    $(".accept-driver2").hide();
+                    $(".accept-owner2").show();
+                }
+            });
             sessionStorage.clear();
             $('#form1').submit(function (e) {
                 e.preventDefault();
@@ -338,6 +404,21 @@
                     $("#custom-validation-errors").html('Minimum password length is 6 characters.');
                     return false;
                 }
+                var sel_user_type = $("input[name='account_type']:checked").val();
+                if(sel_user_type == "driver"){
+                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_driver1").is(':checked')){
+                        $("#custom-validation-errors").show();
+                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }else if(sel_user_type == "car"){
+                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_owner1").is(':checked')){
+                        $("#custom-validation-errors").show();
+                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }
+
                 $.post(
                     "{{route('validate-email')}}",
                     {
@@ -360,7 +441,6 @@
                         }
                     },"json"
                 );
-
                 return false;
             });
             $('#form2').submit(function (e) {
@@ -373,6 +453,22 @@
                     $("#custom-validation-errors1").html('Minimum password length is 6 characters.');
                     return false;
                 }
+
+                var sel_user_type = $("input[name='account_type2']:checked").val();
+                if(sel_user_type == "driver"){
+                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
+                        $("#custom-validation-errors1").show();
+                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }else if(sel_user_type == "car"){
+                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
+                        $("#custom-validation-errors1").show();
+                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }
+
                 $.post(
                     "{{route('validate-email')}}",
                     {

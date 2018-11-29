@@ -13,27 +13,22 @@
                     <p class="mt-4">
                         Your idle, parked car is costing you money. Flip the situation: Rent your car to rideshare drivers and create a major flow of passive income. <br><br>Signup today while demand for rentals is high.
                     </p>
-                    {{--<div class="row">--}}
-                        {{--<div class="col-12 col-md-8 offset-md-0 offset-0">--}}
-                            {{--<div class="buttons mt-2">--}}
-                                {{--<a class="btn btn-primary btn-lg btn-block" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2" role="button" target="_blank">Sign up today</a>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
                 </div>
                 <div class="col-md-6 order-2">
                     <div class="row">
                         <div class="register-form col-12 col-md-8 offset-md-2 offset-0">
+                            <form id="form1">
                             <div class="buttons my-4">
                                 <p class="help-text text-center mt-4">
                                     What type of account do you want to create?
                                 </p>
+                                <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>
                                 <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_car1" name="account_type" checked>
+                                    <input type="radio" id="opt_car1" name="account_type" value="car" checked>
                                     <label for="opt_car1">Car owner account</label>
                                 </p>
                                 <p class="mt-1">
-                                    <input type="radio" id="opt_driver1" name="account_type">
+                                    <input type="radio" id="opt_driver1" name="account_type" value="driver">
                                     <label for="opt_driver1">Driver account</label>
                                 </p>
                                 <p class="mt-1 mb-0">
@@ -48,9 +43,23 @@
                                 <p>
                                     <input type="password" class="form-control" name="password1" id="password1" placeholder="" required autocomplete="off">
                                 </p>
-
-                                <a class="btn btn-primary btn-lg btn-block mt-4" href="#" role="button" target="_blank">Create account</a>
+                                <ul class="unstyled terms-area1">
+                                    <li>
+                                        <input class="styled-checkbox" id="chk_terms1" type="checkbox" >
+                                        <label for="chk_terms1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
+                                    </li>
+                                    <li class="accept-driver">
+                                        <input class="styled-checkbox" id="chk_terms_driver1" type="checkbox" >
+                                        <label for="chk_terms_driver1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
+                                    </li>
+                                    <li class="accept-owner">
+                                        <input class="styled-checkbox" id="chk_terms_owner1" type="checkbox" >
+                                        <label for="chk_terms_owner1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
+                                    </li>
+                                </ul>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" id="btn_form1">Create account</button>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -221,6 +230,68 @@
 
 @section('add_custom_script')
     <script>
-
+        $('document').ready(function () {
+            $(".accept-driver").hide();
+            $("input[name='account_type']").click(function () {
+                var sel_user_type = $("input[name='account_type']:checked").val();
+                if(sel_user_type == "driver"){
+                    // show driver license
+                    $(".accept-driver").show();
+                    $(".accept-owner").hide();
+                }else{
+                    $(".accept-driver").hide();
+                    $(".accept-owner").show();
+                }
+            });
+            sessionStorage.clear();
+            $('#form1').submit(function (e) {
+                e.preventDefault();
+                var email = $("#email1").val();
+                var password = $("#password1").val();
+                $("#custom-validation-errors").hide();
+                if(password.length < 6){
+                    $("#custom-validation-errors").show();
+                    $("#custom-validation-errors").html('Minimum password length is 6 characters.');
+                    return false;
+                }
+                var sel_user_type = $("input[name='account_type2']:checked").val();
+                if(sel_user_type == "driver"){
+                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
+                        $("#custom-validation-errors1").show();
+                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }else if(sel_user_type == "car"){
+                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
+                        $("#custom-validation-errors1").show();
+                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }
+                $.post(
+                    "{{route('validate-email')}}",
+                    {
+                        _token: "{{csrf_token()}}",
+                        email: email
+                    },
+                    function (response) {
+                        if(response.status == "ok"){
+                            var sel_user_type = $("input[name='account_type']:checked").val();
+                            sessionStorage.setItem("email", email);
+                            sessionStorage.setItem("password", password);
+                            if(sel_user_type == "driver"){
+                                document.location.href = "{{route('register_driver')}}";
+                            }else if(sel_user_type == "car"){
+                                document.location.href = "{{route('register_car')}}";
+                            }
+                        }else{
+                            $("#custom-validation-errors").show();
+                            $("#custom-validation-errors").html(response.message);
+                        }
+                    },"json"
+                );
+                return false;
+            });
+        });
     </script>
 @endsection
