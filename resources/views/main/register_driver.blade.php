@@ -43,7 +43,7 @@
                                         Address
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}" required autocomplete="off">
+                                        <input id="autocomplete" name="address" onFocus="geolocate()" value="" type="text" class="form-control" required/>
                                     </p>
                                     <hr>
 
@@ -129,18 +129,18 @@
                                         <span style="font-weight: 300;">Are you approved to work for any ridesharing apps?</span>
                                     </p>
                                     <p class="mt-1 mb-0">
-                                        <input type="radio" id="opt_no_approve" name="approve" value="0">
+                                        <input type="radio" id="opt_no_approve" name="approve" checked value="0">
                                         <label for="opt_no_approve" style="font-weight: 300;margin: 0px;">No, I'm not approved</label>
                                     </p>
                                     <p class="mt-1 mb-0">
-                                        <input type="radio" id="opt_approve" name="approve" checked value="1">
+                                        <input type="radio" id="opt_approve" name="approve" value="1">
                                         <label for="opt_approve">Yes, I'm approved</label>
                                     </p>
                                     <div class="approve-apps">
                                         <ul class="unstyled centered">
                                             @foreach (old('ridesharing_app', $defaultApps) as $app)
                                             <li>
-                                                <input class="styled-checkbox" id="chk_{{$app}}" name="ridesharing_apps[{{ $app }}]" type="checkbox" value="{{ $app }}" checked>
+                                                <input class="styled-checkbox" id="chk_{{$app}}" name="ridesharing_apps[{{ $app }}]" type="checkbox" value="{{ $app }}" >
                                                 <label for="chk_{{$app}}">{{$app}}</label>
                                             </li>
                                             @endforeach
@@ -151,7 +151,7 @@
                                         Specify Other
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="ridesharing_app_additional" id="specify" autocomplete="off">
+                                        <input type="text" class="form-control" name="ridesharing_app_additional" id="specify" autocomplete="off" disabled>
                                     </p>
 
 
@@ -168,6 +168,37 @@
 @endsection
 
 @section('add_custom_script')
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&libraries=places&callback=initAutocomplete" async defer></script>
+    <script>
+        var autocomplete;
+        function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(
+                (document.getElementById('autocomplete')));
+            autocomplete.addListener('place_changed', fillInAddress);
+        }
+
+        function fillInAddress() {
+            // Get the place details from the autocomplete object.
+            var place = autocomplete.getPlace();
+            var location  = place.geometry.location;
+        }
+
+        function geolocate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var geolocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    var circle = new google.maps.Circle({
+                        center: geolocation,
+                        radius: position.coords.accuracy
+                    });
+                    autocomplete.setBounds(circle.getBounds());
+                });
+            }
+        }
+    </script>
     <script>
         var FILE = [null,null,null,null,null];
         function remove_img(image_id) {
@@ -203,6 +234,18 @@
                     $(".approve-apps input[type='checkbox']").each(function () {
                         $(this).attr("checked", true);
                     });
+                }
+                if($("#chk_Other").is(':checked')){
+                    $("#specify").attr("disabled", false);
+                }else{
+                    $("#specify").attr("disabled", true);
+                }
+            });
+            $("#chk_Other").click(function () {
+                if($("#chk_Other").is(':checked')){
+                    $("#specify").attr("disabled", false);
+                }else{
+                    $("#specify").attr("disabled", true);
                 }
             });
             $('form#form-register').on('submit', function(e) {

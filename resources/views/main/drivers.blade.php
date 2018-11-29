@@ -301,9 +301,9 @@
                 var email = $("#email1").val();
                 var password = $("#password1").val();
                 $("#custom-validation-errors").hide();
-                if(password.length < 6){
+                if(password.length < 8){
                     $("#custom-validation-errors").show();
-                    $("#custom-validation-errors").html('Minimum password length is 6 characters.');
+                    $("#custom-validation-errors").html('Minimum password length is 8 characters.');
                     return false;
                 }
                 var sel_user_type = $("input[name='account_type2']:checked").val();
