@@ -189,15 +189,52 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
-                    <h3 class="text-center">How will you use the extra income?</h3>
+                    <h5 class="text-center">Want to start earning today?</h5>
                     <div class="row">
                         <div class="col-12 col-md-8 offset-md-2 offset-0">
-                            <div class="buttons my-4">
-                                <a class="btn btn-primary btn-lg btn-block" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2" role="button" target="_blank">Sign up</a>
-                                <p class="help-text text-center mt-4">
-                                    Sign up now and start enjoying the benefits.
-                                </p>
-                            </div>
+                            <form id="form2">
+                                <div class="buttons my-4">
+                                    <p class="help-text text-center mt-4">
+                                        What type of account do you want to create?
+                                    </p>
+                                    <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors1"></div>
+                                    <p class="mt-1 mb-0">
+                                        <input type="radio" id="opt_car2" name="account_type2" value="car" checked>
+                                        <label for="opt_car2">Car owner account</label>
+                                    </p>
+                                    <p class="mt-1 mb-0">
+                                        <input type="radio" id="opt_driver2" name="account_type2" value="driver">
+                                        <label for="opt_driver2">Driver account</label>
+                                    </p>
+                                    <p class="mt-1 mb-0">
+                                        Email
+                                    </p>
+                                    <p>
+                                        <input type="email" class="form-control" name="email2" id="email2" placeholder="" required autocomplete="off">
+                                    </p>
+                                    <p class="mt-1 mb-0">
+                                        Password
+                                    </p>
+                                    <p>
+                                        <input type="password" class="form-control" name="password2" id="password2" placeholder="" required autocomplete="off">
+                                    </p>
+                                    <ul class="unstyled terms-area2">
+                                        <li>
+                                            <input class="styled-checkbox" id="chk_terms2" type="checkbox" >
+                                            <label for="chk_terms2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
+                                        </li>
+                                        <li class="accept-driver2">
+                                            <input class="styled-checkbox" id="chk_terms_driver2" type="checkbox" >
+                                            <label for="chk_terms_driver2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
+                                        </li>
+                                        <li class="accept-owner2">
+                                            <input class="styled-checkbox" id="chk_terms_owner2" type="checkbox" >
+                                            <label for="chk_terms_owner2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
+                                        </li>
+                                    </ul>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Create account</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -226,12 +263,49 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal_terms" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flow_Terms_Of_Use.docx&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_terms_driver" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.docx&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_terms_owner" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.docx&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('add_custom_script')
     <script>
         $('document').ready(function () {
             $(".accept-driver").hide();
+            $(".accept-owner2").hide();
             $("input[name='account_type']").click(function () {
                 var sel_user_type = $("input[name='account_type']:checked").val();
                 if(sel_user_type == "driver"){
@@ -241,6 +315,17 @@
                 }else{
                     $(".accept-driver").hide();
                     $(".accept-owner").show();
+                }
+            });
+            $("input[name='account_type2']").click(function () {
+                var sel_user_type = $("input[name='account_type2']:checked").val();
+                if(sel_user_type == "driver"){
+                    // show driver license
+                    $(".accept-driver2").show();
+                    $(".accept-owner2").hide();
+                }else{
+                    $(".accept-driver2").hide();
+                    $(".accept-owner2").show();
                 }
             });
             sessionStorage.clear();
@@ -290,6 +375,57 @@
                         }
                     },"json"
                 );
+                return false;
+            });
+            $('#form2').submit(function (e) {
+                e.preventDefault();
+                var email = $("#email2").val();
+                var password = $("#password2").val();
+                $("#custom-validation-errors1").hide();
+                if(password.length < 8){
+                    $("#custom-validation-errors1").show();
+                    $("#custom-validation-errors1").html('Minimum password length is 8 characters.');
+                    return false;
+                }
+
+                var sel_user_type = $("input[name='account_type2']:checked").val();
+                if(sel_user_type == "driver"){
+                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
+                        $("#custom-validation-errors1").show();
+                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }else if(sel_user_type == "car"){
+                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
+                        $("#custom-validation-errors1").show();
+                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        return false;
+                    }
+                }
+
+                $.post(
+                    "{{route('validate-email')}}",
+                    {
+                        _token: "{{csrf_token()}}",
+                        email: email
+                    },
+                    function (response) {
+                        if(response.status == "ok"){
+                            var sel_user_type = $("input[name='account_type2']:checked" ).val();
+                            sessionStorage.setItem("email", email);
+                            sessionStorage.setItem("password", password);
+                            if(sel_user_type == "driver"){
+                                document.location.href = "{{route('register_driver')}}";
+                            }else if(sel_user_type == "car"){
+                                document.location.href = "{{route('register_car')}}";
+                            }
+                        }else{
+                            $("#custom-validation-errors1").show();
+                            $("#custom-validation-errors1").html(response.message);
+                        }
+                    },"json"
+                );
+
                 return false;
             });
         });
