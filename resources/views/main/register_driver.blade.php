@@ -275,7 +275,11 @@
                 reader.onload = function (e) {
                     $(".result_tbl_form" + target_id).css("display", "table");
                     $("tr.img_"+target_id + " img").attr('src', e.target.result);
-                    $("tr.img_"+target_id + " .img-name").html(FILE[target_id].name);
+                    var file_name = FILE[target_id].name;
+                    if(file_name.length > 40){
+                        file_name = file_name.substring(0, 40) + "...";
+                    }
+                    $("tr.img_"+target_id + " .img-name").html(file_name);
                     $("tr.img_"+target_id + " .btn-remove").html('<a href="javascript:remove_img('+target_id+')">Remove</a>');
                 }
                 reader.readAsDataURL(FILE[target_id]);

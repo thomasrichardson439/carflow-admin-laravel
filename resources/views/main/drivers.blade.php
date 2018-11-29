@@ -24,11 +24,11 @@
                                 </p>
                                 <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>
                                 <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_car1" name="account_type">
+                                    <input type="radio" id="opt_car1" name="account_type" value="car">
                                     <label for="opt_car1">Car owner account</label>
                                 </p>
                                 <p class="mt-1">
-                                    <input type="radio" id="opt_driver1" name="account_type" checked>
+                                    <input type="radio" id="opt_driver1" name="account_type" checked  value="driver">
                                     <label for="opt_driver1">Driver account</label>
                                 </p>
                                 <p class="mt-1 mb-0">
@@ -388,23 +388,25 @@
                 $("#custom-validation-errors").hide();
                 if(password.length < 8){
                     $("#custom-validation-errors").show();
-                    $("#custom-validation-errors").html('Minimum password length is 8 characters.');
+                    $("#custom-validation-errors").html('Password must have a minimum password length is 8 characters');
                     return false;
                 }
-                var sel_user_type = $("input[name='account_type2']:checked").val();
+                var sel_user_type = $("input[name='account_type']:checked").val();
+                console.log(sel_user_type);
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
-                        $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_driver1").is(':checked')){
+                        $("#custom-validation-errors").show();
+                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
-                        $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_owner1").is(':checked')){
+                        $("#custom-validation-errors").show();
+                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
                         return false;
                     }
                 }
+                alert(345);
                 $.post(
                     "{{route('validate-email')}}",
                     {
@@ -436,7 +438,7 @@
                 $("#custom-validation-errors1").hide();
                 if(password.length < 8){
                     $("#custom-validation-errors1").show();
-                    $("#custom-validation-errors1").html('Minimum password length is 8 characters.');
+                    $("#custom-validation-errors1").html('Password must have a minimum password length is 8 characters.');
                     return false;
                 }
 
