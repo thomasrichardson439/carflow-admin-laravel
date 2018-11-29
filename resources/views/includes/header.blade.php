@@ -14,6 +14,7 @@
                     <a href="{{url('/drivers')}}">Drivers</a>
                     <a href="{{url('/owners')}}">Owners</a>
                     <a href="{{url('/how-it-works')}}">How it works</a>
+                    <a href="{{url('/faq')}}">FAQ</a>
                     <a href="{{url('/about-us')}}">About Us</a>
                 </p>
             </div>
