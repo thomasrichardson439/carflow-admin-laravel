@@ -74,7 +74,7 @@
                                         </select>
                                     </p>
                                     <p class="mt-1 mb-0">
-                                        Car marker
+                                        Car Make
                                     </p>
                                     <p>
                                         <select class="form-control" name="manufacturer_id" id="manufacturer_id" required>
