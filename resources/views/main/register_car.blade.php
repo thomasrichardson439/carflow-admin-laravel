@@ -16,22 +16,26 @@
                             <p class="text-center"><a href="{{url('/register-driver')}}" style="color: red;">Want to create Driver account?</a></p>
                         </div>
                         <div class="col-12 col-md-8 offset-md-2 offset-0 form-border form-pd">
-                            <form id="form-register">
+                            <form id="form-register" action="{{ route('save_car_owner') }}" method="post" enctype="multipart/form-data">
                                 <div class="buttons my-4">
+                                    @csrf
+                                    @include('main._alerts')
                                     <p class="help-text mt-4">
                                         PERSONAL INFORMATION
                                     </p>
+                                    <input type="hidden" name="email" value="{{ old('email') }}" class="form-control">
+                                    <input type="hidden" name="password" value="{{ old('password') }}" class="form-control">
                                     <p class="mt-1 mb-0">
                                         Full name
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="full_name" id="full_name" required autocomplete="off">
+                                        <input type="text" class="form-control" name="full_name" id="full_name" required >
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Phone number
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="phone" id="phone" required autocomplete="off">
+                                        <input type="text" class="form-control" name="phone" id="phone" required >
                                     </p>
                                     <hr>
                                     <p class="mt-1 mb-0">
@@ -44,7 +48,12 @@
                                         Address
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="address" id="address" required autocomplete="off">
+                                        <input id="lot" name="pickup_location_lat" type="hidden" value="">
+                                        <input id="lat" name="pickup_location_lon" type="hidden" value="">
+                                        <input id="return_lat" name="return_location_lat" type="hidden" value="">
+                                        <input id="return_lon" name="return_location_lon" type="hidden" value="">
+                                        <input id="return_location" name="full_return_location" type="hidden" value="">
+                                        <input id="autocomplete" name="full_pickup_location" onFocus="geolocate()" value="" type="text" class="form-control" required/>
                                     </p>
                                     <hr>
 
@@ -56,107 +65,107 @@
                                         Category
                                     </p>
                                     <p>
-                                        <select class="form-control" name="car_category" id="car_category" required>
-                                            <option value=""></option>
-                                            <option value="1">Sedan</option>
-                                            <option value="2">ttt</option>
+                                        <select class="form-control" name="category_id" id="category_id" required>
+                                            @foreach ($carCategories as $category)
+                                                <option @if (old('category_id') == $category->id) selected @endif
+                                                value="{{ $category->id }}"
+                                                >{{ $category->name }}</option>
+                                            @endforeach
                                         </select>
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Car marker
                                     </p>
                                     <p>
-                                        <select class="form-control" name="car_mark" id="car_mark" required>
-                                            <option value=""></option>
-                                            <option value="1">ford</option>
-                                            <option value="2">Benz</option>
+                                        <select class="form-control" name="manufacturer_id" id="manufacturer_id" required>
+                                            @foreach ($carManufacturers as $manufacturer)
+                                                <option @if (old('manufacturer_id') == $manufacturer->id) selected @endif
+                                                value="{{ $manufacturer->id }}"
+                                                >{{ $manufacturer->name }}</option>
+                                            @endforeach
                                         </select>
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Car model
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="car_model" id="car_model" required autocomplete="off">
+                                        <input type="text" class="form-control" name="model" id="model" required >
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Your of production
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="production" id="production" required autocomplete="off">
+                                        <input type="text" class="form-control" name="year" id="year" required >
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Number of seats
                                     </p>
                                     <p>
-                                        <input type="number" class="form-control" name="seat_number" id="seat_number" required autocomplete="off">
+                                        <input type="number" class="form-control" name="seats" id="seats" required >
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Color
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="color" id="color" required autocomplete="off">
+                                        <input type="text" class="form-control" name="color" id="color" required >
                                     </p>
                                     <p class="mt-1 mb-0">
                                         Plate
                                     </p>
                                     <p>
-                                        <input type="text" class="form-control" name="plate" id="plate" required autocomplete="off">
+                                        <input type="text" class="form-control" name="plate" id="plate" required >
+                                        <input type="hidden" name="allowed_recurring" value="0">
                                     </p>
 
                                     <p class="mt-1 mb-0 mt-4">
                                         Photo of the car
                                     </p>
-                                    <div id="image-preview-div" style="display: none">
-                                        <label for="exampleInputFile">Selected image:</label>
-                                        <br>
-                                        <img id="preview-img" src="noimage">
-                                    </div>
                                     <table class="result-tbl result_tbl_form1" style="width: 100%;">
                                         <tr class="img_1">
                                             <td style="width: 30px;">
-                                                <img src="{{asset('images/no-face.png')}}" style="margin: 5px;margin-left: 0px;width: 20px;">
+                                                <img src="{{asset('images/no-face.png')}}" onerror="this.src='{{asset('images/no-face.png')}}'" style="margin: 5px;margin-left: 0px;width: 20px;">
                                             </td>
-                                            <td>IMG_72828.jpg</td>
-                                            <td class="text-right"><a href="javascript:remove_img(1)">Remove</a></td>
+                                            <td class="img-name">IMG_72828.jpg</td>
+                                            <td class="btn-remove text-right"><a href="javascript:remove_img(1)">Remove</a></td>
                                         </tr>
                                     </table>
                                     <label class="fileContainer btn">
                                         SELECT IMAGES
-                                        <input type="file" accept="image/*" id="file1" name="file1"/>
+                                        <input type="file" accept="image/*" id="file1" class="file" name="car_photo"/>
                                     </label>
 
                                     <p class="mt-1 mb-0 mt-4">
                                         Upload TLC/Diamon sticker
                                     </p>
                                     <table class="result-tbl result_tbl_form2" style="width: 100%;">
-                                        <tr class="img_1">
+                                        <tr class="img_2">
                                             <td style="width: 30px;">
-                                                <img src="{{asset('images/no-face.png')}}" style="margin: 5px;margin-left: 0px;width: 20px;">
+                                                <img src="{{asset('images/no-face.png')}}" onerror="this.src='{{asset('images/no-face.png')}}'" style="margin: 5px;margin-left: 0px;width: 20px;">
                                             </td>
                                             <td>IMG_72828.jpg</td>
-                                            <td class="text-right"><a href="javascript:remove_img(1)">Remove</a></td>
+                                            <td class="text-right"><a href="javascript:remove_img(2)">Remove</a></td>
                                         </tr>
                                     </table>
                                     <label class="fileContainer btn">
                                         SELECT IMAGES
-                                        <input type="file" accept="image/*" id="file2"/>
+                                        <input type="file" accept="image/*" id="file2" name="tlc_photo" class="file"/>
                                     </label>
 
                                     <p class="mt-1 mb-0 mt-4">
                                         Upload FH-1 Insurance
                                     </p>
                                     <table class="result-tbl result_tbl_form3" style="width: 100%;">
-                                        <tr class="img_1">
+                                        <tr class="img_3">
                                             <td style="width: 30px;">
-                                                <img src="{{asset('images/no-face.png')}}" style="margin: 5px;margin-left: 0px;width: 20px;">
+                                                <img src="{{asset('images/no-face.png')}}" onerror="this.src='{{asset('images/no-face.png')}}'" style="margin: 5px;margin-left: 0px;width: 20px;">
                                             </td>
                                             <td>IMG_72828.jpg</td>
-                                            <td class="text-right"><a href="javascript:remove_img(1)">Remove</a></td>
+                                            <td class="text-right"><a href="javascript:remove_img(3)">Remove</a></td>
                                         </tr>
                                     </table>
                                     <label class="fileContainer btn">
                                         SELECT IMAGES
-                                        <input type="file" accept="image/*" id="file3"/>
+                                        <input type="file" accept="image/*" id="file3" name="fh_photo" class="file"/>
                                     </label>
 
                                     <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Submit information</button>
@@ -174,74 +183,98 @@
 @endsection
 
 @section('add_custom_script')
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
-        var FILE1;
+        var autocomplete;
+        function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(
+                (document.getElementById('autocomplete')));
+            autocomplete.addListener('place_changed', fillInAddress);
+        }
+
+        function fillInAddress() {
+            // Get the place details from the autocomplete object.
+//            $("#address").val("");
+            $("#lot").val("");
+            $("#lat").val("");
+            var place = autocomplete.getPlace();
+            var location  = place.geometry.location;
+//            $("#address").val(place.name);
+            $("#lat").val(location.lat());
+            $("#lot").val(location.lng());
+            $("#return_lat").val($("#lat").val());
+            $("#return_lon").val($("#lot").val());
+            $("#return_location").val($("#autocomplete").val());
+        }
+
+        function geolocate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var geolocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    var circle = new google.maps.Circle({
+                        center: geolocation,
+                        radius: position.coords.accuracy
+                    });
+                    autocomplete.setBounds(circle.getBounds());
+                });
+            }
+        }
+    </script>
+    <script>
+        var FILE = [null,null,null,null];
         function remove_img(image_id) {
+            $(".result_tbl_form" + image_id).css("display", "none");
+            FILE[image_id] = null;
+            console.log(FILE);
+            var $el = $('#file'+image_id);
+            $el.wrap('<form>').closest('form').get(0).reset();
+            $el.unwrap();
+
             return false;
         }
-        function noPreview() {
-            $('#image-preview-div').css("display", "none");
-            $('#preview-img').attr('src', 'noimage');
-            $('upload-button').attr('disabled', '');
-        }
-
-        function selectImage(e) {
-            $('#file').css("color", "green");
-            $('#image-preview-div').css("display", "block");
-            $('#preview-img').attr('src', e.target.result);
-            $('#preview-img').css('max-width', '50px');
-        }
         $(document).ready(function (e) {
-
+            $(".result-tbl").css("display", "none");
+            var email = sessionStorage.getItem("email");
+            var password = sessionStorage.getItem("password");
+            if(email == undefined || password == undefined){
+                document.location.href = "{{route('home-page')}}";
+            }else{
+                $("input[name='email']").val(email);
+                $("input[name='password']").val(password);
+            }
             var maxsize = 500 * 1024; // 500 KB
             $('#max-size').html((maxsize/1024).toFixed(2));
-//            $('#upload-image-form').on('submit', function(e) {
-//
-//                e.preventDefault();
-//
-//                $('#message').empty();
-//                $('#loading').show();
-//
-//                $.ajax({
-//                    url: "upload-image.php",
-//                    type: "POST",
-//                    data: new FormData(this),
-//                    contentType: false,
-//                    cache: false,
-//                    processData: false,
-//                    success: function(data)
-//                    {
-//                        $('#loading').hide();
-//                        $('#message').html(data);
-//                    }
-//                });
-//
-//            });
 
-            $('#file').change(function() {
-
-                $('#message').empty();
+            $('.file').change(function() {
+                $('#custom-validation-errors').hide();
+                var target_id = $(this).attr('id').replace("file","");
                 var file = this.files[0];
-                var match = ["image/jpeg", "image/png", "image/jpg"];
-
-                if ( !( (file.type == match[0]) || (file.type == match[1]) || (file.type == match[2]) ) )
-                {
-                    noPreview();
-                    $('#message').html('<div class="alert alert-warning" role="alert">Unvalid image format. Allowed formats: JPG, JPEG, PNG.</div>');
-                    return false;
-                }
+                FILE[target_id] = file;
+                $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
+//                if ( !( (file.type == match[0]) || (file.type == match[1]) || (file.type == match[2]) ) )
+//                {
+//                    $('#custom-validation-errors').show();
+//                    $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
+//                    return false;
+//                }
                 if ( file.size > maxsize )
                 {
-                    noPreview();
-                    $('#message').html('<div class=\"alert alert-danger\" role=\"alert\">The size of image you are attempting to upload is ' + (file.size/1024).toFixed(2) + ' KB, maximum size allowed is ' + (maxsize/1024).toFixed(2) + ' KB</div>');
+                    $('#custom-validation-errors').show();
+                    $('#custom-validation-errors').html('<b>The size of image you are attempting to upload is ' + (file.size/1024).toFixed(2) + ' KB, maximum size allowed is ' + (maxsize/1024).toFixed(2) + ' KB</b>');
                     return false;
                 }
 
-//                $('#upload-button').removeAttr("disabled");
-
                 var reader = new FileReader();
-                reader.onload = selectImage;
-                reader.readAsDataURL(this.files[0]);
+                reader.onload = function (e) {
+                    $(".result_tbl_form" + target_id).css("display", "table");
+                    $("tr.img_"+target_id + " img").attr('src', e.target.result);
+                    $("tr.img_"+target_id + " .img-name").html(FILE[target_id].name);
+                    $("tr.img_"+target_id + " .btn-remove").html('<a href="javascript:remove_img('+target_id+')">Remove</a>');
+                }
+                reader.readAsDataURL(FILE[target_id]);
             });
 
         });

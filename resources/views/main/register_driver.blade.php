@@ -16,7 +16,7 @@
                             <p class="text-center"><a href="{{url('/register-car')}}" style="color: red;">Want to create Car Owner account?</a></p>
                         </div>
                         <div class="col-12 col-md-8 offset-md-2 offset-0 form-border form-pd">
-                            <form id="form-register" action="{{ url('/user/store/driver') }}" method="post" enctype="multipart/form-data">
+                            <form id="form-register" action="{{ route('save_driver') }}" method="post" enctype="multipart/form-data">
                                 <div class="buttons my-4">
                                     @csrf
                                     @include('main._alerts')
@@ -71,7 +71,7 @@
                                         Back side
                                     </p>
                                     <table class="result-tbl result_tbl_form2" style="width: 100%;">
-                                        <tr class="img_1">
+                                        <tr class="img_2">
                                             <td style="width: 30px;">
                                                 <img src="{{asset('images/no-face.png')}}" onerror="this.src='{{asset('images/no-face.png')}}'" style="margin: 5px;margin-left: 0px;width: 20px;">
                                             </td>
@@ -181,21 +181,6 @@
             return false;
         }
 
-        function selectImage(id) {
-            $('#file1').css("color", "green");
-            $('#image-preview-div').css("display", "block");
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#preview-img').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(FILE1);
-
-            $('#preview-img').css('max-width', '50px');
-            console.log("id : ", id);
-        }
-
         $(document).ready(function (e) {
             $(".result-tbl").css("display", "none");
             var email = sessionStorage.getItem("email");
@@ -221,19 +206,7 @@
                 }
             });
             $('form#form-register').on('submit', function(e) {
-//                e.preventDefault();
                 return true;
-//                $('#indicator').show();
-//                $.post(
-//                    "http://54.183.254.243/api/register/create",
-//                    {
-//
-//                    },
-//                    function (response) {
-//
-//                    },"json"
-//                );
-
             });
 
             $('.file').change(function() {
@@ -242,12 +215,12 @@
                 var file = this.files[0];
                 FILE[target_id] = file;
                 $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
-                if ( !( (file.type == match[0]) || (file.type == match[1]) || (file.type == match[2]) ) )
-                {
-                    $('#custom-validation-errors').show();
-                    $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
-                    return false;
-                }
+//                if ( !( (file.type == match[0]) || (file.type == match[1]) || (file.type == match[2]) ) )
+//                {
+//                    $('#custom-validation-errors').show();
+//                    $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
+//                    return false;
+//                }
                 if ( file.size > maxsize )
                 {
                     $('#custom-validation-errors').show();

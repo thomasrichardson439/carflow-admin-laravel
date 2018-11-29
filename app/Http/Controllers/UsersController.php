@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AwsHelper;
+use App\Models\Car;
 use App\Models\DrivingLicense;
+use App\Models\Owner;
 use App\Models\TLCLicense;
 use App\Models\User;
+use App\Repositories\CarsRepository;
 use Illuminate\Http\Request;
 use DB;
 
 class UsersController extends Controller
 {
     private $awsHelper;
+    private $carsRepository;
 
     public function __construct()
     {
         $this->awsHelper = new AwsHelper();
+        $this->carsRepository = new CarsRepository();
     }
     public function validateEmail(Request $request)
     {
@@ -109,6 +114,73 @@ class UsersController extends Controller
             $user->save();
         });
 
-        return redirect('/welcome' . $user->id)->with('success', 'User successfully created');
+        return redirect('/welcome')->with('success', 'User successfully created');
+    }
+
+    public function store_car(Request $request)
+    {
+
+        $this->validate($request, [
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'full_name' => 'required|min:2|max:100',
+            'category_id' => 'required|integer|exists:car_categories,id',
+            'manufacturer_id' => 'required|integer|exists:car_manufacturers,id',
+            'model' => 'required|string|max:255',
+            'year' => 'required|integer|min:1990|max:' . date('Y'),
+            'seats' => 'required|integer|max:10',
+//            'owner' => 'required|string|max:255',
+//            'policy_number' => 'string|max:255|nullable',
+            'car_photo' => 'required|image',
+            'tlc_photo' => 'required|image',
+            'fh_photo' => 'required|image',
+            'color' => 'required|string|max:255',
+            'plate' => 'required|string|max:255',
+            'allowed_recurring' => 'required|boolean',
+
+            'pickup_location_lat' => 'required|numeric',
+            'pickup_location_lon' => 'required|numeric',
+            'full_pickup_location' => 'required|string|max:255',
+        ]);
+
+        $owner = new Owner;
+
+        DB::transaction(function () use ($request, &$owner) {
+            $owner->email = $request->email;
+            $owner->password = bcrypt($request->password);
+            $owner->full_name = $request->full_name;
+            $owner->status = \ConstUserStatus::PENDING;
+            $owner->save();
+            $owner->tlc_photo = $this->awsHelper->uploadToS3(
+                $request->file('tlc_photo'),
+                'owners/tlc_photo_' . $owner->id
+            );
+            $owner->fh_photo = $this->awsHelper->uploadToS3(
+                $request->file('fh_photo'),
+                'owners/fh_photo_' . $owner->id
+            );
+
+            $owner->save();
+        });
+
+        $car = new Car();
+        $car->fill(array_merge(
+            $request->all(),
+            ['image_s3_url' => '']
+        ));
+        $car->pickup_borough_id = 0;
+        $car->return_borough_id = 0;
+        $car->owner = $request->full_name;
+        $car->policy_number = "not sure";
+
+        $car->saveOrFail();
+
+        $car->image_s3_url = $this->awsHelper->uploadToS3(
+            $request->file('car_photo'),
+            'cars/' . $car->id
+        );
+
+        $car->save();
+        return redirect('/welcome')->with('success', 'Car successfully created');
     }
 }

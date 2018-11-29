@@ -104,6 +104,9 @@ button:focus {
   line-height: 100%;
   font-family: 'Karla', sans-serif;
 }
+.styled-checkbox + label a{
+    text-decoration: underline !important;
+}
 .styled-checkbox + label:before {
       content: '';
       margin-right: 10px;
@@ -177,6 +180,77 @@ li {
   margin-left: 30px;
 }
 
+/* updated checkbox*/
+.styled-checkbox {
+    position: absolute;
+}
+.styled-checkbox + label{
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    line-height: 100%;
+    font-family: 'Karla', sans-serif;
+}
+.styled-checkbox + label a{
+    text-decoration: underline !important;
+}
+.styled-checkbox + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: bottom;
+    width: 20px;
+    height: 20px;
+    background: #bdbdbd;
+}
+
+
+/*// Box hover*/
+.styled-checkbox:hover + label:before {
+    background: #f35429;
+}
+
+/*// Box focus*/
+.styled-checkbox:focus + label:before {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+/*// Box checked*/
+.styled-checkbox:checked + label:before {
+    background: #f35429;
+}
+
+/*// Disabled state label.*/
+.styled-checkbox:disabled + label {
+    color: #b8b8b8;
+    cursor: auto;
+}
+
+/*// Disabled box.*/
+.styled-checkbox:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+}
+
+/*// Checkmark. Could be replaced with an image*/
+.styled-checkbox:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    background: white;
+    width: 2px;
+    height: 2px;
+    /*border: 2px solid #bdbdbd;*/
+    box-shadow:
+            2px 0 0 white,
+            4px 0 0 white,
+            4px -2px 0 white,
+            4px -4px 0 white,
+            4px -6px 0 white,
+            4px -8px 0 white;
+    transform: rotate(45deg);
+}
 /*indicator loading*/
 #indicator {
   width: 100%;
@@ -197,4 +271,52 @@ li {
   left: 50%;
   top: 50%;
   z-index: 100;
+}
+
+/* google map search */
+#loader {
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+    visibility: visible;
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    background: #fff;
+    z-index: 90000;
+}
+
+#loader.fadeOut {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    background-color: #333;
+    border-radius: 100%;
+    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+    animation: sk-scaleout 1.0s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+    0% { -webkit-transform: scale(0) }
+    100% {
+        -webkit-transform: scale(1.0);
+        opacity: 0;
+    }
+}
+
+@keyframes sk-scaleout {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    } 100% {
+          -webkit-transform: scale(1.0);
+          transform: scale(1.0);
+          opacity: 0;
+      }
 }
