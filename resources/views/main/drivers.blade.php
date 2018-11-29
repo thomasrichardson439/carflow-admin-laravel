@@ -171,26 +171,26 @@
 
 
 
-    <div class="action">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <h3 class="text-center">But you can’t start to enjoy all of these benefits until you sign up.</h3>
-                    <div class="row">
-                        <div class="col-12 col-md-8 offset-md-2 offset-0">
-                            <div class="buttons my-4">
-                                <a class="btn btn-primary btn-lg btn-block" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2" role="button" target="_blank">Sign up today</a>
-                                <p class="help-text text-center mt-4">
-                                    Don’t let this opportunity slip by.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {{--<div class="action">--}}
+        {{--<div class="container">--}}
+            {{--<div class="row">--}}
+                {{--<div class="col-md-6 offset-md-3">--}}
+                    {{--<h3 class="text-center">But you can’t start to enjoy all of these benefits until you sign up.</h3>--}}
+                    {{--<div class="row">--}}
+                        {{--<div class="col-12 col-md-8 offset-md-2 offset-0">--}}
+                            {{--<div class="buttons my-4">--}}
+                                {{--<a class="btn btn-primary btn-lg btn-block" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2" role="button" target="_blank">Sign up today</a>--}}
+                                {{--<p class="help-text text-center mt-4">--}}
+                                    {{--Don’t let this opportunity slip by.--}}
+                                {{--</p>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
-        </div>
-    </div>
+        {{--</div>--}}
+    {{--</div>--}}
 
 
     <div class="about">
