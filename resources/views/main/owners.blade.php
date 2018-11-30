@@ -75,13 +75,12 @@
                     <div class="about_text">
                         <h1>It couldn’t be easier:</h1>
                         <ol class="mt-2">
-                            <li>Complete our simple <a href="https://goo.gl/forms/kZBYHB96tcVJrfRk2">signup form</a>.</li>
+                            <li>Complete our simple <a href="#signup2">signup form</a>.</li>
                             <li>Decide which days and hours you want to make your car available for renting.</li>
                             <li>Set your own pickup and drop-off locations.</li>
                             <li>Get paid for every hour your car is being used and <strong>get it back when you want it.</strong></li>
                         </ol>
                     </div>
-
                 </div>
 
                 <div class="col-md-3 offset-md-2 col-8 offset-2 order-1 order-md-2">
@@ -129,7 +128,7 @@
                 <div class="col-md-6 order-2 order-md-1">
                     <div class="about_text">
                         <h1>Ready, set, go!</h1>
-                        <p class="mt-2">The sooner you get your car in our system, the sooner you’ll start enjoying the profits from this incredible source of passive income. <a href="https://goo.gl/forms/kZBYHB96tcVJrfRk2">Sign up today.</a></p>
+                        <p class="mt-2">The sooner you get your car in our system, the sooner you’ll start enjoying the profits from this incredible source of passive income. <a href="#signup2">Sign up today.</a></p>
                     </div>
 
                 </div>
@@ -185,7 +184,7 @@
     </div>
 
 
-    <div class="action">
+    <div class="action" id="signup2">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
@@ -339,22 +338,25 @@
                     $("#custom-validation-errors").html('Password must have a minimum length of 8 characters');
                     return false;
                 }
+                if(!$("#chk_terms1").is(':checked')){
+                    $("#custom-validation-errors").show();
+                    $("#custom-validation-errors").html('You need to accept Terms & Conditions.');
+                    return false;
+                }
                 var sel_user_type = $("input[name='account_type']:checked").val();
-                console.log(sel_user_type);
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_driver1").is(':checked')){
+                    if(!$("#chk_terms_driver1").is(':checked')){
                         $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors").html('You need to agree to Drivers Contract.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_owner1").is(':checked')){
+                    if(!$("#chk_terms_owner1").is(':checked')){
                         $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors").html('You need to agree to Owners Contract.');
                         return false;
                     }
                 }
-                alert(345);
                 $.post(
                     "{{route('validate-email')}}",
                     {
@@ -390,17 +392,22 @@
                     return false;
                 }
 
+                if(!$("#chk_terms2").is(':checked')){
+                    $("#custom-validation-errors1").show();
+                    $("#custom-validation-errors1").html('You need to accept Terms & Conditions.');
+                    return false;
+                }
                 var sel_user_type = $("input[name='account_type2']:checked").val();
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
+                    if(!$("#chk_terms_driver2").is(':checked')){
                         $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors1").html('You need to agree to Drivers Contract.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
+                    if(!$("#chk_terms_owner2").is(':checked')){
                         $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors1").html('You need to agree to Owners Contract.');
                         return false;
                     }
                 }

@@ -346,3 +346,10 @@ a:hover {
 .carousel-indicators .active {
   background-color: #f03e3e
 }
+
+@media (max-width: 479px) {
+  .logo-bar p.navigation-links a {
+    margin: 0px 4px;
+    font-size: 16px;
+  }
+}
