@@ -44,7 +44,7 @@
 
                     <div class="step">
                         <h5>How do I get started as a driver?</h5>
-                        <p>To <a target="_blank" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2">apply</a> you’ll need to provide us with some basic information as well as snap pictures of the following documents and upload the photos to us:</p>
+                        <p>To <a href="{{url('/drivers#signup2')}}">apply</a> you’ll need to provide us with some basic information as well as snap pictures of the following documents and upload the photos to us:</p>
                         <ul>
                             <li>TLC License</li>
                             <li>DMV License</li>

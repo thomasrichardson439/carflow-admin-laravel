@@ -51,7 +51,7 @@
                     <div class="row">
                         <div class="col-12 col-md-8 offset-md-2 offset-0">
                             <div class="buttons my-4">
-                                <a class="btn btn-primary btn-lg btn-block" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2" role="button" target="_blank">Go with “Car Flo”</a>
+                                <a class="btn btn-primary btn-lg btn-block" href="{{url('/main')}}" role="button">Go with “Car Flo”</a>
                                 <p class="help-text text-center mt-4">
                                     It's free and simple – fill out our registration form and we'll be in touch.
                                 </p>
