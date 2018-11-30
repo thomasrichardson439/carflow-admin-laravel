@@ -95,7 +95,7 @@
                         <h1>Here's how easy it is</h1>
                         <ol class="mt-2">
                             <li>Complete our simple <a href="#signup2">registration form</a>. (You’ll need your driver’s license and TLC license.)</li>
-                            <li>We’ll get back with your approval in usually less than 24 hours.</li>
+                            <li>We’ll get back with your approval in less than 24 hours.</li>
                             <li>Download our app and start reserving your favorite car and scheduling your hours.</li>
                         </ol>
                     </div>
@@ -322,7 +322,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flow_Terms_Of_Use.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Terms_of_Use.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -334,7 +334,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -346,7 +346,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>

@@ -109,7 +109,7 @@
                 <div class="col-md-6 offset-md-2 offset-0">
                     <div class="about_text">
                         <h1>The assurance you need</h1>
-                        <p class="mt-2">Car Flo checks the credentials of every Car Flo driver and requires drivers to have requires drivers to submit their licenses and checks their driving record's before approving them to drive your car behind the wheel and have held a TLC license for at least one year.</p>
+                        <p class="mt-2">Car Flo checks the credentials of every Car Flo driver and requires drivers to have requires drivers to submit their licenses and checks their driving record's before approving them to drive your car.</p>
                     </div>
                 </div>
 
@@ -269,7 +269,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flow_Terms_Of_Use.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Terms_of_Use.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -281,7 +281,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -293,7 +293,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>

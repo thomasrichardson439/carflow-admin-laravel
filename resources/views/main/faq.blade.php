@@ -52,7 +52,7 @@
                             <li>Debit/Credit Card</li>
                         </ul>
                         <p>
-                            We will get back to you within four business hours to schedule an interview. Once approved you can begin scheduling your rentals to match your desire to drive.
+                            We will get back to you within four business hours to. Once approved you can begin scheduling your rentals to match your desire to drive.
                         </p>
                     </div>
 
@@ -84,7 +84,7 @@
                     <div class="step">
                         <h5>How long does the process take to begin working with Car Flo?</h5>
                         <p>
-                            Once you have submitted your documents an interview will be scheduled within four hours. After your interview it can take 24-48 hours to get you insured and ready to drive.
+                            Once you have submitted your documents within four hours. After your interview it can take 24-48 hours to get you insured and ready to drive.
                         </p>
                     </div>
                     <div class="step">
@@ -96,7 +96,7 @@
                     <div class="step">
                         <h5>How much advance notice do I need to give to reserve hours?</h5>
                         <p>
-                            No advance notice is needed. Once you are approved by us simply choose a shift and the app will automatically let you know which vehicles and times are available in your area.
+                            No advance notice is needed. Once you are approved by us simply choose and the app will automatically let you know which vehicles and times are available in your area.
                         </p>
                     </div>
                     <div class="step">
@@ -114,7 +114,7 @@
                     <div class="step">
                         <h5>What happens if there is damage during my rental?</h5>
                         <p>
-                            For damage incurred during the time of the shift, drivers are responsible for the deductible. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence this policy is void.
+                            For damage incurred during the time of drivers are responsible for the deductible. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence this policy is void.
                         </p>
                         <p>
                             When renting a car owned by a Car Flow Owner and made available to other drivers, you need to communicate with the owner. The Car Flo Owner will add your name to the car’s insurance policy.

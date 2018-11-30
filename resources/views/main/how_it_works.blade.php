@@ -12,7 +12,7 @@
 
                     <h1 class="mt-5 pt-5">How Car Flo Works?</h1>
 
-                    <p class="mt-4">Rent an affordable top-quality vehicle for only the hours you plan to drive rideshare. With Car Flow you never worry about insurance, parking, or vehicle maintenance. And, our system is designed for ultimate driver convenience:</p>
+                    <p class="mt-4">Rent an affordable top-quality vehicle for only the hours you plan to drive rideshare. With you never worry about insurance, parking, or vehicle maintenance. And, our system is designed for ultimate driver convenience:</p>
 
                 </div>
 
@@ -37,7 +37,7 @@
                     <div class="step">
                         <h4>2. Get the app</h4>
                         <p>
-                            Download the Car Flow app on iTunes or Google Play.</span>
+                            Download the Car app on iTunes or Google Play.</span>
                         </p>
                     </div>
 
@@ -47,7 +47,6 @@
                         <ul>
                             <li>TLC License</li>
                             <li>DMV License</li>
-                            <li>Social Security card</li>
                             <li>Proof of address (ex: utility bill, bank statement)</li>
                             <li>Debit/Credit Card</li>
                         </ul>
