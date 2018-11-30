@@ -13,55 +13,55 @@
                         Are you suffering from too many costs and too few ways to make rideshare money? Car Flo solves these problems.
                     </p>
                 </div>
-                <div class="col-md-6 order-2">
-                    <div class="row">
-                        <div class="register-form col-12 col-md-8 offset-md-2 offset-0">
-                            <form id="form1">
-                            <div class="buttons my-4">
-                                <p class="help-text text-center mt-4">
-                                    What type of account do you want to create?
-                                </p>
-                                <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>
-                                <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_car1" name="account_type" value="car">
-                                    <label for="opt_car1">Car owner account</label>
-                                </p>
-                                <p class="mt-1">
-                                    <input type="radio" id="opt_driver1" name="account_type" checked  value="driver">
-                                    <label for="opt_driver1">Driver account</label>
-                                </p>
-                                <p class="mt-1 mb-0">
-                                    Email
-                                </p>
-                                <p>
-                                    <input type="email" class="form-control" name="email1" id="email1" placeholder="" required autocomplete="off">
-                                </p>
-                                <p class="mt-1 mb-0">
-                                    Password
-                                </p>
-                                <p>
-                                    <input type="password" class="form-control" name="password1" id="password1" placeholder="" required autocomplete="off">
-                                </p>
-                                <ul class="unstyled terms-area1">
-                                    <li>
-                                        <input class="styled-checkbox" id="chk_terms1" type="checkbox" >
-                                        <label for="chk_terms1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
-                                    </li>
-                                    <li class="accept-driver">
-                                        <input class="styled-checkbox" id="chk_terms_driver1" type="checkbox" >
-                                        <label for="chk_terms_driver1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
-                                    </li>
-                                    <li class="accept-owner">
-                                        <input class="styled-checkbox" id="chk_terms_owner1" type="checkbox" >
-                                        <label for="chk_terms_owner1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
-                                    </li>
-                                </ul>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form1">Create account</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                {{--<div class="col-md-6 order-2">--}}
+                    {{--<div class="row">--}}
+                        {{--<div class="register-form col-12 col-md-8 offset-md-2 offset-0">--}}
+                            {{--<form id="form1">--}}
+                            {{--<div class="buttons my-4">--}}
+                                {{--<p class="help-text text-center mt-4">--}}
+                                    {{--What type of account do you want to create?--}}
+                                {{--</p>--}}
+                                {{--<div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--<input type="radio" id="opt_car1" name="account_type" value="car">--}}
+                                    {{--<label for="opt_car1">Car owner account</label>--}}
+                                {{--</p>--}}
+                                {{--<p class="mt-1">--}}
+                                    {{--<input type="radio" id="opt_driver1" name="account_type" checked  value="driver">--}}
+                                    {{--<label for="opt_driver1">Driver account</label>--}}
+                                {{--</p>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--Email--}}
+                                {{--</p>--}}
+                                {{--<p>--}}
+                                    {{--<input type="email" class="form-control" name="email1" id="email1" placeholder="" required autocomplete="off">--}}
+                                {{--</p>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--Password--}}
+                                {{--</p>--}}
+                                {{--<p>--}}
+                                    {{--<input type="password" class="form-control" name="password1" id="password1" placeholder="" required autocomplete="off">--}}
+                                {{--</p>--}}
+                                {{--<ul class="unstyled terms-area1">--}}
+                                    {{--<li>--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms1" type="checkbox" >--}}
+                                        {{--<label for="chk_terms1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="accept-driver">--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms_driver1" type="checkbox" >--}}
+                                        {{--<label for="chk_terms_driver1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="accept-owner">--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms_owner1" type="checkbox" >--}}
+                                        {{--<label for="chk_terms_owner1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>--}}
+                                    {{--</li>--}}
+                                {{--</ul>--}}
+                                {{--<button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form1">Create account</button>--}}
+                            {{--</div>--}}
+                            {{--</form>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
         </div>
     </div>
@@ -213,7 +213,6 @@
                     <div class="about_text">
                         <h1>How do we do it?</h1>
                         <p class="mt-2">Car Flo uses cutting-edge technology and a commitment to the men and women who make rideshare work to maximize your earnings.</p>
-                        <p class="mt-2">And, we show our drivers the respect they deserve by paying for gas, tolls, and Car Flo vehicle maintenance.</p>
                         <p class="mt-2"><strong>Still have questions?</strong></p>
                         <p class="mt-2">Head over to our <a href="{{url('/faq')}}">FAQ page</a> to dig into even more details about what we’re doing at Car Flo and how you can work with us.</p>
                     </div>
@@ -271,63 +270,63 @@
     </div>
 
 
-    <div class="action">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <h5 class="text-center">Want to start earning today?</h5>
-                    <div class="row">
-                        <div class="col-12 col-md-8 offset-md-2 offset-0">
-                            <form id="form2">
-                            <div class="buttons my-4">
-                                <p class="help-text text-center mt-4">
-                                    What type of account do you want to create?
-                                </p>
-                                <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors1"></div>
-                                <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_car2" name="account_type2" value="car">
-                                    <label for="opt_car2">Car owner account</label>
-                                </p>
-                                <p class="mt-1 mb-0">
-                                    <input type="radio" id="opt_driver2" name="account_type2" checked value="driver">
-                                    <label for="opt_driver2">Driver account</label>
-                                </p>
-                                <p class="mt-1 mb-0">
-                                    Email
-                                </p>
-                                <p>
-                                    <input type="email" class="form-control" name="email2" id="email2" placeholder="" required autocomplete="off">
-                                </p>
-                                <p class="mt-1 mb-0">
-                                    Password
-                                </p>
-                                <p>
-                                    <input type="password" class="form-control" name="password2" id="password2" placeholder="" required autocomplete="off">
-                                </p>
-                                <ul class="unstyled terms-area2">
-                                    <li>
-                                        <input class="styled-checkbox" id="chk_terms2" type="checkbox" >
-                                        <label for="chk_terms2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
-                                    </li>
-                                    <li class="accept-driver2">
-                                        <input class="styled-checkbox" id="chk_terms_driver2" type="checkbox" >
-                                        <label for="chk_terms_driver2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
-                                    </li>
-                                    <li class="accept-owner2">
-                                        <input class="styled-checkbox" id="chk_terms_owner2" type="checkbox" >
-                                        <label for="chk_terms_owner2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
-                                    </li>
-                                </ul>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Create account</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {{--<div class="action">--}}
+        {{--<div class="container">--}}
+            {{--<div class="row">--}}
+                {{--<div class="col-md-6 offset-md-3">--}}
+                    {{--<h5 class="text-center">Want to start earning today?</h5>--}}
+                    {{--<div class="row">--}}
+                        {{--<div class="col-12 col-md-8 offset-md-2 offset-0">--}}
+                            {{--<form id="form2">--}}
+                            {{--<div class="buttons my-4">--}}
+                                {{--<p class="help-text text-center mt-4">--}}
+                                    {{--What type of account do you want to create?--}}
+                                {{--</p>--}}
+                                {{--<div class="alert alert-danger mb-3 main-font" id="custom-validation-errors1"></div>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--<input type="radio" id="opt_car2" name="account_type2" value="car">--}}
+                                    {{--<label for="opt_car2">Car owner account</label>--}}
+                                {{--</p>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--<input type="radio" id="opt_driver2" name="account_type2" checked value="driver">--}}
+                                    {{--<label for="opt_driver2">Driver account</label>--}}
+                                {{--</p>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--Email--}}
+                                {{--</p>--}}
+                                {{--<p>--}}
+                                    {{--<input type="email" class="form-control" name="email2" id="email2" placeholder="" required autocomplete="off">--}}
+                                {{--</p>--}}
+                                {{--<p class="mt-1 mb-0">--}}
+                                    {{--Password--}}
+                                {{--</p>--}}
+                                {{--<p>--}}
+                                    {{--<input type="password" class="form-control" name="password2" id="password2" placeholder="" required autocomplete="off">--}}
+                                {{--</p>--}}
+                                {{--<ul class="unstyled terms-area2">--}}
+                                    {{--<li>--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms2" type="checkbox" >--}}
+                                        {{--<label for="chk_terms2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="accept-driver2">--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms_driver2" type="checkbox" >--}}
+                                        {{--<label for="chk_terms_driver2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="accept-owner2">--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms_owner2" type="checkbox" >--}}
+                                        {{--<label for="chk_terms_owner2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>--}}
+                                    {{--</li>--}}
+                                {{--</ul>--}}
+                                {{--<button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Create account</button>--}}
+                            {{--</div>--}}
+                            {{--</form>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
-        </div>
-    </div>
+        {{--</div>--}}
+    {{--</div>--}}
     <div class="modal fade" id="modal_terms" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -335,7 +334,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flow_Terms_Of_Use.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Terms_of_Use.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -347,7 +346,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
@@ -359,7 +358,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.docx&embedded=true"></iframe>
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.doc&embedded=true"></iframe>
                 </div>
             </div>
         </div>
