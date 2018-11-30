@@ -94,7 +94,7 @@
                     <div class="about_text">
                         <h1>Here's how easy it is</h1>
                         <ol class="mt-2">
-                            <li>Complete our simple <a href="https://goo.gl/forms/kZBYHB96tcVJrfRk2">registration form</a>. (You’ll need your driver’s license and TLC license.)</li>
+                            <li>Complete our simple <a href="#signup2">registration form</a>. (You’ll need your driver’s license and TLC license.)</li>
                             <li>We’ll get back with your approval in usually less than 24 hours.</li>
                             <li>Download our app and start reserving your favorite car and scheduling your hours.</li>
                         </ol>
@@ -391,22 +391,25 @@
                     $("#custom-validation-errors").html('Password must have a minimum length of 8 characters.');
                     return false;
                 }
+                if(!$("#chk_terms1").is(':checked')){
+                    $("#custom-validation-errors").show();
+                    $("#custom-validation-errors").html('You need to accept Terms & Conditions.');
+                    return false;
+                }
                 var sel_user_type = $("input[name='account_type']:checked").val();
-                console.log(sel_user_type);
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_driver1").is(':checked')){
+                    if(!$("#chk_terms_driver1").is(':checked')){
                         $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors").html('You need to agree to Drivers Contract.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_owner1").is(':checked')){
+                    if(!$("#chk_terms_owner1").is(':checked')){
                         $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors").html('You need to agree to Owners Contract.');
                         return false;
                     }
                 }
-                alert(345);
                 $.post(
                     "{{route('validate-email')}}",
                     {
@@ -442,17 +445,22 @@
                     return false;
                 }
 
+                if(!$("#chk_terms2").is(':checked')){
+                    $("#custom-validation-errors1").show();
+                    $("#custom-validation-errors1").html('You need to accept Terms & Conditions.');
+                    return false;
+                }
                 var sel_user_type = $("input[name='account_type2']:checked").val();
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
+                    if(!$("#chk_terms_driver2").is(':checked')){
                         $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors1").html('You need to agree to Drivers Contract.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
+                    if(!$("#chk_terms_owner2").is(':checked')){
                         $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors1").html('You need to agree to Owners Contract.');
                         return false;
                     }
                 }

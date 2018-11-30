@@ -404,17 +404,23 @@
                     $("#custom-validation-errors").html('Password must have a minimum length of 8 characters.');
                     return false;
                 }
+
+                if(!$("#chk_terms1").is(':checked')){
+                    $("#custom-validation-errors").show();
+                    $("#custom-validation-errors").html('You need to accept Terms & Conditions.');
+                    return false;
+                }
                 var sel_user_type = $("input[name='account_type']:checked").val();
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_driver1").is(':checked')){
+                    if(!$("#chk_terms_driver1").is(':checked')){
                         $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors").html('You need to agree to Drivers Contract.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms1").is(':checked') || !$("#chk_terms_owner1").is(':checked')){
+                    if(!$("#chk_terms_owner1").is(':checked')){
                         $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors").html('You need to agree to Owners Contract.');
                         return false;
                     }
                 }
@@ -454,17 +460,22 @@
                     return false;
                 }
 
+                if(!$("#chk_terms2").is(':checked')){
+                    $("#custom-validation-errors1").show();
+                    $("#custom-validation-errors1").html('You need to accept Terms & Conditions.');
+                    return false;
+                }
                 var sel_user_type = $("input[name='account_type2']:checked").val();
                 if(sel_user_type == "driver"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_driver2").is(':checked')){
+                    if(!$("#chk_terms_driver2").is(':checked')){
                         $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors1").html('You need to agree to Drivers Contract.');
                         return false;
                     }
                 }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms2").is(':checked') || !$("#chk_terms_owner2").is(':checked')){
+                    if(!$("#chk_terms_owner2").is(':checked')){
                         $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You should agree on Terms and Policy.');
+                        $("#custom-validation-errors1").html('You need to agree to Owners Contract.');
                         return false;
                     }
                 }

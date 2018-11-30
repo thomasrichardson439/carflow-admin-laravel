@@ -140,7 +140,7 @@
                                         <ul class="unstyled centered">
                                             @foreach (old('ridesharing_app', $defaultApps) as $app)
                                             <li>
-                                                <input class="styled-checkbox" id="chk_{{$app}}" name="ridesharing_apps[{{ $app }}]" type="checkbox" value="{{ $app }}" >
+                                                <input class="styled-checkbox" id="chk_{{$app}}" name="ridesharing_apps[{{ $app }}]" type="checkbox" value="{{ $app }}" disabled >
                                                 <label for="chk_{{$app}}">{{$app}}</label>
                                             </li>
                                             @endforeach
@@ -229,9 +229,11 @@
                 if(selected_option == 0){
                     $(".approve-apps input[type='checkbox']").each(function () {
                         $(this).attr("checked", false);
+                        $(this).attr("disabled", true);
                     });
                 }else{
                     $(".approve-apps input[type='checkbox']").each(function () {
+                        $(this).attr("disabled", false);
                         $(this).attr("checked", true);
                     });
                 }
@@ -258,12 +260,6 @@
                 var file = this.files[0];
                 FILE[target_id] = file;
                 $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
-//                if ( !( (file.type == match[0]) || (file.type == match[1]) || (file.type == match[2]) ) )
-//                {
-//                    $('#custom-validation-errors').show();
-//                    $('#custom-validation-errors').html('<b>Unvalid image format. Allowed formats: JPG, JPEG, PNG.</b>');
-//                    return false;
-//                }
                 if ( file.size > maxsize )
                 {
                     $('#custom-validation-errors').show();

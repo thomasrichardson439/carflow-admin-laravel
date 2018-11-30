@@ -43,7 +43,7 @@
 
                     <div class="step">
                         <h4>3. Register with Car Flow</h4>
-                        <p>Use the app or our <a target="_blank" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2">website page</a> to register. Have these required documents ready to photograph and upload:</p>
+                        <p>Use the app or our <a href="{{url('/main')}}">website page</a> to register. Have these required documents ready to photograph and upload:</p>
                         <ul>
                             <li>TLC License</li>
                             <li>DMV License</li>
@@ -89,7 +89,7 @@
                     <div class="row">
                         <div class="col-12 col-md-8 offset-md-2 offset-0">
                             <div class="buttons my-4">
-                                <a class="btn btn-primary btn-lg btn-block" href="https://goo.gl/forms/kZBYHB96tcVJrfRk2" role="button" target="_blank">Go with “The Flow”</a>
+                                <a class="btn btn-primary btn-lg btn-block" href="{{url('/main')}}" role="button">Go with “The Flow”</a>
                                 <p class="help-text text-center mt-4">
                                     It's free and simple – fill out our registration form and we'll be in touch.
                                 </p>
