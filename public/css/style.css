@@ -347,6 +347,13 @@ a:hover {
   background-color: #f03e3e
 }
 
+@media (max-width: 580px) {
+  .register-form.col-12.col-md-8.offset-md-2{
+    margin: 10px;
+    flex: auto;
+  }
+}
+
 @media (max-width: 479px) {
   .logo-bar p.navigation-links a {
     margin: 0px 4px;
