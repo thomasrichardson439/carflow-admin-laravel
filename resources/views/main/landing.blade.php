@@ -401,7 +401,7 @@
                 $("#custom-validation-errors").hide();
                 if(password.length < 8){
                     $("#custom-validation-errors").show();
-                    $("#custom-validation-errors").html('Password must have a minimum password length is 8 characters.');
+                    $("#custom-validation-errors").html('Password must have a minimum length of 8 characters.');
                     return false;
                 }
                 var sel_user_type = $("input[name='account_type']:checked").val();
@@ -450,7 +450,7 @@
                 $("#custom-validation-errors1").hide();
                 if(password.length < 8){
                     $("#custom-validation-errors1").show();
-                    $("#custom-validation-errors1").html('Password must have a minimum password length is 8 characters.');
+                    $("#custom-validation-errors1").html('Password must have a minimum length of 8 characters.');
                     return false;
                 }
 
