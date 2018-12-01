@@ -20,7 +20,6 @@
                                 <div class="buttons my-4">
                                     @csrf
                                     @include('main._alerts')
-
                                     <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>
                                     <p class="help-text mt-4">
                                         PERSONAL INFORMATION
@@ -154,7 +153,10 @@
                                         <input type="text" class="form-control" name="ridesharing_app_additional" id="specify" autocomplete="off" disabled>
                                     </p>
 
-
+                                    <div class="accept-driver2">
+                                        <input class="styled-checkbox" id="chk_terms_driver" type="checkbox" >
+                                        <label for="chk_terms_driver">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
+                                    </div>
                                     <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Submit information</button>
                                 </div>
                             </form>
@@ -165,6 +167,19 @@
 
         </div>
     </div>
+    <div class="modal fade" id="modal_terms_driver" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.doc&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('add_custom_script')
@@ -251,7 +266,14 @@
                 }
             });
             $('form#form-register').on('submit', function(e) {
-                return true;
+                $('#custom-validation-errors').hide();
+                if($('#chk_terms_driver').is(':checked') == false){
+                    e.preventDefault();
+                    $('#custom-validation-errors').show();
+                    $('#custom-validation-errors').html('You need to agree to Drivers Contract.');
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                    return false;
+                }
             });
 
             $('.file').change(function() {

@@ -48,14 +48,14 @@
                                         <input class="styled-checkbox" id="chk_terms1" type="checkbox" >
                                         <label for="chk_terms1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
                                     </li>
-                                    <li class="accept-driver">
-                                        <input class="styled-checkbox" id="chk_terms_driver1" type="checkbox" >
-                                        <label for="chk_terms_driver1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
-                                    </li>
-                                    <li class="accept-owner">
-                                        <input class="styled-checkbox" id="chk_terms_owner1" type="checkbox" >
-                                        <label for="chk_terms_owner1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
-                                    </li>
+                                    {{--<li class="accept-driver">--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms_driver1" type="checkbox" >--}}
+                                        {{--<label for="chk_terms_driver1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="accept-owner">--}}
+                                        {{--<input class="styled-checkbox" id="chk_terms_owner1" type="checkbox" >--}}
+                                        {{--<label for="chk_terms_owner1">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>--}}
+                                    {{--</li>--}}
                                 </ul>
                                 <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" id="btn_form1">Create account</button>
                             </div>
@@ -222,14 +222,14 @@
                                             <input class="styled-checkbox" id="chk_terms2" type="checkbox" >
                                             <label for="chk_terms2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms">Terms & Conditions</a></label>
                                         </li>
-                                        <li class="accept-driver2">
-                                            <input class="styled-checkbox" id="chk_terms_driver2" type="checkbox" >
-                                            <label for="chk_terms_driver2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>
-                                        </li>
-                                        <li class="accept-owner2">
-                                            <input class="styled-checkbox" id="chk_terms_owner2" type="checkbox" >
-                                            <label for="chk_terms_owner2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
-                                        </li>
+                                        {{--<li class="accept-driver2">--}}
+                                            {{--<input class="styled-checkbox" id="chk_terms_driver2" type="checkbox" >--}}
+                                            {{--<label for="chk_terms_driver2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_driver">Drivers Contract</a></label>--}}
+                                        {{--</li>--}}
+                                        {{--<li class="accept-owner2">--}}
+                                            {{--<input class="styled-checkbox" id="chk_terms_owner2" type="checkbox" >--}}
+                                            {{--<label for="chk_terms_owner2">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>--}}
+                                        {{--</li>--}}
                                     </ul>
                                     <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Create account</button>
                                 </div>
@@ -274,29 +274,29 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modal_terms_driver" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.doc&embedded=true"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="modal_terms_owner" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.doc&embedded=true"></iframe>
-                </div>
-            </div>
-        </div>
+    {{--<div class="modal fade" id="modal_terms_driver" role="dialog">--}}
+        {{--<div class="modal-dialog modal-lg">--}}
+            {{--<div class="modal-content">--}}
+                {{--<div class="modal-header">--}}
+                    {{--<button type="button" class="close" data-dismiss="modal">&times;</button>--}}
+                {{--</div>--}}
+                {{--<div class="modal-body">--}}
+                    {{--<iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Contract.doc&embedded=true"></iframe>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+    {{--<div class="modal fade" id="modal_terms_owner" role="dialog">--}}
+        {{--<div class="modal-dialog modal-lg">--}}
+            {{--<div class="modal-content">--}}
+                {{--<div class="modal-header">--}}
+                    {{--<button type="button" class="close" data-dismiss="modal">&times;</button>--}}
+                {{--</div>--}}
+                {{--<div class="modal-body">--}}
+                    {{--<iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.doc&embedded=true"></iframe>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
     </div>
 @endsection
 
@@ -343,20 +343,20 @@
                     $("#custom-validation-errors").html('You need to accept Terms & Conditions.');
                     return false;
                 }
-                var sel_user_type = $("input[name='account_type']:checked").val();
-                if(sel_user_type == "driver"){
-                    if(!$("#chk_terms_driver1").is(':checked')){
-                        $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You need to agree to Drivers Contract.');
-                        return false;
-                    }
-                }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms_owner1").is(':checked')){
-                        $("#custom-validation-errors").show();
-                        $("#custom-validation-errors").html('You need to agree to Owners Contract.');
-                        return false;
-                    }
-                }
+//                var sel_user_type = $("input[name='account_type']:checked").val();
+//                if(sel_user_type == "driver"){
+//                    if(!$("#chk_terms_driver1").is(':checked')){
+//                        $("#custom-validation-errors").show();
+//                        $("#custom-validation-errors").html('You need to agree to Drivers Contract.');
+//                        return false;
+//                    }
+//                }else if(sel_user_type == "car"){
+//                    if(!$("#chk_terms_owner1").is(':checked')){
+//                        $("#custom-validation-errors").show();
+//                        $("#custom-validation-errors").html('You need to agree to Owners Contract.');
+//                        return false;
+//                    }
+//                }
                 $.post(
                     "{{route('validate-email')}}",
                     {
@@ -397,20 +397,20 @@
                     $("#custom-validation-errors1").html('You need to accept Terms & Conditions.');
                     return false;
                 }
-                var sel_user_type = $("input[name='account_type2']:checked").val();
-                if(sel_user_type == "driver"){
-                    if(!$("#chk_terms_driver2").is(':checked')){
-                        $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You need to agree to Drivers Contract.');
-                        return false;
-                    }
-                }else if(sel_user_type == "car"){
-                    if(!$("#chk_terms_owner2").is(':checked')){
-                        $("#custom-validation-errors1").show();
-                        $("#custom-validation-errors1").html('You need to agree to Owners Contract.');
-                        return false;
-                    }
-                }
+//                var sel_user_type = $("input[name='account_type2']:checked").val();
+//                if(sel_user_type == "driver"){
+//                    if(!$("#chk_terms_driver2").is(':checked')){
+//                        $("#custom-validation-errors1").show();
+//                        $("#custom-validation-errors1").html('You need to agree to Drivers Contract.');
+//                        return false;
+//                    }
+//                }else if(sel_user_type == "car"){
+//                    if(!$("#chk_terms_owner2").is(':checked')){
+//                        $("#custom-validation-errors1").show();
+//                        $("#custom-validation-errors1").html('You need to agree to Owners Contract.');
+//                        return false;
+//                    }
+//                }
 
                 $.post(
                     "{{route('validate-email')}}",

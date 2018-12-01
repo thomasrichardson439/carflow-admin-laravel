@@ -20,6 +20,7 @@
                                 <div class="buttons my-4">
                                     @csrf
                                     @include('main._alerts')
+                                    <div class="alert alert-danger mb-3 main-font" id="custom-validation-errors"></div>
                                     <p class="help-text mt-4">
                                         PERSONAL INFORMATION
                                     </p>
@@ -167,7 +168,10 @@
                                         SELECT IMAGES
                                         <input type="file" accept="image/*" id="file3" name="fh_photo" class="file"/>
                                     </label>
-
+                                    <div class="accept-owner2">
+                                        <input class="styled-checkbox" id="chk_terms_owner" type="checkbox" >
+                                        <label for="chk_terms_owner">Accept <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_terms_owner">Owners Contract</a></label>
+                                    </div>
                                     <button type="submit" class="btn btn-primary btn-lg btn-block mt-4" href="#" id="btn_form2">Submit information</button>
                                     <p id="message"></p>
                                 </div>
@@ -179,7 +183,18 @@
 
         </div>
     </div>
-
+    <div class="modal fade" id="modal_terms_owner" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="doc" src="https://docs.google.com/gview?url=http://54.183.254.243/docs/Car_Flo_Owner_Contract.doc&embedded=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('add_custom_script')
@@ -245,6 +260,17 @@
                 $("input[name='email']").val(email);
                 $("input[name='password']").val(password);
             }
+            $('form#form-register').on('submit', function(e) {
+                $('#custom-validation-errors').hide();
+                if($('#chk_terms_owner').is(':checked') == false){
+                    e.preventDefault();
+                    $('#custom-validation-errors').show();
+                    $('#custom-validation-errors').html('You need to agree to Owners Contract.');
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                    return false;
+                }
+            });
+
             var maxsize = 500 * 1024; // 500 KB
             $('#max-size').html((maxsize/1024).toFixed(2));
 
