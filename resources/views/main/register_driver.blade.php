@@ -243,19 +243,16 @@
                 var selected_option = $( "input[name='approve']:checked" ).val();
                 if(selected_option == 0){
                     $(".approve-apps input[type='checkbox']").each(function () {
-                        $(this).attr("checked", false);
+                        if($(this).is(':checked')){
+                            $(this).next().before().trigger("click");
+                        }
                         $(this).attr("disabled", true);
+                        $("#specify").attr("disabled", true);
                     });
                 }else{
                     $(".approve-apps input[type='checkbox']").each(function () {
                         $(this).attr("disabled", false);
-                        $(this).attr("checked", true);
                     });
-                }
-                if($("#chk_Other").is(':checked')){
-                    $("#specify").attr("disabled", false);
-                }else{
-                    $("#specify").attr("disabled", true);
                 }
             });
             $("#chk_Other").click(function () {
