@@ -18,7 +18,7 @@
                             <i class="fa fa-caret-right"></i>
                             {{ $car->manufacturer->name }} {{ $car->model }}
                             <small>
-                                ID {{ $car->id }}
+                                {{ $car->plate }}
                             </small>
                         </h1>
                     </div>
