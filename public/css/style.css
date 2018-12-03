@@ -360,3 +360,17 @@ a:hover {
     font-size: 16px;
   }
 }
+
+@media (max-width: 400px){
+  .logo-bar p.navigation-links a {
+    margin: 0px 2px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 340px){
+  .logo-bar p.navigation-links a {
+    margin: 0px 1px;
+    font-size: 13px;
+  }
+}
