@@ -37,7 +37,7 @@
                     <div class="step">
                         <h4>2. Get the app</h4>
                         <p>
-                            Download the Car app on iTunes or Google Play.</span>
+                            Download the Car Flo app on iTunes or Google Play.</span>
                         </p>
                     </div>
 
@@ -68,9 +68,9 @@
 
                     <div class="step">
                         <h4>6. Return your car</h4>
-                        <p>When your time is up, return the car to any Car Flo parking zone, put the keys back in the console and lock the car.</p>
+                        <p>When your time is up, return the car to the designated drop off location, put the keys back in the console and lock the car.</p>
                         <p class="text-muted small">
-                            Important: Don’t forget to leave it with the gas tank full and the car clean for the next driver.
+                            Important: Don't forget to return the car clean and with a full tank of gas for the next driver.
                         </p>
                     </div>
 
