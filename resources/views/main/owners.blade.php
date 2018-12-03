@@ -109,7 +109,7 @@
                 <div class="col-md-6 offset-md-2 offset-0">
                     <div class="about_text">
                         <h1>The assurance you need</h1>
-                        <p class="mt-2">Car Flo checks the credentials of every Car Flo driver and requires drivers to have requires drivers to submit their licenses and checks their driving record's before approving them to drive your car.</p>
+                        <p class="mt-2">Car Flo checks the credentials of every Car Flo driver, requires drivers to submit their licenses and checks their driving record before approving them to drive your car.</p>
                     </div>
                 </div>
 

@@ -102,7 +102,6 @@
                     <div class="step">
                         <h5>How do I get the vehicle on to my Uber account?</h5>
                         <p>
-                            How do I get the vehicle on to my Uber account?
                             Don’t worry, shortly after you book a vehicle, the documents you need to add the vehicle to your rideshare account will be emailed to you.
                         </p>
                     </div>

@@ -211,7 +211,7 @@
                 <div class="col-md-6 offset-md-2 offset-0">
                     <div class="about_text">
                         <h1>Here’s all it takes</h1>
-                        <p class="mt-2">To work with Car Flo you need to be signed up with one or more of the rideshare companies – like Uber or Lyft – have had your driver’s license for at least three years and your NYC TLC license for one year.</p>
+                        <p class="mt-2">To work with Car Flo, you need to be signed up with one or more of the rideshare companies – like Uber or Lyft – have had your driver’s license for at least three years and your NYC TLC license for one year.</p>
                     </div>
 
                 </div>
