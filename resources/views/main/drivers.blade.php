@@ -233,7 +233,7 @@
                         <div class="carousel-item active px-5">
                             <h3 class="text-center mb-4">Lisa</h3>
                             <p class="px-0 px-md-5">
-                                Lisa is a single mother who doesn’t own a car and doesn’t see herself buying one. With her daughter’s school events, holidays, and after-school programs, her schedule changes every week. She loves the simplicity of the Car Flo app and the scheduling flexibility it affords her. The income she earns each month is more than she could earn with any part-time job.
+                                Lisa is a single mother who doesn’t own a car and doesn’t see herself buying one. With her daughter’s school events, holidays, and after-school programs, her schedule changes every week. She loves the simplicity of the Car Flo app and the scheduling flexibility it affords her. The income month is more than she could earn with any part-time job.
                             </p>
                         </div>
 
