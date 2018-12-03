@@ -243,7 +243,7 @@
                             <h3 class="text-center mb-4">Lisa</h3>
                             <p class="px-0 px-md-5">
                                 Lisa is a single mother who doesn’t own a car and doesn’t see herself buying one. With her daughter’s school events, holidays, and after-school programs, her schedule changes every week. She loves the simplicity of the Car Flo app and
-                                the scheduling flexibility it affords her. The income she earns each month is far beyond anything available to her with any other part-time work. If something comes up at school she can reschedule her shift on a moment’s notice. No
+                                the scheduling flexibility it affords her. The month is far beyond anything available to her with any other part-time work. If something comes up at school she can reschedule her shift on a moment’s notice. No
                                 other part-time work has ever given her that kind of freedom.
                             </p>
                         </div>
