@@ -44,7 +44,7 @@
 
                     <div class="step">
                         <h5>How do I get started as a driver?</h5>
-                        <p>To <a href="{{url('/drivers#signup2')}}">register</a> you’ll need to provide us with some basic information as well as snap pictures of the following documents and upload the photos to us:</p>
+                        <p>To <a href="{{url('/drivers#signup2')}}">register</a>, you’ll need to provide us with some basic information as well as snap pictures of the following documents and upload the photos to us:</p>
                         <ul>
                             <li>TLC License</li>
                             <li>DMV License</li>
@@ -102,7 +102,8 @@
                     <div class="step">
                         <h5>How do I get the vehicle on to my Uber account?</h5>
                         <p>
-                            Don’t worry, shortly after you book a vehicle the documents you need to add the vehicle to your rideshare account will be emailed to you.
+                            How do I get the vehicle on to my Uber account?
+                            Don’t worry, shortly after you book a vehicle, the documents you need to add the vehicle to your rideshare account will be emailed to you.
                         </p>
                     </div>
                     <div class="step">
@@ -114,7 +115,7 @@
                     <div class="step">
                         <h5>What happens if there is damage during my rental?</h5>
                         <p>
-                            For damage incurred during the time of your rental, you’ll be responsible for any deductible or repairs. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence this policy is void.
+                            For damage incurred during the time of your rental, you’ll be responsible for any deductible or repairs. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence, this policy is void.
                         </p>
                         <p>
                             When renting a car owned by a Car Flow Owner and made available to other drivers, you need to communicate with the owner. The Car Flo Owner will add your name to the car’s insurance policy.
@@ -159,7 +160,7 @@
                     <div class="step">
                         <h5>What if I get into an accident?</h5>
                         <p>
-                            Call 9-1-1 to file a police report whenever you get into an accident. After calling 9-1-1 click the Car Is Damaged button on your app and upload photos of the damage and the police report. You are responsible to upload the police report to our app, within five business days. We’ll walk you through the process from there.
+                            Call 9-1-1 to file a police report whenever you get into an accident. After calling 9-1-1, click the Car Is Damaged button on your app, upload photos of the damage and the police report. You are responsible to upload the police report to our app within five business days. We’ll walk you through the process from there.
                         </p>
                     </div>
                     <div class="step">

@@ -93,11 +93,16 @@
                 <div class="col-md-6 order-2 order-md-1">
                     <div class="about_text">
                         <h1>Here's how easy it is</h1>
-                        <ol class="mt-2">
-                            <li>Complete our simple <a href="#signup2">registration form</a>. (You’ll need your driver’s license and TLC license.)</li>
-                            <li>We’ll get back with your approval in less than 24 hours.</li>
-                            <li>Download our app and start reserving your favorite car and scheduling your hours.</li>
-                        </ol>
+                        <p class="mt-2">
+                            Complete our simple registration form (you’ll need your driver’s license and TLC license).
+                            We’ll get back with your approval in less than 24 hours.
+                            Download our app, start reserving your favorite car and scheduling your hours.
+                        </p>
+                        {{--<ol class="mt-2">--}}
+                            {{--<li>Complete our simple <a href="#signup2">registration form</a>. (You’ll need your driver’s license and TLC license.)</li>--}}
+                            {{--<li>We’ll get back with your approval in less than 24 hours.</li>--}}
+                            {{--<li>Download our app, start reserving your favorite car and scheduling your hours.</li>--}}
+                        {{--</ol>--}}
                     </div>
 
                 </div>

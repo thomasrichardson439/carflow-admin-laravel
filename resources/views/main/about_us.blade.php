@@ -42,7 +42,6 @@
         </div>
     </div>
 
-
     <div class="action">
         <div class="container">
             <div class="row">
