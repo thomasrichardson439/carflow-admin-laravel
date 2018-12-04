@@ -20,6 +20,7 @@ class CreateOwnersTable extends Migration
             $table->string('password');
             $table->string('tlc_photo')->nullable();
             $table->string('fh_photo')->nullable();
+            $table->string('phone')->nullable();
             $table->enum('status', ['rejected', 'pending', 'approved'])
                 ->default('pending');
             $table->rememberToken();
