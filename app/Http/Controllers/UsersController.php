@@ -124,6 +124,7 @@ class UsersController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'full_name' => 'required|min:2|max:100',
+            'phone' => 'required|string|max:255',
             'category_id' => 'required|integer|exists:car_categories,id',
             'manufacturer_id' => 'required|integer|exists:car_manufacturers,id',
             'model' => 'required|string|max:255',
@@ -149,6 +150,7 @@ class UsersController extends Controller
             $owner->email = $request->email;
             $owner->password = bcrypt($request->password);
             $owner->full_name = $request->full_name;
+            $owner->phone = $request->phone;
             $owner->status = \ConstUserStatus::PENDING;
             $owner->save();
             $owner->tlc_photo = $this->awsHelper->uploadToS3(
