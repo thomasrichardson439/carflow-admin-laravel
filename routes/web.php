@@ -35,7 +35,7 @@ Route::group([
         Route::post('{id}/approve-profile-changes', 'UsersController@approveProfileChanges');
         Route::post('{id}/reject-profile-changes', 'UsersController@rejectProfileChanges');
 
-        Route::post('{id}/policy', 'UsersController@policy');
+        Route::get('{id}/policy', 'UsersController@policy');
     });
 
     Route::resource('cars', 'CarsController');

@@ -134,8 +134,13 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
                     </div>
 
                     <div class="tab-pane active" id="user-info">
-                        @include('admin.users._form')
-                        @include('admin.users._info')
+                        <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-form" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            {{ method_field('PATCH') }}
+
+                            @include('admin.users._form')
+                            @include('admin.users._info')
+                        </form>
                     </div>
                 </div>
             </div>

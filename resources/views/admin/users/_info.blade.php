@@ -1,21 +1,17 @@
-<form action="{{ url('/admin/users/' . $user->id . '/policy') }}" method="post">
-    {{csrf_field()}}
+<div class="row">
+    <div class="col-4">
+        <div class="form-card">
+            <h4>Policy</h4>
 
-    <div class="row">
-        <div class="col-4">
-            <div class="form-card">
-                <h4>Policy</h4>
-
-                <div class="form-group">
-                    <label>Policy number</label>
-                    <input type="text" class="form-control" name="policy_number" value="{{ old('policy_number', $user->policy_number) }}">
-                </div>
-
-                <button class="btn btn-primary edit-on" type="submit">Send query</button>
+            <div class="form-group">
+                <label>Policy number</label>
+                <input type="text" class="form-control" name="policy_number" value="{{ old('policy_number', $user->policy_number) }}">
             </div>
+
+            <a class="btn btn-primary" href="{{ url('admin/users/' . $user->id . '/policy') }}">Send mail</a>
         </div>
     </div>
-</form>
+</div>
 
 <div class="row">
     <div class="col-12">

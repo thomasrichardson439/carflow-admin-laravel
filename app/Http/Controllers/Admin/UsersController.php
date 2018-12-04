@@ -208,6 +208,7 @@ class UsersController extends Controller
             'ridesharing_apps' => 'array',
             'ridesharing_apps.*' => 'string',
             'ridesharing_app_additional' => 'string|nullable',
+            'policy_number' => 'string|max:255',
         ]);
 
         $apps = $request->ridesharing_apps ?? [];
@@ -347,23 +348,19 @@ class UsersController extends Controller
     /**
      * Sends policy email
      * @param $id
-     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function policy($id, Request $request)
+    public function policy($id)
     {
         $user = User::findOrFail($id);
 
-        $this->validate($request, [
-            'policy_number' => 'required|string|max:255',
-        ]);
+        if (empty($user->policy_number)) {
+            return redirect()->back()->with('error', 'Policy number is not filled in user profile');
+        }
 
         Mail::to(config('params.userPolicyManagerEmail'))->send(
-            new UserPolicyNotification($request->policy_number, $user)
+            new UserPolicyNotification($user->policy_number, $user)
         );
-
-        $user->policy_number = $request->policy_number;
-        $user->save();
 
         return redirect()->back()->with('success', 'Policy number added. Notification sent.');
     }

@@ -8,6 +8,12 @@
     </div>
 @endif
 
+@if(Session::has('error'))
+    <div class="alert alert-danger">
+        {{ Session::get('error')}}
+    </div>
+@endif
+
 @if ($errors->any())
     <div class="alert alert-danger mb-3" id="validation-errors">
         <b>Errors found while validating your request:</b>
