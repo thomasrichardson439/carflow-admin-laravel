@@ -92,7 +92,7 @@
                     ],
                     'additionalActions' => [
                         'send-query' => function($model) {
-                            return '<a href="' . url('/admin/users/' . $model->id . '/policy') . '">Send mail</a>';
+                            return '<a href="' . url('/admin/users/' . $model->id . '/policy') . '">Send email</a>';
                         }
                     ],
                     'actionsUrls' => function($model) {
