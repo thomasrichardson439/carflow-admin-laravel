@@ -37,6 +37,7 @@ class BookingsRepository extends BaseRepository
     public function checkIntervalIsNotBooked(int $userId, int $carId, Carbon $start, Carbon $end) : bool
     {
         $bookings = $this->model->query()
+            ->where('status', '!=', Booking::STATUS_CANCELED)
             ->where(function(Builder $query) use ($userId, $carId) {
                 $query->where('car_id', $carId)
                     ->orWhere('user_id', $userId);
