@@ -156,7 +156,7 @@ class BookingsController extends BaseApiController
     {
         $booking = $this->findModel($id);
 
-        if ($booking->status != Booking::STATUS_PENDING) {
+        if (!in_array($booking->status, [Booking::STATUS_PENDING, Booking::STATUS_DRIVING])) {
             abort(409, 'Unable to cancel ride');
         }
 
