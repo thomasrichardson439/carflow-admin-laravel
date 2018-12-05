@@ -336,7 +336,8 @@ a:hover {
 }
 
 .carousel-inner {
-  height: 340px;
+  /*height: 340px;*/
+  display: table;
 }
 
 .carousel-indicators li {
@@ -346,6 +347,10 @@ a:hover {
 .carousel-indicators .active {
   background-color: #f03e3e
 }
+.carousel-indicators{
+    bottom: -20px;
+}
+
 
 @media (max-width: 580px) {
   .register-form.col-12.col-md-8.offset-md-2{
