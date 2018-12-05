@@ -8,7 +8,7 @@
                 <input type="text" class="form-control" name="policy_number" value="{{ old('policy_number', $user->policy_number) }}">
             </div>
 
-            <a class="btn btn-primary" href="{{ url('admin/users/' . $user->id . '/policy') }}">Send mail</a>
+            <a class="btn btn-primary" href="{{ url('admin/users/' . $user->id . '/policy') }}">Send email</a>
         </div>
     </div>
 </div>

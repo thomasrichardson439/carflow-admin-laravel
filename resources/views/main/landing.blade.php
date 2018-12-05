@@ -156,8 +156,8 @@
 
                 <div class="col-md-6 offset-md-2 offset-0">
                     <div class="about_text">
-                        <h1>Sound good?</h1>
-                        <p class="mt-2">The driver requirements are simple: You have a TLC License and have had a driver’s license for at least one year. Have those documents ready and you can apply online immediately.</p>
+                        <h1>Sounds good?</h1>
+                        <p class="mt-2">The driver requirements are simple: You have a TLC License and have had a driver’s license for at least one year. Have those documents ready and you can <a href="#signup2">register</a> online immediately.</p>
                         <p class="mt-2">To get your car into our rental program, we need your name, phone number, email, car model, car year, car color, car insurance company, and car availability. You’ll set your rental rate and simply name renters on your
                             insurance.</p>
                     </div>
@@ -173,9 +173,6 @@
     <div class="about">
         <div class="container">
             <div class="row">
-
-
-
                 <div class="col-md-6 order-2 order-md-1">
                     <div class="about_text">
                         <h1>24-7 driver support</h1>
@@ -269,7 +266,7 @@
     </div>
 
 
-    <div class="action">
+    <div class="action" id="signup2">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3">

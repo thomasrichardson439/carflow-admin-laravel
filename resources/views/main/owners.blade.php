@@ -154,7 +154,7 @@
                 <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel" data-interval="3000">
 
 
-                    <div class="carousel-inner">
+                    <div class="carousel-inner custom-carousel2">
 
                         <div class="carousel-item active px-5">
                             <h3 class="text-center mb-4">Mario</h3>
@@ -248,7 +248,7 @@
                 <div class="col-md-6 order-2 order-md-1">
                     <div class="about_text">
                         <h1>More information</h1>
-                        <p>You set the rental rate for your vehicle. Car Flo charges just 20% to facilitate the rental. Owners are responsible for proper maintenance insurance.</p>
+                        <p>You set the rental rate for your vehicle. Car Flo charges just 20% to facilitate the rental. Owners are responsible for proper maintenance and insurance.</p>
                     </div>
 
                 </div>

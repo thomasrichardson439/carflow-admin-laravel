@@ -9,7 +9,7 @@
             <div class="row">
 
                 <div class="col-md-6 order-2 order-md-1">
-                    <h1>Earn money renting without car ownership headaches</h1>
+                    <h1>Earn rideshare money without car ownership headaches</h1>
                     <p class="mt-4">
                         NYC is a hard place to own a car and that makes cashing in on the rideshare gig opportunity tough. But Car Flo is changing that.
                     </p>
@@ -233,7 +233,7 @@
                 <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel" data-interval="3000">
 
 
-                    <div class="carousel-inner">
+                    <div class="carousel-inner custom-carousel">
 
                         <div class="carousel-item active px-5">
                             <h3 class="text-center mb-4">Lisa</h3>
