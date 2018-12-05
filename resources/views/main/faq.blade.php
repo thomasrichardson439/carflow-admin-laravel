@@ -38,7 +38,7 @@
                     <div class="step">
                         <h5>As an owner, how much will my car rent for?</h5>
                         <p>
-                            You set the rental rate for your vehicle. When you set your rate, remember that Car Flo charges a 20 percent commission.
+                            You set the rental rate for your vehicle. When you set your rate, remember that Car Flo charges a 20% commission.
                         </p>
                     </div>
 
@@ -71,14 +71,14 @@
                             <li>FH-1 Insurance</li>
                             <li>Photos of Your Vehicle</li>
                             <li>Social Security Number (To issue 1099s)</li>
-                            <li>Account and Routing Number (To Send Your Earnings)</li>
+                            <li>Bank account and bank routing numbers (to deposit your earnings)</li>
                         </ul>
                     </div>
 
                     <div class="step">
                         <h5>Do I need to have my license for a certain period of time in order to rent a car?</h5>
                         <p>
-                            We vet all of our drivers thoroughly to make sure they are responsible and trustworthy drivers. Drivers must have at least one year with their driver’s license in order to sign up.
+                            We vet all of our drivers thoroughly to make sure they are responsible and trustworthy drivers. Drivers must have at least one year with their driver’s license in order to <a href="{{url('/drivers')}}">sign up</a>.
                         </p>
                     </div>
                     <div class="step">
@@ -117,13 +117,13 @@
                             For damage incurred during the time of your rental, you’ll be responsible for any deductible or repairs. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence, this policy is void.
                         </p>
                         <p>
-                            When renting a car owned by a Car Flo owner and made available to other drivers, you need to communicate with the owner. The Car Flo owner will add your name to the car’s insurance policy.
+                            When renting a car owned by a Car Flo OWNER and made available to other drivers, you need to communicate with the owner. The Car Flo OWNER will add your name to the car’s insurance policy.
                         </p>
                     </div>
                     <div class="step">
                         <h5>Is there a cancellation fee?</h5>
                         <p>
-                            There is no cancellation fee when canceling at least 24 hours in advance. You will be charged 50 percent of your rental fee if you choose to cancel with fewer than 24-hours notice.
+                            There is no cancellation fee when canceling at least 24 hours in advance. You will be charged 50% of your rental fee if you choose to cancel with fewer than 24-hours notice.
                         </p>
                     </div>
                     <div class="step">
