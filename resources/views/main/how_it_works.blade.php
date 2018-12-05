@@ -47,7 +47,7 @@
                         <ul>
                             <li>TLC License</li>
                             <li>DMV License</li>
-                            <li>Social Secutity card <span style="color: red;"> &nbsp;(If you are an owner planning to rent your vehicle)</span></li>
+                            <li>Social Security card (If you are an owner planning to rent your vehicle)</li>
                             <li>Proof of address (ex: utility bill, bank statement)</li>
                             <li>Debit/Credit Card</li>
                         </ul>

@@ -156,7 +156,7 @@
 
                 <div class="col-md-6 offset-md-2 offset-0">
                     <div class="about_text">
-                        <h1>Sound good?</h1>
+                        <h1>Sounds good?</h1>
                         <p class="mt-2">The driver requirements are simple: You have a TLC License and have had a driver’s license for at least one year. Have those documents ready and you can apply online immediately.</p>
                         <p class="mt-2">To get your car into our rental program, we need your name, phone number, email, car model, car year, car color, car insurance company, and car availability. You’ll set your rental rate and simply name renters on your
                             insurance.</p>
