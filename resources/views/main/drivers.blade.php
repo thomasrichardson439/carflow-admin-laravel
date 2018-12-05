@@ -9,7 +9,7 @@
             <div class="row">
 
                 <div class="col-md-6 order-2 order-md-1">
-                    <h1>Earn money renting without car ownership headaches</h1>
+                    <h1>Earn rideshare money without car ownership headaches</h1>
                     <p class="mt-4">
                         NYC is a hard place to own a car and that makes cashing in on the rideshare gig opportunity tough. But Car Flo is changing that.
                     </p>
