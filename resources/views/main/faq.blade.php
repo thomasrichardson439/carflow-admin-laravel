@@ -64,7 +64,7 @@
                             <li>Car Model</li>
                             <li>Miles</li>
                             <li>Pickup and Drop-off Location</li>
-                            <li>Your Vehicle’s Availability (Days of the week and hours) </li>
+                            <li>Your vehicle’s Availability (Days of the week and hours) </li>
                             <li>Registration</li>
                             <li>Title</li>
                             <li>Diamond Sticker</li>
@@ -117,7 +117,7 @@
                             For damage incurred during the time of your rental, you’ll be responsible for any deductible or repairs. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence, this policy is void.
                         </p>
                         <p>
-                            When renting a car owned by a Car Flo OWNER and made available to other drivers, you need to communicate with the owner. The Car Flo OWNER will add your name to the car’s insurance policy.
+                            When renting a car owned by a Car Flo owner and made available to other drivers, you need to communicate with the owner. The Car Flo owner will add your name to the car’s insurance policy.
                         </p>
                     </div>
                     <div class="step">
