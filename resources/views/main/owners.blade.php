@@ -248,7 +248,7 @@
                 <div class="col-md-6 order-2 order-md-1">
                     <div class="about_text">
                         <h1>More information</h1>
-                        <p>You set the rental rate for your vehicle. Car Flo charges just 20% to facilitate the rental. Owners are responsible for proper maintenance insurance.</p>
+                        <p>You set the rental rate for your vehicle. Car Flo charges just 20% to facilitate the rental. Owners are responsible for proper maintenance and insurance.</p>
                     </div>
 
                 </div>
