@@ -64,13 +64,13 @@
                             <li>Car Model</li>
                             <li>Miles</li>
                             <li>Pickup and Drop-off Location</li>
-                            <li>Your Vehicles Availability (Days of the week and hours)</li>
+                            <li>Your Vehicle’s Availability (Days of the week and hours) </li>
                             <li>Registration</li>
                             <li>Title</li>
                             <li>Diamond Sticker</li>
                             <li>FH-1 Insurance</li>
                             <li>Photos of Your Vehicle</li>
-                            <li>Social Security Number (To issue 1099’s)</li>
+                            <li>Social Security Number (To issue 1099s)</li>
                             <li>Account and Routing Number (To Send Your Earnings)</li>
                         </ul>
                     </div>
@@ -78,13 +78,13 @@
                     <div class="step">
                         <h5>Do I need to have my license for a certain period of time in order to rent a car?</h5>
                         <p>
-                            We vet all of our drivers thoroughly to make sure they are responsible and trustworthy drivers. Drivers must have at least one year with their driver’s license in order to signup.
+                            We vet all of our drivers thoroughly to make sure they are responsible and trustworthy drivers. Drivers must have at least one year with their driver’s license in order to sign up.
                         </p>
                     </div>
                     <div class="step">
                         <h5>How long does the process take to begin working with Car Flo?</h5>
                         <p>
-                            Once you have submitted your documents within four hours. After your approval, it can take 24-48 hours to get you insured and ready to drive.
+                            Once you have submitted your documents, we will notify you within four hours. After your approval, it can take 24-48 hours to get you insured and ready to drive.
                         </p>
                     </div>
                     <div class="step">
@@ -96,7 +96,7 @@
                     <div class="step">
                         <h5>How much advance notice do I need to give to reserve hours?</h5>
                         <p>
-                            No advance notice is needed. Once you are approved by us simply choose and the app will automatically let you know which vehicles and times are available in your area.
+                            No advance notice is needed. Once you are approved by us simply choose your hours in the Car Flo app and the app will automatically let you know which vehicles and times are available in your area.
                         </p>
                     </div>
                     <div class="step">
@@ -117,13 +117,13 @@
                             For damage incurred during the time of your rental, you’ll be responsible for any deductible or repairs. Car Flo offers an umbrella policy available for purchase that will cover the deductible in case of damage. In cases of gross negligence, this policy is void.
                         </p>
                         <p>
-                            When renting a car owned by a Car Flo Owner and made available to other drivers, you need to communicate with the owner. The Car Flo Owner will add your name to the car’s insurance policy.
+                            When renting a car owned by a Car Flo owner and made available to other drivers, you need to communicate with the owner. The Car Flo owner will add your name to the car’s insurance policy.
                         </p>
                     </div>
                     <div class="step">
                         <h5>Is there a cancellation fee?</h5>
                         <p>
-                            There is no cancellation fee when canceling 24 hours in advanced. You will be charged 50% of your rental if you choose to cancel within 24 hours.
+                            There is no cancellation fee when canceling at least 24 hours in advance. You will be charged 50 percent of your rental fee if you choose to cancel with fewer than 24-hours notice.
                         </p>
                     </div>
                     <div class="step">
@@ -147,7 +147,7 @@
                     <div class="step">
                         <h5>And Parking?</h5>
                         <p>
-                            Each vehicle will have its own guidelines for parking that will be determined by the owner of the vehicle. Drivers will park the vehicle legally when the vehicle is rented. When drivers return the vehicle to the owner they will park it based on the vehicle owners instructions.
+                            Each vehicle will have its own guidelines for parking that will be determined by the owner of the vehicle. Drivers will park the vehicle legally when the vehicle is rented. When drivers return the vehicle to the owner they will park it based on the vehicle owner’s instructions.
                         </p>
                     </div>
                     <div class="step">

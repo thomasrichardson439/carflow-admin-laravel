@@ -154,7 +154,7 @@
                 <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel" data-interval="3000">
 
 
-                    <div class="carousel-inner">
+                    <div class="carousel-inner custom-carousel2">
 
                         <div class="carousel-item active px-5">
                             <h3 class="text-center mb-4">Mario</h3>
