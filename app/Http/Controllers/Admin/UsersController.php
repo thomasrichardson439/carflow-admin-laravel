@@ -45,7 +45,6 @@ class UsersController extends Controller
                 ->with('profileUpdateRequest')
                 ->orderBy('id', 'ASC')
         );
-
         return view('admin.users.index', [
             'dataProvider' => $dataProvider,
         ]);
