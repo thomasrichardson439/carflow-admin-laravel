@@ -136,7 +136,7 @@
                                     </label>
 
                                     <p class="mt-1 mb-0 mt-4">
-                                        Upload TLC/Diamon sticker
+                                        Upload TLC/Diamond sticker
                                     </p>
                                     <table class="result-tbl result_tbl_form2" style="width: 100%;">
                                         <tr class="img_2">
