@@ -78,6 +78,13 @@ $columns = [
 @endphp
 
 <div class="row">
+    <div class="col-12 d-flex justify-content-start align-items-center">
+        <a href="{{ url('/admin/users/'.$user->id.'/booking/create') }}" class="btn btn-danger">
+            <i class="fa fa-plus"></i> Create Booking
+        </a>
+    </div>
+</div>
+<div class="row">
     <div class="col-12">
         <h3>Recurring bookings</h3>
     </div>

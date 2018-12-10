@@ -36,6 +36,12 @@ Route::group([
         Route::post('{id}/reject-profile-changes', 'UsersController@rejectProfileChanges');
 
         Route::get('{id}/policy', 'UsersController@policy');
+
+        // updated by karen
+        Route::get('{id}/booking/create', 'UsersController@booking_create');
+        Route::get('{id}/booking/availableForBooking', 'UsersController@availableForBooking');
+        Route::get('{id}/booking/view/{car_id}', 'UsersController@bookViewCar');
+        Route::get('{id}/booking/preview/{car_id}', 'UsersController@bookPreview');
     });
 
     Route::resource('cars', 'CarsController');
