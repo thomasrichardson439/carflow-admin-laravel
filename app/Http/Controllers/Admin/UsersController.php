@@ -6,9 +6,12 @@ use App\Helpers\AwsHelper;
 use App\Mail\UserPolicyNotification;
 use App\Mail\UserProfileReviewNotification;
 use App\Models\Booking;
+use App\Models\CarCategory;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\UserProfileUpdate;
+use App\Repositories\BookingsRepository;
+use App\Repositories\CarsRepository;
 use DB;
 use Mail;
 use App\Models\User;
@@ -27,10 +30,14 @@ class UsersController extends Controller
      * @var AwsHelper
      */
     private $awsHelper;
+    private $carsRepository;
+    private $bookingsRepository;
 
     public function __construct()
     {
         $this->awsHelper = new AwsHelper();
+        $this->carsRepository = new CarsRepository();
+        $this->bookingsRepository = new BookingsRepository();
     }
 
     /**
@@ -362,5 +369,134 @@ class UsersController extends Controller
         );
 
         return redirect()->back()->with('success', 'Policy number added. Notification sent.');
+    }
+
+    public function booking_create($id)
+    {
+        $data['user'] = User::findOrFail($id);
+        $data['vehicles'] = CarCategory::all();
+        return view('admin.users.booking_filters', $data);
+    }
+    public function availableForBooking(Request $request, $id)
+    {
+        if(count($request->all()) == 0){
+            return redirect('admin/users/'.$id.'/booking/create');
+        }else{
+            $this->validate($request, [
+                'available_from' => 'date|date_format:"l, j M Y h:i A"|required|after:yesterday',
+                'available_to' =>   'date|date_format:"l, j M Y h:i A"|required|after:available_from',
+                'categories' => 'array',
+                'categories.*' => 'integer|exists:car_categories,id',
+                'pickup_location_lat' => 'numeric',
+                'pickup_location_lon' => 'numeric|required_with:pickup_location_lat',
+                'allowed_range_miles' => 'integer|required_with:pickup_location_lat|min:1|max:100',
+                'allowed_recurring' => 'boolean',
+            ]);
+            $req = $request->all();
+
+            switch ($req['allowed_range_miles']){
+                case 1:
+                    $req['allowed_range_miles'] = 0.5;
+                    break;
+                case 2:
+                    $req['allowed_range_miles'] = 1;
+                    break;
+                case 3:
+                    $req['allowed_range_miles'] = 2;
+                    break;
+                case 4:
+                    $req['allowed_range_miles'] = 5;
+                    break;
+                case 5:
+                    $req['allowed_range_miles'] = 10;
+                    break;
+                case 6:
+                    $req['allowed_range_miles'] = 10000;
+                    break;
+            }
+            $data['cars']= $this->carsRepository->availableForBooking($req);
+            $data['user']= User::findOrFail($id);
+//            dd($data);
+
+            return view('admin.users.booking_available_cars', $data);
+        }
+    }
+
+    public function bookViewCar($id, $car_id, Request $request){
+        if(count($request->all()) == 0){
+            return redirect('admin/users/'.$id.'/booking/create');
+        }else{
+            $this->validate($request, [
+                'available_from' => 'date|date_format:"l, j M Y h:i A"|required|after:yesterday',
+                'available_to' =>   'date|date_format:"l, j M Y h:i A"|required|after:available_from',
+                'categories' => 'array',
+                'categories.*' => 'integer|exists:car_categories,id',
+                'pickup_location_lat' => 'numeric',
+                'pickup_location_lon' => 'numeric|required_with:pickup_location_lat',
+                'allowed_range_miles' => 'integer|required_with:pickup_location_lat|min:1|max:100',
+                'allowed_recurring' => 'boolean',
+            ]);
+            $req = $request->all();
+
+            switch ($req['allowed_range_miles']){
+                case 1:
+                    $req['allowed_range_miles'] = 0.5;
+                    break;
+                case 2:
+                    $req['allowed_range_miles'] = 1;
+                    break;
+                case 3:
+                    $req['allowed_range_miles'] = 2;
+                    break;
+                case 4:
+                    $req['allowed_range_miles'] = 5;
+                    break;
+                case 5:
+                    $req['allowed_range_miles'] = 10;
+                    break;
+                case 6:
+                    $req['allowed_range_miles'] = 10000;
+                    break;
+            }
+            $cars= $this->carsRepository->availableForBooking($req);
+            if(count($cars) > 0){
+                foreach ($cars as $car){
+                    if($car_id == $car['car']['id']){
+                        $data['car'] = $car['car'];
+                    }
+                }
+            }else{
+                return redirect('admin/users/'.$id.'/booking/create');
+            }
+
+            $data['user']= User::findOrFail($id);
+//            dd($data);
+
+            return view('admin.users.booking_view_car', $data);
+        }
+    }
+
+    public function bookPreview($id, $car_id, Request $request)
+    {
+        /**
+         * @var $model Car
+         */
+        $model = Car::query()->findOrFail($car_id);
+
+        $this->validate($request, [
+            'calendar_date_from' => 'date|date_format:"Y-m-d H:i"|required|after:now',
+            'calendar_date_to' => 'date|date_format:"Y-m-d H:i"|required|after:calendar_date_from',
+        ]);
+
+        $dateFrom = Carbon::parse($request->calendar_date_from);
+        $dateTo = Carbon::parse($request->calendar_date_to);
+
+        return $this->success([
+            'car' => $this->carsRepository->show($model),
+            'calendar' => $this->carsRepository->availabilityCalendar(
+                $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+                $this->carsRepository->bookingCalendar(auth()->user()->id, $model->id, $dateFrom, $dateTo)
+            )[$model->id],
+        ]);
     }
 }
