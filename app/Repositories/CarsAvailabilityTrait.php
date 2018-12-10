@@ -577,7 +577,6 @@ trait CarsAvailabilityTrait
 
         $data = [];
         $cars = $query->get();
-
         foreach ($cars as $car) {
 
             /** @var Car $car */
