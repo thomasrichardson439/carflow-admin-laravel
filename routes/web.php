@@ -41,7 +41,8 @@ Route::group([
         Route::get('{id}/booking/create', 'UsersController@booking_create');
         Route::get('{id}/booking/availableForBooking', 'UsersController@availableForBooking');
         Route::get('{id}/booking/view/{car_id}', 'UsersController@bookViewCar');
-        Route::get('{id}/booking/preview/{car_id}', 'UsersController@bookPreview');
+        Route::post('{id}/booking/preview/{car_id}', 'UsersController@bookPreview');
+        Route::post('{id}/booking/complete/{car_id}', 'UsersController@bookComplete');
     });
 
     Route::resource('cars', 'CarsController');
