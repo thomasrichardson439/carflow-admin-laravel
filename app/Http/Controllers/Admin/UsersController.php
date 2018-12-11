@@ -6,12 +6,14 @@ use App\Helpers\AwsHelper;
 use App\Mail\UserPolicyNotification;
 use App\Mail\UserProfileReviewNotification;
 use App\Models\Booking;
+use App\Models\Car;
 use App\Models\CarCategory;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\UserProfileUpdate;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
+use Carbon\Carbon;
 use DB;
 use Mail;
 use App\Models\User;
@@ -426,52 +428,24 @@ class UsersController extends Controller
         if(count($request->all()) == 0){
             return redirect('admin/users/'.$id.'/booking/create');
         }else{
-            $this->validate($request, [
-                'available_from' => 'date|date_format:"l, j M Y h:i A"|required|after:yesterday',
-                'available_to' =>   'date|date_format:"l, j M Y h:i A"|required|after:available_from',
-                'categories' => 'array',
-                'categories.*' => 'integer|exists:car_categories,id',
-                'pickup_location_lat' => 'numeric',
-                'pickup_location_lon' => 'numeric|required_with:pickup_location_lat',
-                'allowed_range_miles' => 'integer|required_with:pickup_location_lat|min:1|max:100',
-                'allowed_recurring' => 'boolean',
-            ]);
-            $req = $request->all();
+            $model = Car::query()->findOrFail($car_id);
 
-            switch ($req['allowed_range_miles']){
-                case 1:
-                    $req['allowed_range_miles'] = 0.5;
-                    break;
-                case 2:
-                    $req['allowed_range_miles'] = 1;
-                    break;
-                case 3:
-                    $req['allowed_range_miles'] = 2;
-                    break;
-                case 4:
-                    $req['allowed_range_miles'] = 5;
-                    break;
-                case 5:
-                    $req['allowed_range_miles'] = 10;
-                    break;
-                case 6:
-                    $req['allowed_range_miles'] = 10000;
-                    break;
-            }
-            $cars= $this->carsRepository->availableForBooking($req);
-            if(count($cars) > 0){
-                foreach ($cars as $car){
-                    if($car_id == $car['car']['id']){
-                        $data['car'] = $car['car'];
-                    }
-                }
-            }else{
-                return redirect('admin/users/'.$id.'/booking/create');
-            }
+            $this->validate($request, [
+                'available_from' => 'date|date_format:"l, j M Y h:i A"|required|after:now',
+                'available_to' => 'date|date_format:"l, j M Y h:i A"|required|after:available_from',
+            ]);
+
+            $dateFrom = Carbon::parse($request->available_from);
+            $dateTo = Carbon::parse($request->available_to);
 
             $data['user']= User::findOrFail($id);
+            $data['car']= $this->carsRepository->show($model);
+            $calendar = $this->carsRepository->availabilityCalendar(
+                $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+                $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
+            )[$model->id];
+            $data['calendar'] = json_encode($calendar);
 //            dd($data);
-
             return view('admin.users.booking_view_car', $data);
         }
     }
@@ -484,19 +458,75 @@ class UsersController extends Controller
         $model = Car::query()->findOrFail($car_id);
 
         $this->validate($request, [
-            'calendar_date_from' => 'date|date_format:"Y-m-d H:i"|required|after:now',
-            'calendar_date_to' => 'date|date_format:"Y-m-d H:i"|required|after:calendar_date_from',
+            'calendar_date_from' => 'date|date_format:"Y-m-d h:i A"|required|after:now',
+            'calendar_date_to' => 'date|date_format:"Y-m-d h:i A"|required|after:calendar_date_from',
         ]);
 
         $dateFrom = Carbon::parse($request->calendar_date_from);
         $dateTo = Carbon::parse($request->calendar_date_to);
 
-        return $this->success([
-            'car' => $this->carsRepository->show($model),
-            'calendar' => $this->carsRepository->availabilityCalendar(
-                $model->availabilitySlots()->get(), $dateFrom, $dateTo,
-                $this->carsRepository->bookingCalendar(auth()->user()->id, $model->id, $dateFrom, $dateTo)
-            )[$model->id],
+        $data['user']= User::findOrFail($id);
+        $data['car']= $this->carsRepository->show($model);
+        $data['calendar']= $this->carsRepository->availabilityCalendar(
+            $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+            $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
+        )[$model->id];
+        dd($data);
+        return view('admin.users.booking_view_car', $data);
+    }
+
+    public function bookComplete($id, $car_id, Request $request){
+        $data['user']= User::findOrFail($id);
+        $model = Car::query()->findOrFail($car_id);
+
+        $this->validate($request, [
+            'calendar_date_from' => 'required|date|date_format:"Y-m-d h:i A"|after:now',
+            'calendar_date_to' => 'required|date|date_format:"Y-m-d h:i A"|after:calendar_date_from',
+            'is_recurring' => 'required|boolean',
         ]);
+
+        $startingAt = Carbon::parse($request->calendar_date_from);
+        $endingAt = Carbon::parse($request->calendar_date_to);
+
+        /**
+         * This conditions means that app should accept ending date without including next hour
+         */
+        if ($endingAt->minute != 59) {
+            return $this->validationErrors([
+                'calendar_date_to' => 'Minute should be 59',
+            ]);
+        }
+
+        if ($startingAt->diffInHours($endingAt) > config('params.maxBookingInHours')) {
+            return $this->validationErrors([
+                'calendar_date_to' => 'Interval could not be more than ' . config('params.maxBookingInHours') . ' hours',
+            ]);
+        }
+
+        if (!$this->carsRepository->carIsAvailable($model->id, $startingAt, $endingAt)) {
+            return $this->validationErrors([
+                'calendar_date_from' => 'Some of this hours are disabled for booking',
+            ]);
+        }
+
+        if (!$this->bookingsRepository->checkIntervalIsNotBooked(
+            auth()->user()->id, $model->id, $startingAt, $endingAt
+        )) {
+            return $this->validationErrors([
+                'calendar_date_from' => 'Picked range contains already booked hours',
+            ]);
+        }
+
+        $booking = $this->bookingsRepository->create([
+            'user_id' => $id,
+            'car_id' => $car_id,
+            'booking_starting_at' => $startingAt->timestamp,
+            'booking_ending_at' => $endingAt->timestamp,
+            'is_recurring' => $request->is_recurring,
+            'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
+            'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
+        ]);
+        $data['booking'] = $booking;
+        return view('admin.users.booking_complete', $data);
     }
 }
