@@ -13,21 +13,21 @@
                 <div class="row form-card">
                     <div class="col-12">
                         <h1 class="title">Booking created!</h1>
-                        <div class="form-group">
+                        <div class="form-group" style="margin: 60px 0;">
                             <div class="image">
-                                <img src="{{ asset('images/welcome.png') }}" class="gallery-items" alt="" style="max-width: 300px;margin-top: 20px;margin-left: auto;margin-right: auto;display: block;">
+                                <img src="{{ asset('images/welcom_t.png') }}" class="gallery-items" alt="" style="max-width: 300px;margin-top: 20px;margin-left: auto;margin-right: auto;display: block;">
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-6 offset-3">
+                            <div class="col-md-8 offset-2">
                                 @php
                                     $timestampStart = strtotime($booking['booking_starting_at']['formatted']);
                                     $timestampEnd = strtotime($booking['booking_ending_at']['formatted']);
                                 @endphp
                                 <p>You have successfully created a booking on {{date('j M Y',$timestampStart)}} on {{date('l',$timestampStart)}} from {{date('h:i A',$timestampStart)}} to {{date('h:i A',$timestampEnd)}} on {{$booking['car']['model']}}.</p>
                             </div>
-                            <div class="col-12 text-center">
-                                <h3><a href="{{url('admin/users/'.$user->id.'/booking/create')}}" style="color: #f14444;">Continue</a></h3>
+                            <div class="col-12 text-center" style="margin-top: 30px">
+                                <a href="{{url('admin/users/'.$user->id.'?booking=1')}}" class=" btn-block" style="color: #f14444;padding: 4px;border: 1px solid #ddd;border-radius: 3px;text-decoration: none;font-size: 20px;">Continue</a>
                             </div>
                         </div>
                     </div>

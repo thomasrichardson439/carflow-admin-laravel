@@ -62,14 +62,14 @@ $columns = [
     ],
     [
         'class' => \Woo\GridView\Columns\ActionsColumn::class,
-        'value' => '{edit} {delete}',
+        'value' => '{edit} {cancel}',
         'contentHtmlOptions' => [
             'class' => 'actionsColumn',
         ],
         'actionsUrls' => function($model) {
             return [
-                'edit' => url('admin/bookings/' . $model->id . '#edit'),
-                'delete' => url('admin/bookings/' . $model->id . '/delete'),
+                'edit' => url('admin/users/'.$model->user_id.'/booking/edit/' . $model->id),
+                'cancel' => url('admin/users/'.$model->user_id.'/booking/delete/' . $model->id ),
             ];
         }
     ]

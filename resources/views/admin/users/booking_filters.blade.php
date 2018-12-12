@@ -19,11 +19,6 @@
                     @include('admin._alerts')
 
                     <div class="row">
-                        <div class="col-12">
-                            <h3>Personal information</h3>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-6">
                             <div class="form-card">
                                 <div class="form-group">
@@ -65,13 +60,14 @@
                             </div>
                             <div class="form-card">
                                 <div class="form-group">
+                                    <input type="hidden" name="allowed_recurring" value="1">
                                     <label class="d-flex align-items-center">
                                         <input class="apple-switch mR-10"
-                                               type="checkbox" name="allowed_recurring"
+                                               type="checkbox" id="allowed_recurring"
                                                value="1"
                                                checked
                                         >
-                                        Allowed recurring
+                                        Only cars available for recurring booking
                                     </label>
                                 </div>
                             </div>
@@ -83,9 +79,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Address</label>
-                                    <input id="lat" name="pickup_location_lat" type="hidden" value="">
-                                    <input id="lot" name="pickup_location_lon" type="hidden" value="">
-                                    <input id="autocomplete" onFocus="geolocate()" value="" type="text" class="form-control" required/>
+                                    <input id="lat" name="pickup_location_lat" type="hidden" value="0">
+                                    <input id="lot" name="pickup_location_lon" type="hidden" value="0">
+                                    <input id="autocomplete" onFocus="geolocate()" value="" type="text" class="form-control" />
                                 </div>
                                 <div class="form-group">
                                     <label>Range (miles)</label>
@@ -142,6 +138,13 @@
             $('#start_date').data("DateTimePicker").maxDate(e.date);
         });
         var mySlider = $("input.slider").slider();
+        $("#allowed_recurring").change(function () {
+            if($("#allowed_recurring").is(':checked')){
+                $("input[name='allowed_recurring']").val("1");
+            }else{
+                $("input[name='allowed_recurring']").val("0");
+            }
+        });
     });
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&libraries=places&callback=initAutocomplete" async defer></script>

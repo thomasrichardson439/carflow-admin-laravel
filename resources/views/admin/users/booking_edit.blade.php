@@ -43,17 +43,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-card">
                                 <div class="form-group">
                                     <h5>CAR</h5>
                                 </div>
                                 <div class="form-group">
-                                    <h3>{{ $car['manufacturer']['name'] }} {{$car['model']}}, {{$car['color']}}, {{$car['year']}}</h3>
+                                    <h3>{{$car['model']}}, {{$car['color']}}, {{$car['year']}}</h3>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-card">
                                 <div class="form-group">
                                     <h5>VEHICLE TYPE</h5>
@@ -95,7 +95,7 @@
                                     <h5>SCHEDULE</h5>
                                 </div>
                                 <div class="form-group" style="display: flex;">
-                                    <div style="flex: 1;">
+                                    <div style="flex: 1;margin-top: 20px;">
                                         <input type="hidden" name="is_recurring" value="{{ $car['allowed_recurring'] ? "1" : "0" }}">
                                         <input class="apple-switch mR-10"
                                                type="checkbox" id="is_recurring"
@@ -105,7 +105,7 @@
                                     </div>
                                     <div style="flex: 8;">
                                         <label>Create recurring booking</label>
-                                        {{--<p>Book this car automatically on every Tuesday, from 10:00AM to 10:00PM</p>--}}
+                                        <p>Book this car automatically on every Tuesday, from 10:00AM to 10:00PM</p>
                                         {{--<p>Book this car automatically on every selected date</p>--}}
                                     </div>
                                 </div>
@@ -196,15 +196,18 @@
         return slots;
     }
     function initCalendar() {
-
+        for(var i = 0; i < Calendar.length; i ++){
+            console.log(Calendar[i]);
+        }
         for(var j in Calendar){
             if(Calendar[j].length > 0){
                 enableStartDate.push(j)
             }
         }
+        console.log(enableStartDate.length)
         if(enableStartDate.length == 0){
             $("#custom-validation-errors").show();
-            $("#custom-validation-errors").html("There is not available time");
+            $("#custom-validation-errors").html("Please select start date");
             $('#start_date').attr("disabled", true);
             return false;
         }
@@ -222,9 +225,11 @@
                 }
             }
         }else{
+            console.log(valid_hours)
             for(var j = 0;j < valid_hours.length; j++){
                 valid_hours[j] = parseInt(valid_hours[j]) + 1;
             }
+            console.log(valid_hours)
             for(var k in rows){
                 if(jQuery.inArray(parseInt(k), valid_hours) !== -1 && parseInt(k) >= parseInt(selectedStartTime)){
                     html += "<option value='"+k+"' style='color:red;'>"+rows[k]+"</option>";
@@ -237,8 +242,8 @@
         return html;
     }
     $(document).ready(function () {
-        $("#custom-validation-errors").hide();
         initCalendar();
+        $("#custom-validation-errors").hide();
         $('#start_date').datetimepicker({
             format: "dddd, DD MMM gggg",
             useCurrent: false,
@@ -317,37 +322,5 @@
     });
 
 </script>
-{{--<script src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&libraries=places&callback=initAutocomplete" async defer></script>--}}
-{{--<script>--}}
-    {{--var autocomplete_pickup;--}}
-    {{--var autocomplete_return;--}}
-    {{--function initAutocomplete() {--}}
-        {{--autocomplete_pickup = new google.maps.places.Autocomplete(--}}
-            {{--(document.getElementById('full_pickup_location')));--}}
-        {{--autocomplete_pickup.addListener('place_changed', fillInAddress);--}}
-    {{--}--}}
 
-    {{--function fillInAddress() {--}}
-        {{--var place = autocomplete_pickup.getPlace();--}}
-        {{--var location  = place.geometry.location;--}}
-        {{--$("#pickup_location_lat").val(location.lat());--}}
-        {{--$("#pickup_location_lon").val(location.lng());--}}
-    {{--}--}}
-
-    {{--function geolocate_pickup() {--}}
-        {{--if (navigator.geolocation) {--}}
-            {{--navigator.geolocation.getCurrentPosition(function(position) {--}}
-                {{--var geolocation = {--}}
-                    {{--lat: position.coords.latitude,--}}
-                    {{--lng: position.coords.longitude--}}
-                {{--};--}}
-                {{--var circle = new google.maps.Circle({--}}
-                    {{--center: geolocation,--}}
-                    {{--radius: position.coords.accuracy--}}
-                {{--});--}}
-                {{--autocomplete_pickup.setBounds(circle.getBounds());--}}
-            {{--});--}}
-        {{--}--}}
-    {{--}--}}
-{{--</script>--}}
 @endpush

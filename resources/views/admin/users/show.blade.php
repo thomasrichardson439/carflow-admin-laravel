@@ -117,10 +117,10 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
                     <div class="col-12">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#user-bookings">Bookings</a>
+                                <a class="nav-link {!! app('request')->input('booking') == 1 ? "active" : "" !!}" data-toggle="tab" href="#user-bookings">Bookings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#user-info">Information</a>
+                                <a class="nav-link  {!! app('request')->input('booking') == 1 ? "" : "active" !!}" data-toggle="tab" href="#user-info">Information</a>
                             </li>
                         </ul>
                     </div>
@@ -129,11 +129,11 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
 
                 <div class="tab-content">
 
-                    <div class="tab-pane" id="user-bookings">
+                    <div class="tab-pane {!! app('request')->input('booking') == 1 ? "active" : "" !!}" id="user-bookings">
                         @include('admin.users._bookings')
                     </div>
 
-                    <div class="tab-pane active" id="user-info">
+                    <div class="tab-pane  {!! app('request')->input('booking') == 1 ? "" : "active" !!}" id="user-info">
                         <form action="{{ url('/admin/users/' . $user->id) }}" method="post" id="user-form" enctype="multipart/form-data">
                             {{csrf_field()}}
                             {{ method_field('PATCH') }}
