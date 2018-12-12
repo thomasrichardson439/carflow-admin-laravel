@@ -67,7 +67,7 @@
                                     <h5>PICKUP</h5>
                                 </div>
                                 <div class="form-group">
-                                    <label>{{$booking['car']['full_pickup_location']}}</label>
+                                    <label>{{$booking['car']['full_pickup_location']}}</label></br>
                                     <a href="#modalMap1" data-toggle="modal" style="color:#ff0000;">Open in Maps</a>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                     <h5>RETURN</h5>
                                 </div>
                                 <div class="form-group">
-                                    <label>{{$booking['car']['full_return_location']}}</label>
+                                    <label>{{$booking['car']['full_return_location']}}</label></br>
                                     <a href="#modalMap2" data-toggle="modal" style="color:#ff0000;">Open in Maps</a>
                                 </div>
                             </div>

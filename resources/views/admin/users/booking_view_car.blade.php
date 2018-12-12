@@ -69,7 +69,7 @@
                                     <h5>PICKUP</h5>
                                 </div>
                                 <div class="form-group">
-                                    <label>{{$car['full_pickup_location']}}</label>
+                                    <label>{{$car['full_pickup_location']}}</label></br>
                                     <a href="#modalMap1" data-toggle="modal" style="color:#ff0000;">Open in Maps</a>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                     <h5>RETURN</h5>
                                 </div>
                                 <div class="form-group">
-                                    <label>{{$car['full_return_location']}}</label>
+                                    <label>{{$car['full_return_location']}}</label></br>
                                     <a href="#modalMap2" data-toggle="modal" style="color:#ff0000;">Open in Maps</a>
                                 </div>
                             </div>
@@ -253,11 +253,13 @@
                 }
             }
         }else{
+            var end_hours = [];
             for(var j = 0;j < valid_hours.length; j++){
-                valid_hours[j] = parseInt(valid_hours[j]) + 1;
+                end_hours[j] = parseInt(valid_hours[j]) + 1;
             }
+            console.log(end_hours)
             for(var k in rows){
-                if(jQuery.inArray(parseInt(k), valid_hours) !== -1 && parseInt(k) >= parseInt(selectedStartTime)){
+                if(jQuery.inArray(parseInt(k), end_hours) !== -1 && parseInt(k) > parseInt(selectedStartTime)){
                     html += "<option value='"+k+"' style='color:red;'>"+rows[k]+"</option>";
                 }else{
                     html += "<option value='"+k+"' disabled>"+rows[k]+"</option>";
