@@ -491,30 +491,40 @@ class UsersController extends Controller
         /**
          * This conditions means that app should accept ending date without including next hour
          */
-//        if ($endingAt->minute != 59) {
+        if ($endingAt->minute != 59) {
 //            return $this->validationErrors([
 //                'calendar_date_to' => 'Minute should be 59',
 //            ]);
-//        }
+            return redirect('admin/users/'.$id.'/booking/view/'.$car_id)->withErrors(['calendar_date_to' => 'Minute should be 59']);
+        }
 
         if ($startingAt->diffInHours($endingAt) > config('params.maxBookingInHours')) {
-            return $this->validationErrors([
+//            return $this->validationErrors([
+//                'calendar_date_to' => 'Interval could not be more than ' . config('params.maxBookingInHours') . ' hours',
+//            ]);
+            return redirect('admin/users/'.$id.'/booking/view/'.$car_id)->withErrors([
                 'calendar_date_to' => 'Interval could not be more than ' . config('params.maxBookingInHours') . ' hours',
             ]);
         }
 
         if (!$this->carsRepository->carIsAvailable($model->id, $startingAt, $endingAt)) {
-            return $this->validationErrors([
+            return redirect('admin/users/'.$id.'/booking/view/'.$car_id)->withErrors([
                 'calendar_date_from' => 'Some of this hours are disabled for booking',
             ]);
+//            return $this->validationErrors([
+//                'calendar_date_from' => 'Some of this hours are disabled for booking',
+//            ]);
         }
 
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
             auth()->user()->id, $model->id, $startingAt, $endingAt
         )) {
-            return $this->validationErrors([
+            return redirect('admin/users/'.$id.'/booking/view/'.$car_id)->withErrors([
                 'calendar_date_from' => 'Picked range contains already booked hours',
             ]);
+//            return $this->validationErrors([
+//                'calendar_date_from' => 'Picked range contains already booked hours',
+//            ]);
         }
 
         $booking = $this->bookingsRepository->create([
@@ -545,5 +555,17 @@ class UsersController extends Controller
         $booking = Booking::query()->findOrFail($id);
 
         return $booking;
+    }
+    private function validationErrors(array $errors)
+    {
+        return response()->json([
+            'status' => 'failed',
+            'data' => [],
+            'error' => [
+                'type' => 'validation',
+                'message' => 'The given data was invalid.',
+                'errors' => $errors,
+            ]
+        ], 422);
     }
 }

@@ -23,8 +23,9 @@
                                 @php
                                     $timestampStart = strtotime($booking['booking_starting_at']['formatted']);
                                     $timestampEnd = strtotime($booking['booking_ending_at']['formatted']);
+                                    $timestampEnd += 60;
                                 @endphp
-                                <p>You have successfully created a booking on {{date('j M Y',$timestampStart)}} on {{date('l',$timestampStart)}} from {{date('h:i A',$timestampStart)}} to {{date('h:i A',$timestampEnd)}} on {{$booking['car']['model']}}.</p>
+                                <p>You have successfully created a booking on {{date('j M Y',$timestampStart)}} on {{date('l',$timestampStart)}} from {{date('h:i A',$timestampStart)}} to {{date('h:i A',$timestampEnd)}} on {{ $booking['car']['manufacturer']['name'] }} {{$booking['car']['model']}}.</p>
                             </div>
                             <div class="col-12 text-center" style="margin-top: 30px">
                                 <a href="{{url('admin/users/'.$user->id.'?booking=1')}}" class=" btn-block" style="color: #f14444;padding: 4px;border: 1px solid #ddd;border-radius: 3px;text-decoration: none;font-size: 20px;">Continue</a>

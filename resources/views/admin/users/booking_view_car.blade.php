@@ -69,10 +69,8 @@
                                     <h5>PICKUP</h5>
                                 </div>
                                 <div class="form-group">
-                                    {{--<input id="pickup_location_lat" name="pickup_location_lat" type="hidden" value="{{$car['pickup_location_lat']}}">--}}
-                                    {{--<input id="pickup_location_lon" name="pickup_location_lon" type="hidden" value="{{$car['pickup_location_lon']}}">--}}
-                                    {{--<input id="full_pickup_location" name="full_pickup_location" onFocus="geolocate_pickup()" type="text" class="form-control" value="{{$car['full_pickup_location']}}" readonly />--}}
                                     <label>{{$car['full_pickup_location']}}</label>
+                                    <a href="#modalMap1" data-toggle="modal" style="color:#ff0000;">Open in Maps</a>
                                 </div>
                             </div>
                         </div>
@@ -82,10 +80,8 @@
                                     <h5>RETURN</h5>
                                 </div>
                                 <div class="form-group">
-                                    {{--<input id="return_location_lat" name="return_location_lat" type="hidden" value="{{$car['return_location_lat']}}">--}}
-                                    {{--<input id="return_location_lon" name="return_location_lon" type="hidden" value="{{$car['return_location_lon']}}">--}}
-                                    {{--<input id="full_return_location" name="full_return_location" onFocus="geolocate_return()" type="text" class="form-control" value="{{$car['full_return_location']}}" readonly/>--}}
                                     <label>{{$car['full_return_location']}}</label>
+                                    <a href="#modalMap2" data-toggle="modal" style="color:#ff0000;">Open in Maps</a>
                                 </div>
                             </div>
                         </div>
@@ -155,13 +151,48 @@
             </div>
         </div>
     </form>
-
+    <div id="modalMap1" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: none;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div id="map1" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div id="modalMap2" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: none;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div id="map2" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh5U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="{{asset('plugin/bootstrap.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js" type="text/javascript"></script>
 <script src="{{asset('plugin/datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
 {{--<script src="{{asset('plugin/locationPicker/locationpicker.jquery.js')}}"></script>--}}
@@ -308,8 +339,10 @@
             }
             var arrStartTime = generateTimeSlots("00");
             var startTime = arrStartTime[selectedStartTime];
-            var arrEndTime = generateTimeSlots("00");
-            var endTime = arrEndTime[selectedEndTime];
+            var arrEndTime = generateTimeSlots("59");
+            var endTime = arrEndTime[parseInt(selectedEndTime)-1];
+            console.log("startTime :: ", startTime)
+            console.log("endTime :: ", endTime)
             $("input[name='calendar_date_from']").val(selectedStartDate + " " + startTime);
             $("input[name='calendar_date_to']").val(selectedEndDate + " " + endTime);
             return true;
@@ -317,37 +350,34 @@
     });
 
 </script>
-{{--<script src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&libraries=places&callback=initAutocomplete" async defer></script>--}}
-{{--<script>--}}
-    {{--var autocomplete_pickup;--}}
-    {{--var autocomplete_return;--}}
-    {{--function initAutocomplete() {--}}
-        {{--autocomplete_pickup = new google.maps.places.Autocomplete(--}}
-            {{--(document.getElementById('full_pickup_location')));--}}
-        {{--autocomplete_pickup.addListener('place_changed', fillInAddress);--}}
-    {{--}--}}
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ config('params.googleMapsKey') }}&callback=initMap"></script>
+<script>
+    var lat1 = '{{$car['pickup_location_lat']}}';
+    var lon1 = '{{$car['pickup_location_lon']}}';
+    var lat2 = '{{$car['return_location_lat']}}';
+    var lon2 = '{{$car['return_location_lon']}}';
+    function initMap() {
+        var myLatLng = {lat: parseFloat(lat1), lng: parseFloat(lon1)};
+        var map = new google.maps.Map(document.getElementById('map1'), {
+            zoom: 8,
+            center: myLatLng
+        });
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Hello World!'
+        });
+        var myLatLng2 = {lat: parseFloat(lat2), lng: parseFloat(lon2)};
+        var map2 = new google.maps.Map(document.getElementById('map2'), {
+            zoom: 8,
+            center: myLatLng2
+        });
+        var marker2 = new google.maps.Marker({
+            position: myLatLng2,
+            map: map2,
+            title: 'Hello World!'
+        });
+    }
 
-    {{--function fillInAddress() {--}}
-        {{--var place = autocomplete_pickup.getPlace();--}}
-        {{--var location  = place.geometry.location;--}}
-        {{--$("#pickup_location_lat").val(location.lat());--}}
-        {{--$("#pickup_location_lon").val(location.lng());--}}
-    {{--}--}}
-
-    {{--function geolocate_pickup() {--}}
-        {{--if (navigator.geolocation) {--}}
-            {{--navigator.geolocation.getCurrentPosition(function(position) {--}}
-                {{--var geolocation = {--}}
-                    {{--lat: position.coords.latitude,--}}
-                    {{--lng: position.coords.longitude--}}
-                {{--};--}}
-                {{--var circle = new google.maps.Circle({--}}
-                    {{--center: geolocation,--}}
-                    {{--radius: position.coords.accuracy--}}
-                {{--});--}}
-                {{--autocomplete_pickup.setBounds(circle.getBounds());--}}
-            {{--});--}}
-        {{--}--}}
-    {{--}--}}
-{{--</script>--}}
+</script>
 @endpush
