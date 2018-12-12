@@ -491,11 +491,11 @@ class UsersController extends Controller
         /**
          * This conditions means that app should accept ending date without including next hour
          */
-        if ($endingAt->minute != 59) {
-            return $this->validationErrors([
-                'calendar_date_to' => 'Minute should be 59',
-            ]);
-        }
+//        if ($endingAt->minute != 59) {
+//            return $this->validationErrors([
+//                'calendar_date_to' => 'Minute should be 59',
+//            ]);
+//        }
 
         if ($startingAt->diffInHours($endingAt) > config('params.maxBookingInHours')) {
             return $this->validationErrors([
@@ -528,5 +528,22 @@ class UsersController extends Controller
         ]);
         $data['booking'] = $booking;
         return view('admin.users.booking_complete', $data);
+    }
+
+    public function bookEdit($id, $booking_id){
+        $booking = $this->findModel($booking_id);
+        $data['booking'] = $this->bookingsRepository->show($booking);
+        $data['user']= User::findOrFail($id);
+        dd($data);
+        return view('admin.users.booking_edit', $data);
+    }
+    private function findModel($id) : Booking
+    {
+        /**
+         * @var $booking Booking
+         */
+        $booking = Booking::query()->findOrFail($id);
+
+        return $booking;
     }
 }
