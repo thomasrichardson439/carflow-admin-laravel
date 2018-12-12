@@ -79,7 +79,7 @@
                         <div class="col-6">
                             <div class="form-card">
                                 <div class="form-group">
-                                    <h4>Neighborhood</h4>
+                                    <h4>Location</h4>
                                 </div>
                                 <div class="form-group">
                                     <label>Address</label>
@@ -98,7 +98,7 @@
                                            data-slider-min="1"
                                            data-slider-max="6"
                                            data-slider-step="1"
-                                           data-slider-value="1"
+                                           data-slider-value="4"
                                            data-slider-tooltip="hide" />
                                 </div>
                             </div>
