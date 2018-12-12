@@ -44,7 +44,7 @@
                         @foreach ($cars as $car)
                         <div class="form-card car" data="{{$car['car']['id']}}" style="cursor: pointer;">
                             <div class="form-group">
-                                <div class="image-card">
+                                <div class="image-card" style="position: relative;">
                                     <div class="image">
                                         <img src="{{$car['car']['image_s3_url']}}"
                                              class="img-fluid gallery-items" alt="">
@@ -56,6 +56,11 @@
                                             <p>Dropoff: {{$car['car']['full_return_location']}}</p>
                                         </div>
                                     </div>
+                                    @if($car['car']['allowed_recurring'])
+                                    <div style="position: absolute; right: 0px;top: 0px;">
+                                        <img src="{{asset('images/recurring.png')}}" alt="" style="width: 30px;height: 30px;border: none;">
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

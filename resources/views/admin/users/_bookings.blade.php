@@ -63,13 +63,23 @@ $columns = [
     [
         'class' => \Woo\GridView\Columns\ActionsColumn::class,
         'value' => '{edit} {cancel}',
+        'additionalActions'=>['cancel' => function($model) {
+                return '
+                    <form action="' . url('admin/users/'.$model->user_id.'/booking/delete/' . $model->id ) . '" method="post" class="deleteForm">
+                        <input type="hidden" name="_token" value="' . csrf_token() . '">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="deleteButton" href="' . url('admin/users/'.$model->user_id.'/booking/delete/' . $model->id ) . '"
+                            onclick="if(!confirm(\'Are you sure want to cancel this item?\')) return false;"
+                        >Cancel</button>
+                    </form>
+                ';
+            }],
         'contentHtmlOptions' => [
             'class' => 'actionsColumn',
         ],
         'actionsUrls' => function($model) {
             return [
-                'edit' => url('admin/users/'.$model->user_id.'/booking/edit/' . $model->id),
-                'cancel' => url('admin/users/'.$model->user_id.'/booking/delete/' . $model->id ),
+                'edit' => url('admin/users/'.$model->user_id.'/booking/edit/' . $model->id)
             ];
         }
     ]

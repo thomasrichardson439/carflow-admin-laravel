@@ -123,13 +123,20 @@
 <script src="{{asset('plugin/datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        var dt = new Date();
+        var minDate = dt.getFullYear()+"-"+ parseInt(dt.getMonth()+1)+"-"+dt.getDate();
+        var hour = parseInt(dt.getHours())+1;
+        minDate += " " + hour + ":00:00"
+        console.log(minDate);
         $('#start_date').datetimepicker({
             format: "dddd, DD MMM gggg hh:mm A",
-            minDate: "{{ date('l, j M Y h:i A', time()) }}"
+            useCurrent: false,
+            minDate: minDate
         });
         $('#end_date').datetimepicker({
             format: "dddd, DD MMM gggg hh:mm A",
-            useCurrent: false
+            useCurrent: false,
+            minDate: minDate
         });
         $("#start_date").on("dp.change", function (e) {
             $('#end_date').data("DateTimePicker").minDate(e.date);
