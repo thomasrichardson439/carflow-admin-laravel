@@ -184,11 +184,13 @@ class UsersController extends Controller
                 $user->bookings()
                     ->getQuery()
                     ->where('is_recurring', true)
+                    ->where('status', '<>', 'canceled')
             ),
             'oneTimeBookingsProvider' => new EloquentDataProvider(
                 $user->bookings()
                     ->getQuery()
                     ->where('is_recurring', false)
+                    ->where('status', '<>', 'canceled')
             ),
             'averageBookingTime' => Booking::query()
                 ->where('user_id', $user->id)
@@ -544,8 +546,17 @@ class UsersController extends Controller
         $booking = $this->findModel($booking_id);
         $data['booking'] = $this->bookingsRepository->show($booking);
         $data['user']= User::findOrFail($id);
-        dd($data);
+//        dd($data);
         return view('admin.users.booking_edit', $data);
+    }
+    public function bookDelete($id, $booking_id){
+        $booking = $this->findModel($booking_id);
+        if (!in_array($booking->status, [Booking::STATUS_PENDING, Booking::STATUS_DRIVING])) {
+            abort(409, 'Unable to cancel ride');
+        }
+        $result = $this->bookingsRepository->cancelRide($booking);
+        return redirect(url('admin/users/'.$id.'?booking=1'));
+
     }
     private function findModel($id) : Booking
     {
