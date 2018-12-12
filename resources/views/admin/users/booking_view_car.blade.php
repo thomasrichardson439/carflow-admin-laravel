@@ -257,7 +257,6 @@
             for(var j = 0;j < valid_hours.length; j++){
                 end_hours[j] = parseInt(valid_hours[j]) + 1;
             }
-            console.log(end_hours)
             for(var k in rows){
                 if(jQuery.inArray(parseInt(k), end_hours) !== -1 && parseInt(k) > parseInt(selectedStartTime)){
                     html += "<option value='"+k+"' style='color:red;'>"+rows[k]+"</option>";
@@ -269,6 +268,7 @@
 
         return html;
     }
+    var endDatePicker = "";
     $(document).ready(function () {
         $("#custom-validation-errors").hide();
         initCalendar();
@@ -289,11 +289,21 @@
             $("#start_time").html(update_time("start"));
             selectedStartTime = Calendar[selectedStartDate][0];
             $('#end_date').attr("disabled", false);
-            $('#end_date').datetimepicker({
-                format: "dddd, DD MMM gggg",
-                enabledDates: [selectedStartDate],
-                useCurrent: false
-            });
+            if(endDatePicker != ""){
+                $('#end_date').datetimepicker('destroy');
+                endDatePicker = $('#end_date').datetimepicker({
+                    format: "dddd, DD MMM gggg",
+                    date: selectedStartDate,
+                    enabledDates: [selectedStartDate],
+                    useCurrent: false
+                });
+            }else{
+                endDatePicker = $('#end_date').datetimepicker({
+                    format: "dddd, DD MMM gggg",
+                    enabledDates: [selectedStartDate],
+                    useCurrent: false
+                });
+            }
         });
         $("#end_date").on("dp.change", function (e) {
             var day = e.date.format('dddd');
