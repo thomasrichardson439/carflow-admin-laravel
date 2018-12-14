@@ -426,30 +426,26 @@ class UsersController extends Controller
         }
     }
 
-    public function bookViewCar($id, $car_id, Request $request){
-        if(count($request->all()) == 0){
-            return redirect('admin/users/'.$id.'/booking/create');
-        }else{
-            $model = Car::query()->findOrFail($car_id);
+    public function bookViewCar($id, $car_id){
+        $model = Car::query()->findOrFail($car_id);
 
-            $this->validate($request, [
-                'available_from' => 'date|date_format:"l, j M Y h:i A"|required|after:now',
-                'available_to' => 'date|date_format:"l, j M Y h:i A"|required|after:available_from',
-            ]);
+        $from = mktime(date("H", time()), (date("i", time()) + 1), 0, date("m", time()), date("d", time()), date("Y", time()));
+        $available_from = date("Y-m-d h:i A", $from);
+        $to = mktime(0, 0, 0, date("m", time())+2, 1, date("Y", time()));
+        $available_to = date("Y-m-d h:i A", $to);
 
-            $dateFrom = Carbon::parse($request->available_from);
-            $dateTo = Carbon::parse($request->available_to);
+        $dateFrom = Carbon::parse($available_from);
+        $dateTo = Carbon::parse($available_to);
 
-            $data['user']= User::findOrFail($id);
-            $data['car']= $this->carsRepository->show($model);
-            $calendar = $this->carsRepository->availabilityCalendar(
-                $model->availabilitySlots()->get(), $dateFrom, $dateTo,
-                $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
-            )[$model->id];
-            $data['calendar'] = json_encode($calendar);
-//            dd($data);
-            return view('admin.users.booking_view_car', $data);
-        }
+        $data['user']= User::findOrFail($id);
+        $data['car']= $this->carsRepository->show($model);
+        $calendar = $this->carsRepository->availabilityCalendar(
+            $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+            $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
+        )[$model->id];
+        $data['calendar'] = json_encode($calendar);
+//        dd($data);
+        return view('admin.users.booking_view_car', $data);
     }
 
     public function bookPreview($id, $car_id, Request $request)
@@ -473,7 +469,7 @@ class UsersController extends Controller
             $model->availabilitySlots()->get(), $dateFrom, $dateTo,
             $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
         )[$model->id];
-        dd($data);
+//        dd($data);
         return view('admin.users.booking_view_car', $data);
     }
 
@@ -546,6 +542,27 @@ class UsersController extends Controller
         $booking = $this->findModel($booking_id);
         $data['booking'] = $this->bookingsRepository->show($booking);
         $data['user']= User::findOrFail($id);
+
+        $car_id = $data['booking']['car']['id'];
+//        dd($car_id);
+        $model = Car::query()->findOrFail($car_id);
+        $from = mktime(date("H", time()), (date("i", time()) + 1), 0, date("m", time()), date("d", time()), date("Y", time()));
+        $available_from = date("Y-m-d h:i A", $from);
+        $to = mktime(0, 0, 0, date("m", time())+2, 1, date("Y", time()));
+        $available_to = date("Y-m-d h:i A", $to);
+        $dateFrom = Carbon::parse($available_from);
+        $dateTo = Carbon::parse($available_to);
+
+        $calendar = $this->carsRepository->availabilityCalendar(
+            $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+            $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
+        )[$model->id];
+        $data['calendar'] = json_encode($calendar);
+        $req = array(
+            "available_from" => $available_from,
+            "available_to" => $available_to,
+        );
+        $data['cars']= $this->carsRepository->availableForBooking($req);
 //        dd($data);
         return view('admin.users.booking_edit', $data);
     }

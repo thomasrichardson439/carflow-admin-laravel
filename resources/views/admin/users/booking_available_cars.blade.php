@@ -85,7 +85,7 @@
         $(".car").click(function () {
             var car_id = $(this).attr("data");
             var sPageURL = window.location.search.substring(1);
-            document.location.href = "/admin/users/{{$user->id}}/booking/view/"+car_id+"?"+sPageURL;
+            document.location.href = "/admin/users/{{$user->id}}/booking/view/"+car_id;
         });
     });
 </script>
