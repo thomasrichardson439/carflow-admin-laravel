@@ -195,7 +195,6 @@
 <script src="{{asset('plugin/bootstrap.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js" type="text/javascript"></script>
 <script src="{{asset('plugin/datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
-{{--<script src="{{asset('plugin/locationPicker/locationpicker.jquery.js')}}"></script>--}}
 <script type="text/javascript">
     var Calendar = JSON.parse('{!! $calendar !!}');
     var enableStartDate = [];
