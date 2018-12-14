@@ -56,10 +56,10 @@
         <div class="form-card">
             <h4>Events</h4>
 
-            <div class="info">
-                <p class="title">Receipts</p>
-                <p class="content">{{ $user->receipts()->count() }} receipts <a href="#" data-toggle="modal" data-target="#receipts">Show</a></p>
-            </div>
+            {{--<div class="info">--}}
+                {{--<p class="title">Receipts</p>--}}
+                {{--<p class="content">{{ $user->receipts()->count() }} receipts <a href="#" data-toggle="modal" data-target="#receipts">Show</a></p>--}}
+            {{--</div>--}}
 
             <div class="info">
                 <p class="title">Number of car malfunctions</p>

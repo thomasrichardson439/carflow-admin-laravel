@@ -131,11 +131,13 @@
         $('#start_date').datetimepicker({
             format: "dddd, DD MMM gggg hh:mm A",
             useCurrent: false,
+            stepping: 60,
             minDate: minDate
         });
         $('#end_date').datetimepicker({
             format: "dddd, DD MMM gggg hh:mm A",
             useCurrent: false,
+            stepping: 60,
             minDate: minDate
         });
         $("#start_date").on("dp.change", function (e) {
