@@ -543,26 +543,25 @@ class UsersController extends Controller
         $data['booking'] = $this->bookingsRepository->show($booking);
         $data['user']= User::findOrFail($id);
 
-        $car_id = $data['booking']['car']['id'];
-//        dd($car_id);
-        $model = Car::query()->findOrFail($car_id);
-        $from = mktime(date("H", time()), (date("i", time()) + 1), 0, date("m", time()), date("d", time()), date("Y", time()));
-        $available_from = date("Y-m-d h:i A", $from);
-        $to = mktime(0, 0, 0, date("m", time())+2, 1, date("Y", time()));
-        $available_to = date("Y-m-d h:i A", $to);
-        $dateFrom = Carbon::parse($available_from);
-        $dateTo = Carbon::parse($available_to);
-
-        $calendar = $this->carsRepository->availabilityCalendar(
-            $model->availabilitySlots()->get(), $dateFrom, $dateTo,
-            $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
-        )[$model->id];
-        $data['calendar'] = json_encode($calendar);
-        $req = array(
-            "available_from" => $available_from,
-            "available_to" => $available_to,
-        );
-        $data['cars']= $this->carsRepository->availableForBooking($req);
+//        $car_id = $data['booking']['car']['id'];
+//        $model = Car::query()->findOrFail($car_id);
+//        $from = mktime(date("H", time()), (date("i", time()) + 1), 0, date("m", time()), date("d", time()), date("Y", time()));
+//        $available_from = date("Y-m-d h:i A", $from);
+//        $to = mktime(0, 0, 0, date("m", time())+2, 1, date("Y", time()));
+//        $available_to = date("Y-m-d h:i A", $to);
+//        $dateFrom = Carbon::parse($available_from);
+//        $dateTo = Carbon::parse($available_to);
+//
+//        $calendar = $this->carsRepository->availabilityCalendar(
+//            $model->availabilitySlots()->get(), $dateFrom, $dateTo,
+//            $this->carsRepository->bookingCalendar($id, $model->id, $dateFrom, $dateTo)
+//        )[$model->id];
+//        $data['calendar'] = json_encode($calendar);
+//        $req = array(
+//            "available_from" => $available_from,
+//            "available_to" => $available_to,
+//        );
+//        $data['cars']= $this->carsRepository->availableForBooking($req);
 //        dd($data);
         return view('admin.users.booking_edit', $data);
     }

@@ -62,7 +62,7 @@ $columns = [
     ],
     [
         'class' => \Woo\GridView\Columns\ActionsColumn::class,
-        'value' => '{edit} {cancel}',
+        'value' => '{show} {cancel}',
         'additionalActions'=>['cancel' => function($model) {
                 return '
                     <a class="deleteButton" href="' . url('admin/users/'.$model->user_id.'/booking/delete/' . $model->id ) . '"
@@ -75,7 +75,7 @@ $columns = [
         ],
         'actionsUrls' => function($model) {
             return [
-                'edit' => url('admin/users/'.$model->user_id.'/booking/edit/' . $model->id)
+                'show' => url('admin/users/'.$model->user_id.'/booking/edit/' . $model->id)
             ];
         }
     ]
