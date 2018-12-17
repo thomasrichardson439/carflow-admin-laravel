@@ -246,8 +246,7 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user = User::query()->findOrFail($id);
-        $user->delete();
-
+        $user->forceDelete();
         return redirect('/admin/users')->with('success', 'User successfully deleted');
     }
 
