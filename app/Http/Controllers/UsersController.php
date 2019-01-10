@@ -214,11 +214,11 @@ class UsersController extends Controller
             }
 
             if(!is_dir($downloads_paths)) {
-                mkdir($downloads_paths, 0777, true);
+                mkdir($downloads_paths, 0775, true);
             }
 
             if(!is_dir($downloads_paths . '/' . $user_id)) {
-                mkdir($downloads_paths . '/' . $user_id, 0777, true);
+                mkdir($downloads_paths . '/' . $user_id, 0775, true);
             }
 
             if($type == 'driving-licenses'){
