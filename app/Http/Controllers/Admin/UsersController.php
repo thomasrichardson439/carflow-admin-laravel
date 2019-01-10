@@ -367,7 +367,7 @@ class UsersController extends Controller
             return redirect()->back()->with('error', 'Policy number is not filled in user profile');
         }
 
-        Mail::to(config('params.userPolicyManagerEmail'))->send(
+        Mail::to(config('params.userPolicyManagerEmail'))->cc(config('params.userPolicyCcEmail'))->send(
             new UserPolicyNotification($user->policy_number, $user)
         );
 

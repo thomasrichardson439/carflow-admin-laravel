@@ -185,4 +185,75 @@ class UsersController extends Controller
         $car->save();
         return redirect('/welcome')->with('success', 'Car successfully created');
     }
+
+    public function download($type, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        if(!empty($type) && $user){
+            $downloads_paths = 'downloads';
+
+            $old_folders = glob($downloads_paths . "/*");
+            $now   = time();
+
+            foreach ($old_folders as $old_folder) {
+                if (is_dir($old_folder)) {
+                    if ($now - filemtime($old_folder) >= 60 * 60 * 24) { // remove all files and folders older than 1 day
+                        $objects = scandir($old_folder);
+                        foreach ($objects as $object) {
+                            if ($object != "." && $object != "..") {
+                                if (is_dir($old_folder."/".$object))
+                                    rrmdir($old_folder."/".$object);
+                                else
+                                    unlink($old_folder."/".$object);
+                            }
+                        }
+                        rmdir($old_folder);
+                    }
+                }
+            }
+
+            if(!is_dir($downloads_paths)) {
+                mkdir($downloads_paths, 0777, true);
+            }
+
+            if(!is_dir($downloads_paths . '/' . $user_id)) {
+                mkdir($downloads_paths . '/' . $user_id, 0777, true);
+            }
+
+            if($type == 'driving-licenses'){
+                if (!empty($user->drivingLicense)) {
+                    $url = $user->drivingLicense->front;
+                    $contents = file_get_contents($url);
+                    $name = substr($url, strrpos($url, '/') + 1);
+                    file_put_contents(public_path($downloads_paths . '/' . $user_id . '/' . $name), $contents);
+
+                    $url = $user->drivingLicense->back;
+                    $contents = file_get_contents($url);
+                    $name = substr($url, strrpos($url, '/') + 1);
+                    file_put_contents(public_path($downloads_paths . '/' . $user_id . '/' . $name), $contents);
+                }
+            }elseif ($type == 'tlc-licenses'){
+                if (!empty($user->tlcLicense)) {
+                    $url = $user->tlcLicense->front;
+                    $contents = file_get_contents($url);
+                    $name = substr($url, strrpos($url, '/') + 1);
+                    file_put_contents(public_path($downloads_paths . '/' . $user_id . '/' . $name), $contents);
+
+                    $url = $user->tlcLicense->back;
+                    $contents = file_get_contents($url);
+                    $name = substr($url, strrpos($url, '/') + 1);
+                    file_put_contents(public_path($downloads_paths . '/' . $user_id . '/' . $name), $contents);
+                }
+            }
+
+            $files = glob(public_path($downloads_paths . '/' . $user_id . '/*'));
+
+            \Zipper::make(public_path($type . '.zip'))->add($files)->close();
+
+            return response()->download(public_path($type . '.zip'));
+        }else{
+            return redirect('/');
+        }
+    }
 }
