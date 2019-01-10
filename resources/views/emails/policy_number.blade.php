@@ -4,8 +4,10 @@
     <p>Mailing address: <b>{{ $user->address }}</b></p>
 
     <br />
-    <p><a href="{{ url('download/driving-licenses/' . $user->id) }}">Download driving licenses</a></p>
-    <p><a href="{{ url('download/tlc-licenses/' . $user->id) }}">Download TLC licenses</a></p>
+    <p><a href="{{ url('download/driving-license/' . $user->id) }}/front">Download front driving license</a></p>
+    <p><a href="{{ url('download/driving-license/' . $user->id) }}/back">Download back driving license</a></p>
+    <p><a href="{{ url('download/tlc-license/' . $user->id) }}/front">Download front TLC license</a></p>
+    <p><a href="{{ url('download/tlc-license/' . $user->id) }}/back">Download back TLC license</a></p>
 
     <br />
 

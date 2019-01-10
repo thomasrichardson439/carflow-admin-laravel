@@ -10,7 +10,7 @@ Route::get('/about-us', 'MainController@about_us');
 Route::get('/faq', 'MainController@faq');
 Route::get('/register-car', 'MainController@register_car')->name('register_car');
 Route::get('/register-driver', 'MainController@register_driver')->name('register_driver');
-Route::get('/download/{type}/{id}', 'UsersController@download');
+Route::get('/download/{type}/{id}/{side}', 'UsersController@download');
 Route::post('/user/register-driver', 'UsersController@store')->name('save_driver');
 Route::post('/user/register-car-owner', 'UsersController@store_car')->name('save_car_owner');
 Route::post('/user/validate-email', 'UsersController@validateEmail')->name('validate-email');
