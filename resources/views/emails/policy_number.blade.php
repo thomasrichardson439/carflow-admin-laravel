@@ -3,7 +3,11 @@
     <p>Can you please add {{ $user->full_name }} to <b>{{ $policyNumber }}</b></p>
     <p>Mailing address: <b>{{ $user->address }}</b></p>
 
-    <br>
+    <br />
+    <p><a href="{{ url('download/driving-licenses/' . $user->id) }}">Download driving licenses</a></p>
+    <p><a href="{{ url('download/tlc-licenses/' . $user->id) }}">Download TLC licenses</a></p>
+
+    <br />
 
     <p>Sincerely,</p>
     <p>Carl Nowicki</p>

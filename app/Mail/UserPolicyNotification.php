@@ -42,17 +42,6 @@ class UserPolicyNotification extends Mailable
                 ['user' => $this->user, 'policyNumber' => $this->policyNumber]
             );
 
-        if (!empty($this->user->drivingLicense)) {
-            $settings->attach($this->user->drivingLicense->front)
-                ->attach($this->user->drivingLicense->back);
-        }
-
-
-        if (!empty($this->user->tlcLicense)) {
-            $settings->attach($this->user->tlcLicense->front)
-                ->attach($this->user->tlcLicense->back);
-        }
-
         return $settings;
     }
 }
