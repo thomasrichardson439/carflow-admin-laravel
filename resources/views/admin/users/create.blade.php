@@ -7,7 +7,7 @@
         <div class="container-fluid container-admin-form">
             <div class="row">
                 <div class="col-6 offset-3">
-                    <h1 class="title">Add new user</h1>
+                    <h1 class="title">Add new driver</h1>
 
                     @include('admin._alerts')
 

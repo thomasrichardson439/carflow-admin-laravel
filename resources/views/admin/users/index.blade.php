@@ -5,12 +5,12 @@
 
         <div class="row">
             <div class="col-6">
-                <h1 class="title">Users</h1>
-                <h4 class="subtitle">Edit and manually add users</h4>
+                <h1 class="title">Drivers</h1>
+                <h4 class="subtitle">Edit and manually add drivers</h4>
             </div>
             <div class="col-6 d-flex justify-content-end align-items-center">
                 <a href="{{ url('/admin/users/create') }}" class="btn btn-danger">
-                    <i class="fa fa-plus"></i> Add new user
+                    <i class="fa fa-plus"></i> Add new driver
                 </a>
             </div>
         </div>

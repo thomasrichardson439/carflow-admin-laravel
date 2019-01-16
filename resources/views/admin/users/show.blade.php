@@ -22,7 +22,7 @@ if ($user->profileUpdateRequest && $user->profileUpdateRequest->status == \App\M
                 <div class="row mb-3">
                     <div class="col-6">
                         <h1 class="title">
-                            <a href="{{ url('admin/users') }}">Users</a>
+                            <a href="{{ url('admin/users') }}">Drivers</a>
                             <i class="fa fa-caret-right"></i>
                             {{ $user->full_name }}
                             <small>
