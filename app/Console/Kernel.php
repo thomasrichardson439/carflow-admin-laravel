@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\DriversNotifications;
 use App\Console\Commands\NextWeekRecurlyBookings;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         NextWeekRecurlyBookings::class,
+        DriversNotifications::class
     ];
 
     /**
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('bookings:fill-next-week')
             ->weeklyOn(7, '23:05');
+        $schedule->command('drivers:notifications')
+            ->everyThirtyMinutes();
     }
 
     /**
