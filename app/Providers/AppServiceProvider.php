@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(150);
+
+        Bugsnag::registerCallback(function ($report) {
+            $report->setMetaData([
+                'account' => [
+                    'name' => 'Car Flo',
+                    'files' => $_FILES,
+                    'post_array' => $_POST,
+                ]
+            ]);
+        });
     }
 
     /**

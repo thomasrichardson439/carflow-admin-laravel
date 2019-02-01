@@ -8,6 +8,7 @@ use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
 use Illuminate\Http\Request;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 
 class BookingsController extends BaseApiController
 {
@@ -77,6 +78,17 @@ class BookingsController extends BaseApiController
     public function start($id, Request $request)
     {
         $booking = $this->findModel($id);
+
+//        echo 'sent';
+//        exit;
+
+//        Bugsnag::leaveBreadcrumb(
+//            'UPLOADED FILES',
+//            \Bugsnag\Breadcrumbs\Breadcrumb::MANUAL_TYPE,
+//            $_FILES
+//        );
+//
+//        exit;
 
         $this->validate($request, [
             'mileage_photo' => 'image|required',

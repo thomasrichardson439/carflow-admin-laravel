@@ -212,7 +212,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'AWS' => Aws\Laravel\AwsFacade::class,
         'Zipper' => Chumper\Zipper\Zipper::class,
-
+        'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
     ],
 
 ];
