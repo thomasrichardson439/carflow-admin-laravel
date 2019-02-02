@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 
@@ -116,8 +117,6 @@ class BookingsController extends BaseApiController
         if ($booking->status != Booking::STATUS_DRIVING) {
             abort(409, 'Unable to end non-started ride');
         }
-
-        dd($booking);
 
         $this->validate($request, [
             'car_front_photo' => 'image|required',

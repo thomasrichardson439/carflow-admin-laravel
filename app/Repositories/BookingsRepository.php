@@ -193,8 +193,8 @@ class BookingsRepository extends BaseRepository
                 $newBooking = new Booking();
                 $newBooking->user_id = $booking->user_id;
                 $newBooking->car_id = $booking->car_id;
-                $newBooking->booking_starting_at = $booking->booking_starting_at;
-                $newBooking->booking_ending_at = $booking->booking_ending_at;
+                $newBooking->booking_starting_at = Carbon::parse($booking->booking_starting_at)->addDay();
+                $newBooking->booking_ending_at = Carbon::parse($booking->booking_ending_at)->addDay();
                 $newBooking->is_recurring = $booking->is_recurring;
                 $newBooking->starting_at_weekday = $booking->starting_at_weekday;
                 $newBooking->ending_at_weekday = $booking->ending_at_weekday;
