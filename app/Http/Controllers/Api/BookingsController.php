@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 
