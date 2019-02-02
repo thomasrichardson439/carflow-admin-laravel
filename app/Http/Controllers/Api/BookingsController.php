@@ -117,6 +117,8 @@ class BookingsController extends BaseApiController
             abort(409, 'Unable to end non-started ride');
         }
 
+        dd($booking);
+
         $this->validate($request, [
             'car_front_photo' => 'image|required',
             'car_back_photo' => 'image|required',
