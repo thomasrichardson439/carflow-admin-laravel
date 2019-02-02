@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
 
         Bugsnag::registerCallback(function ($report) {
             $report->setMetaData([
-                'account' => [
+                'additional_data' => [
                     'name' => 'Car Flo',
                     'files' => $_FILES,
                     'post_array' => $_POST,

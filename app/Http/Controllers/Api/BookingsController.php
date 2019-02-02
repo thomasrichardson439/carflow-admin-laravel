@@ -77,22 +77,13 @@ class BookingsController extends BaseApiController
      */
     public function start($id, Request $request)
     {
+        Bugsnag::leaveBreadcrumb('Before booking');
         $booking = $this->findModel($id);
-
-//        echo 'sent';
-//        exit;
-
-//        Bugsnag::leaveBreadcrumb(
-//            'UPLOADED FILES',
-//            \Bugsnag\Breadcrumbs\Breadcrumb::MANUAL_TYPE,
-//            $_FILES
-//        );
-//
-//        exit;
-
         $this->validate($request, [
             'mileage_photo' => 'image|required',
         ]);
+
+        Bugsnag::leaveBreadcrumb('After validation');
 
         $startMileagePhotoS3Link = $this->awsHelper->uploadToS3(
             $request->file('mileage_photo'), $booking->id . '_gas_tank'
@@ -101,6 +92,12 @@ class BookingsController extends BaseApiController
         if ($booking->status != Booking::STATUS_PENDING) {
             abort(409, 'This drive could not be started');
         }
+
+        Bugsnag::leaveBreadcrumb(
+            'Before error',
+            \Bugsnag\Breadcrumbs\Breadcrumb::MANUAL_TYPE,
+            ['files' => $request->file('mileage_photo')]
+        );
 
         return $this->success($this->bookingsRepository->startRide($booking, $startMileagePhotoS3Link));
     }
