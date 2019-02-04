@@ -132,7 +132,7 @@ class DriversNotifications extends Command
             'sound' => true,
         ];
 
-        $extraNotificationData = ["message" => $notification,"moredata" =>'dd'];
+        $extraNotificationData = ["message" => $notification];
 
         $fcmNotification = [
             //'registration_ids' => $tokenList, //multple token array
@@ -145,7 +145,6 @@ class DriversNotifications extends Command
             'Authorization: key=Legacy server key',
             'Content-Type: application/json'
         ];
-
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$fcmUrl);
