@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <form action="{{ url('/admin/users/') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url('/admin/users/') }}" method="post" enctype="multipart/form-data" autocomplete="off">
         {{csrf_field()}}
         <div class="container-fluid container-admin-form">
             <div class="row">
@@ -53,7 +53,7 @@
                                 <h4>Password</h4>
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input type="password" name="password" value="{{ old('password') }}" class="form-control">
+                                    <input type="search" name="password" value="{{ old('password') }}" onfocus="this.setAttribute('type', 'password');" class="form-control">
                                 </div>
                             </div>
                         </div>
