@@ -2,13 +2,15 @@
 <html lang="en">
 
 <head>
+<meta name="msvalidate.01" content="310E6540CE61306C2596B6477B844752" />
+<meta name="google-site-verification" content="xViFI79cGH1RXsvLGsxTlQVlePBk8lT5ssyMG6XvWUo" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <meta name="description" content="With our fleet of new cars, you will not have to worry about the ridesharing company’s strict vehicle requirements anymore.">
+    <meta name="description" content="With our fleet of new cars, you will not have to worry about the ridesharing company’s strict vehicle requirements anymore. Join the next generation of Rideshare Driving">
     <meta name="keywords" content="Uber, Lyft, Rideshare, Car Flo">
     <meta name="author" content="Car Flo">
-    <title>Car Flo</title>
+    <title>Tlc Car Rental, Uber Driver App: Car Flo</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{asset('images/favicon-32x32.png')}}" sizes="32x32" />
     <link rel="icon" type="image/png" href="{{asset('images/favicon-16x16.png')}}" sizes="16x16" />
