@@ -189,6 +189,18 @@ class BookingsRepository extends BaseRepository
             $booking->status = Booking::STATUS_ENDED;
             $booking->save();
 
+            if($booking->is_recurring){
+                $newBooking = new Booking();
+                $newBooking->user_id = $booking->user_id;
+                $newBooking->car_id = $booking->car_id;
+                $newBooking->booking_starting_at = Carbon::parse($booking->booking_starting_at)->addDay();
+                $newBooking->booking_ending_at = Carbon::parse($booking->booking_ending_at)->addDay();
+                $newBooking->is_recurring = $booking->is_recurring;
+                $newBooking->starting_at_weekday = $booking->starting_at_weekday;
+                $newBooking->ending_at_weekday = $booking->ending_at_weekday;
+                $newBooking->save();
+            }
+
             $report = new BookingEndedReport();
             $report->fill($data);
             $report->booking_id = $booking->id;

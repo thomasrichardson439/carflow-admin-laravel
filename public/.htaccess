@@ -1,4 +1,9 @@
 <IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^www\.carflo\.co [NC]
+RewriteRule ^(.*)$ http://carflo.co/$1 [L,R=301]
+</IfModule>
+<IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>

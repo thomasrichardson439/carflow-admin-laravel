@@ -7,7 +7,9 @@ use App\Models\Booking;
 use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 
 class BookingsController extends BaseApiController
 {
@@ -76,11 +78,13 @@ class BookingsController extends BaseApiController
      */
     public function start($id, Request $request)
     {
+        Bugsnag::leaveBreadcrumb('Before booking');
         $booking = $this->findModel($id);
-
         $this->validate($request, [
             'mileage_photo' => 'image|required',
         ]);
+
+        Bugsnag::leaveBreadcrumb('After validation');
 
         $startMileagePhotoS3Link = $this->awsHelper->uploadToS3(
             $request->file('mileage_photo'), $booking->id . '_gas_tank'
@@ -89,6 +93,12 @@ class BookingsController extends BaseApiController
         if ($booking->status != Booking::STATUS_PENDING) {
             abort(409, 'This drive could not be started');
         }
+
+        Bugsnag::leaveBreadcrumb(
+            'Before error',
+            \Bugsnag\Breadcrumbs\Breadcrumb::MANUAL_TYPE,
+            ['files' => $request->file('mileage_photo')]
+        );
 
         return $this->success($this->bookingsRepository->startRide($booking, $startMileagePhotoS3Link));
     }
