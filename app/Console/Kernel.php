@@ -29,8 +29,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('bookings:fill-next-week')
             ->weeklyOn(7, '23:05');
-        $schedule->command('drivers:notifications')
-            ->everyThirtyMinutes();
     }
 
     /**
