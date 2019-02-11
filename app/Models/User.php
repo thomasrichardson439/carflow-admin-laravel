@@ -15,6 +15,7 @@ use Laravel\Passport\HasApiTokens;
  * @property \App\Models\DrivingLicense $drivingLicense
  * @property \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property \App\Models\TLCLicense $tlcLicense
+ * @property \App\Models\DeviceToken $deviceTokens
  * @property \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
  * @property UserProfileUpdate $profileUpdateRequest
  * @property Booking[] $bookings
@@ -141,6 +142,14 @@ class User extends Authenticatable
     public function tlcLicense()
     {
         return $this->hasOne(TLCLicense::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class);
     }
 
     /**
