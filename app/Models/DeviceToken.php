@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $device_token
  * @property Carbon $updated_at
  * @property Carbon $created_at
+ *
  */
 class DeviceToken extends Model
 {
