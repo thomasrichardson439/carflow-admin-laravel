@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\AwsHelper;
 use App\Http\Controllers\Controller;
+use App\Models\DeviceToken;
 use App\Models\DrivingLicense;
 use App\Models\TLCLicense;
 use App\Models\User;
@@ -146,5 +147,43 @@ class AuthController extends BaseApiController
             'user' => $user,
             'auth_token' => $auth_token
         ], 201);
+    }
+
+    /**
+     * Store device token in database
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function deviceToken(Request $request)
+    {
+        $user = auth()->user();
+
+        $this->validate($request, [
+            'device_token' => 'required',
+        ]);
+
+        $deviceToken = DeviceToken::where('user_id', $user->id)
+            ->where('device_token', $request->device_token)
+            ->first();
+
+        if($deviceToken){
+            $deviceToken->updated_at = now();
+            $deviceToken->save();
+        }else{
+            $deviceToken = new DeviceToken;
+
+            DB::transaction(function () use ($request, &$user, &$deviceToken) {
+                $deviceToken->user_id = $user->id;
+                $deviceToken->device_token = $request->device_token;
+                $deviceToken->save();
+            });
+        }
+
+        return $this->success([
+            'updated' => true,
+            'device_token' => $deviceToken,
+        ]);
     }
 }

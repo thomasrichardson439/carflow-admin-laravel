@@ -15,6 +15,7 @@ Route::group(['namespace' => 'Api', 'middleware' => ['api']], function () {
     Route::post('/login', 'AuthController@login');
 
     Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('/device_token', 'AuthController@deviceToken');
 
         Route::group(['prefix' => 'users'], function() {
             Route::get('me', 'UsersController@me');
