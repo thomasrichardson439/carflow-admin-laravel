@@ -156,7 +156,7 @@ class AuthController extends BaseApiController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function deviceToken(Request $request)
+    public function storeDeviceToken(Request $request)
     {
         $user = auth()->user();
 
@@ -184,6 +184,36 @@ class AuthController extends BaseApiController
         return $this->success([
             'updated' => true,
             'device_token' => $deviceToken,
+        ]);
+    }
+
+    /**
+     * Remove device token from database
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function deleteDeviceToken(Request $request)
+    {
+        $user = auth()->user();
+
+        $this->validate($request, [
+            'device_token' => 'required',
+        ]);
+
+        $deviceToken = DeviceToken::where('user_id', $user->id)
+            ->where('device_token', $request->device_token)
+            ->first();
+
+        if(!$deviceToken){
+            return $this->error(409, 'Unable to find device token.');
+        }
+
+        $deviceToken->forceDelete();
+
+        return $this->success([
+            'message' => 'Device token was successfully removed.',
         ]);
     }
 }
