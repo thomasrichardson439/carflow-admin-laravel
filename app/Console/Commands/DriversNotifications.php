@@ -122,47 +122,66 @@ class DriversNotifications extends Command
 
         if($allNotifications){
             foreach ($allNotifications as $notificationType=>$userNotifications){
+                $k_index = 0;
+                $deviceTokens = [];
+                $amount_of_tokens = 0;
                 foreach ($userNotifications as $key=>$notification){
                     if($notification->user->deviceTokens){
                         foreach ($notification->user->deviceTokens as $deviceKey=>$deviceToken){
-                            $message = '';
-
-                            switch ($notificationType) {
-                                case Notification::TYPE_BEFORE_24:
-                                    $message = "You have 24 hours until your vehicle pickup. Don't forget to upload all of your documents to you ride-share app?";
-                                    break;
-                                case Notification::TYPE_BEFORE_4:
-                                    $message = "You have 4 hours until your vehicle pickup. Don't forget to upload all of your documents to you ride-share app?";
-                                    break;
-                                case Notification::TYPE_BEFORE_1:
-                                    $message = "You have 1 hour until your vehicle pickup. Get there early so you can inspect the vehicle.";
-                                    break;
-
-                                case Notification::TYPE_MISSED_0_5:
-                                    $message = "You are 30 minutes late to pick up your vehicle. Are you still coming to pick up vehicle?";
-                                    break;
-
-                                case Notification::TYPE_MISSED_1:
-                                    $message = "You are one hour late for your pickup. Are you still going to pick up the vehicle?";
-                                    break;
-
-                                case Notification::TYPE_MISSED_1_5:
-                                    $message = "You missed a vehicle that you rented.";
-                                    break;
+                            if($amount_of_tokens % 2 == 0){
+                                $k_index++;
                             }
+                            $amount_of_tokens++;
 
-                            if(!empty($message)){
-                                $this->notification($deviceToken, $message, $notificationType);
+                            if(isset($deviceTokens[$k_index]) && $deviceTokens[$k_index]){
+                                $deviceTokens[$k_index] .= $deviceToken->device_token . ',';
+                            }else{
+                                $deviceTokens[$k_index] = $deviceToken->device_token . ',';
                             }
                         }
+
+
+                    }
+                }
+
+                $message = '';
+
+                switch ($notificationType) {
+                    case Notification::TYPE_BEFORE_24:
+                        $message = "You have 24 hours until your vehicle pickup. Don't forget to upload all of your documents to you ride-share app?";
+                        break;
+                    case Notification::TYPE_BEFORE_4:
+                        $message = "You have 4 hours until your vehicle pickup. Don't forget to upload all of your documents to you ride-share app?";
+                        break;
+                    case Notification::TYPE_BEFORE_1:
+                        $message = "You have 1 hour until your vehicle pickup. Get there early so you can inspect the vehicle.";
+                        break;
+
+                    case Notification::TYPE_MISSED_0_5:
+                        $message = "You are 30 minutes late to pick up your vehicle. Are you still coming to pick up vehicle?";
+                        break;
+
+                    case Notification::TYPE_MISSED_1:
+                        $message = "You are one hour late for your pickup. Are you still going to pick up the vehicle?";
+                        break;
+
+                    case Notification::TYPE_MISSED_1_5:
+                        $message = "You missed a vehicle that you rented.";
+                        break;
+                }
+
+                if(!empty($message) && $deviceTokens){
+                    foreach ($deviceTokens as $k=>$tokens){
+                        $this->notification($tokens, $message, $notificationType);
                     }
                 }
             }
         }
     }
 
-    public function notification($token, $message, $notificationType)
+    public function notification($tokens, $message, $notificationType)
     {
+        $tokens = trim($tokens, ',');
         $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
         $firebaseLegacyServerKey = env('FIREBASE_LEGACY_SERVER_KEY', 'AIzaSyD_uyZ6v4tHRS4M7n65WyfzByxsbPDiGj0');
 
@@ -174,8 +193,8 @@ class DriversNotifications extends Command
         $extraNotificationData = ["message" => $notification];
 
         $fcmNotification = [
-            //'registration_ids' => $tokenList, //multple token array
-            'to'        => $token->device_token, //single token
+            'registration_ids' => $tokens, //multple token array
+//            'to'        => $token->device_token, //single token
             'notification' => $notification,
             'data' => $extraNotificationData
         ];
@@ -204,7 +223,7 @@ class DriversNotifications extends Command
         }
 
         $notification = new Notification;
-        $notification->device_token_id = $token->id;
+        $notification->device_token_ids = $tokens;
         $notification->type = $notificationType;
         $notification->status = $status;
         $notification->save();
