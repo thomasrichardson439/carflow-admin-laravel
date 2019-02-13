@@ -47,7 +47,9 @@ class BookingsRepository extends BaseRepository
                     $query->orWhereBetween('booking_starting_at', [$start, $end]);
                     $query->orWhereBetween('booking_ending_at', [$start, $end]);
                 })
-                ->orWhere(function (Builder $query) use ($start, $end) {
+//                    we had a bug when it was ignoring booking_starting_at and booking_ending_at and was displaying current bookings
+//                ->orWhere(function (Builder $query) use ($start, $end) {
+                ->where(function (Builder $query) use ($start, $end) {
                     $query->where([
                         'starting_at_weekday' => strtolower($start->format('l')),
                     ]);
