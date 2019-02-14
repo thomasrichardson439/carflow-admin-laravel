@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Booking;
+use App\Models\BookingStartedReport;
 use App\Models\BookingEndedReport;
 use App\Models\BookingIssueReport;
 use App\Models\BookingReceipt;
@@ -165,13 +166,20 @@ class BookingsRepository extends BaseRepository
     /**
      * Allows to start ride
      * @param Booking $booking
+     * @param array $data
      * @return array
      */
-    public function startRide(Booking $booking, string $startMileagePhotoS3Link) : array
+    public function startRide(Booking $booking, array $data) : array
     {
-        $booking->status = Booking::STATUS_DRIVING;
-        $booking->photo_start_mileage_s3_link = $startMileagePhotoS3Link;
-        $booking->save();
+        \DB::transaction(function() use ($booking, $data) {
+            $booking->status = Booking::STATUS_DRIVING;
+            $booking->save();
+
+            $report = new BookingStartedReport();
+            $report->fill($data);
+            $report->booking_id = $booking->id;
+            $report->save();
+        });
 
         $booking->refresh();
 

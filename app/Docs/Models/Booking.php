@@ -13,6 +13,5 @@
  *   @OA\Property(property="receipts", type="array", @OA\Items(ref="#/components/schemas/Receipt")),
  *   @OA\Property(property="late_notifications", type="array", @OA\Items(ref="#/components/schemas/LateNotification")),
  *   @OA\Property(property="is_recurring", format="boolean", type="boolean"),
- *   @OA\Property(property="photo_start_mileage_s3_link", format="url", type="string"),
  * )
  */

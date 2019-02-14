@@ -14,29 +14,95 @@
 
             <div class="modal-body">
                 @forelse ($user->endedBookings as $index => $booking)
+                    @php
+                        if ($booking->startedReport == null) continue;
+                    @endphp
+
                     <div class="row">
                         <div class="col-12">
                             <h3 class="group" data-toggle="collapse" href="#group-{{ $index }}">
                                 <i class="fa fa-caret-down"></i> {{ $booking->booking_starting_at->format('m/d/Y') }}
                             </h3>
 
-                            <table class="table table-modal collapse" id="group-{{ $index }}">
-                                <caption>Mileage</caption>
-                                <colgroup>
-                                    <col width="70">
-                                    <col width="200">
-                                </colgroup>
-                                <tbody>
+                            <div id="group-{{ $index }}" class="collapse">
+                                <table class="table table-modal">
+                                    <caption>Car check</caption>
+                                    <colgroup>
+                                        <col width="70">
+                                        <col width="200">
+                                    </colgroup>
+                                    <tbody>
                                     <tr>
                                         <td>
-                                            <div class="square-image" style="background-image: url({{ $booking->photo_start_mileage_s3_link }})"></div>
+                                            <div class="square-image" style="background-image: url({{ $booking->startedReport->photo_front_s3_link }})"></div>
                                         </td>
-                                        <td>Mileage</td>
-                                        <td>{{ $booking->booking_starting_at->format('m/d/Y h:i A') }}</td>
-                                        <td><a href="{{ $booking->photo_start_mileage_s3_link }}" target="_blank">View</a></td>
+                                        <td>Front</td>
+                                        <td>{{ $booking->startedReport->created_at->format('m/d/Y h:i A') }}</td>
+                                        <td><a href="{{ $booking->startedReport->photo_front_s3_link }}" target="_blank">View</a></td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    <tr>
+                                        <td>
+                                            <div class="square-image" style="background-image: url({{ $booking->endedReport->photo_back_s3_link }})"></div>
+                                        </td>
+                                        <td>Back</td>
+                                        <td>{{ $booking->startedReport->created_at->format('m/d/Y h:i A') }}</td>
+                                        <td><a href="{{ $booking->startedReport->photo_back_s3_link }}" target="_blank">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="square-image" style="background-image: url({{ $booking->startedReport->photo_left_s3_link }})"></div>
+                                        </td>
+                                        <td>Left</td>
+                                        <td>{{ $booking->startedReport->created_at->format('m/d/Y h:i A') }}</td>
+                                        <td><a href="{{ $booking->startedReport->photo_left_s3_link }}" target="_blank">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="square-image" style="background-image: url({{ $booking->startedReport->photo_right_s3_link }})"></div>
+                                        </td>
+                                        <td>Right</td>
+                                        <td>{{ $booking->startedReport->created_at->format('m/d/Y h:i A') }}</td>
+                                        <td><a href="{{ $booking->startedReport->photo_right_s3_link }}" target="_blank">View</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-modal">
+                                    <caption>Gas tank</caption>
+                                    <colgroup>
+                                        <col width="70">
+                                        <col width="200">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="square-image" style="background-image: url({{ $booking->startedReport->photo_gas_tank_s3_link }})"></div>
+                                        </td>
+                                        <td>Gas tank indicator</td>
+                                        <td>{{ $booking->startedReport->created_at->format('m/d/Y h:i A') }}</td>
+                                        <td><a href="{{ $booking->startedReport->photo_gas_tank_s3_link }}" target="_blank">View</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-modal">
+                                    <caption>Mileage</caption>
+                                    <colgroup>
+                                        <col width="70">
+                                        <col width="200">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="square-image" style="background-image: url({{ $booking->startedReport->photo_mileage_s3_link }})"></div>
+                                        </td>
+                                        <td>Mileage indicator</td>
+                                        <td>{{ $booking->startedReport->created_at->format('m/d/Y h:i A') }}</td>
+                                        <td><a href="{{ $booking->startedReport->photo_mileage_s3_link }}" target="_blank">View</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 @empty

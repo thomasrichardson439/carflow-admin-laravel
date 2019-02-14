@@ -80,19 +80,47 @@ class BookingsController extends BaseApiController
     {
         Bugsnag::leaveBreadcrumb('Before booking');
         $booking = $this->findModel($id);
+
         $this->validate($request, [
+            'car_front_photo' => 'image|required',
+            'car_back_photo' => 'image|required',
+            'car_right_photo' => 'image|required',
+            'car_left_photo' => 'image|required',
+            'gas_tank_photo' => 'image|required',
             'mileage_photo' => 'image|required',
         ]);
 
         Bugsnag::leaveBreadcrumb('After validation');
 
-        $startMileagePhotoS3Link = $this->awsHelper->uploadToS3(
-            $request->file('mileage_photo'), $booking->id . '_gas_tank'
-        );
-
         if ($booking->status != Booking::STATUS_PENDING) {
             abort(409, 'This drive could not be started');
         }
+
+        $data = $request->all();
+
+        $data['photo_front_s3_link'] =  $this->awsHelper->uploadToS3(
+            $request->file('car_front_photo'), $booking->id . '_car_front'
+        );
+
+        $data['photo_back_s3_link'] = $this->awsHelper->uploadToS3(
+            $request->file('car_back_photo'), $booking->id . '_car_back'
+        );
+
+        $data['photo_right_s3_link'] =  $this->awsHelper->uploadToS3(
+            $request->file('car_right_photo'), $booking->id . '_car_right'
+        );
+
+        $data['photo_left_s3_link'] = $this->awsHelper->uploadToS3(
+            $request->file('car_left_photo'), $booking->id . '_car_left'
+        );
+
+        $data['photo_gas_tank_s3_link'] = $this->awsHelper->uploadToS3(
+            $request->file('gas_tank_photo'), $booking->id . '_gas_tank'
+        );
+
+        $data['photo_mileage_s3_link'] = $this->awsHelper->uploadToS3(
+            $request->file('mileage_photo'), $booking->id . '_gas_tank'
+        );
 
         Bugsnag::leaveBreadcrumb(
             'Before error',
@@ -100,7 +128,7 @@ class BookingsController extends BaseApiController
             ['files' => $request->file('mileage_photo')]
         );
 
-        return $this->success($this->bookingsRepository->startRide($booking, $startMileagePhotoS3Link));
+        return $this->success($this->bookingsRepository->startRide($booking, $data));
     }
 
     /**
