@@ -17,13 +17,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $status
- * @property string $photo_start_mileage_s3_link
  * @property string $starting_at_weekday
  * @property string $ending_at_weekday
  *
  * @property BookingIssueReport[] $issueReports
  * @property BookingReceipt[] $receipts
  * @property LateNotification[] $lateNotifications
+ * @property BookingStartedReport $startedReport
  * @property BookingEndedReport $endedReport
  * @property Car $car
  * @property User $user
@@ -43,7 +43,6 @@ class Booking extends Model
         'is_recurring',
         'booking_starting_at',
         'booking_ending_at',
-        'photo_start_mileage_s3_link',
         'starting_at_weekday',
         'ending_at_weekday',
     ];
@@ -62,15 +61,16 @@ class Booking extends Model
         'is_recurring',
         'status',
         'car',
+        'startedReport',
         'endedReport',
         'issueReports',
         'receipts',
         'lateNotifications',
-        'photo_start_mileage_s3_link',
     ];
 
     protected $with = [
         'car',
+        'startedReport',
         'endedReport',
         'issueReports',
         'receipts',
@@ -111,6 +111,14 @@ class Booking extends Model
     public function endedReport()
     {
         return $this->hasOne(BookingEndedReport::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function startedReport()
+    {
+        return $this->hasOne(BookingStartedReport::class);
     }
 
     /**
