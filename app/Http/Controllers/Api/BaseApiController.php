@@ -28,13 +28,13 @@ class BaseApiController extends Controller
      * @param string $errorMessage
      * @return JsonResponse
      */
-    protected function error(int $httpCode, string $errorMessage)
+    protected function error(int $httpCode, string $errorMessage, string $type = 'http')
     {
         return response()->json([
             'status' => 'failed',
             'data' => [],
             'error' => [
-                'type' => 'http',
+                'type' => $type,
                 'message' => $errorMessage,
             ]
         ], $httpCode);

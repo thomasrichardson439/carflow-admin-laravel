@@ -111,29 +111,21 @@ class CarsController extends BaseApiController
          * This conditions means that app should accept ending date without including next hour
          */
         if ($endingAt->minute != 59) {
-            return $this->validationErrors([
-                'booking_ending_at' => 'Minute should be 59',
-            ]);
+            return $this->error(422, 'Minute should be 59', 'validation');
         }
 
         if ($startingAt->diffInHours($endingAt) > config('params.maxBookingInHours')) {
-            return $this->validationErrors([
-                'booking_ending_at' => 'Interval could not be more than ' . config('params.maxBookingInHours') . ' hours',
-            ]);
+            return $this->error(422, 'Interval could not be more than ' . config('params.maxBookingInHours') . ' hours', 'validation');
         }
 
         if (!$this->carsRepository->carIsAvailable($model->id, $startingAt, $endingAt)) {
-            return $this->validationErrors([
-                'booking_starting_at' => 'Some of this hours are disabled for booking',
-            ]);
+            return $this->error(422, 'Some of this hours are disabled for booking', 'validation');
         }
 
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
             auth()->user()->id, $model->id, $startingAt, $endingAt
         )) {
-            return $this->validationErrors([
-                'booking_starting_at' => 'Picked range contains already booked hours',
-            ]);
+            return $this->error(422, 'Picked range contains already booked hours', 'validation');
         }
 
         $booking = $this->bookingsRepository->create([
