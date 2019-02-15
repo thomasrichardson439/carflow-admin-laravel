@@ -45,6 +45,10 @@ class DriversNotifications extends Command
          * Trigger: 24 hours before pick up
          */
 
+//        dd([
+//            now()->minute(0)->second(0)->addHours(24),
+//            now()->minute(0)->second(0)->addHours(24)->addMinutes(5)
+//        ]);
         $bookings24hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
@@ -182,21 +186,28 @@ class DriversNotifications extends Command
     public function notification($tokens, $message, $notificationType)
     {
         $tokens = trim($tokens, ',');
+        $tokens = explode(',', $tokens);
+
         $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
         $firebaseLegacyServerKey = env('FIREBASE_LEGACY_SERVER_KEY', 'AIzaSyD_uyZ6v4tHRS4M7n65WyfzByxsbPDiGj0');
 
-        $notification = [
-            'title' => $message,
-            'sound' => true,
+        $notificationData = [
+            "title" => "CarFlo",
+            "body" => $message
         ];
 
-        $extraNotificationData = ["message" => $notification];
+        if($notificationType == Notification::TYPE_MISSED_0_5 || $notificationType == Notification::TYPE_MISSED_1){
+            $notificationData = array_merge($notificationData, [
+                'positiveText'      => 'yes',
+                'positiveScreen'    => 'Profile',
+                'negativeText'      => 'no',
+                'negativeScreen'    => 'RideHelp'
+            ]);
+        }
 
         $fcmNotification = [
             'registration_ids' => $tokens, //multple token array
-//            'to'        => $token->device_token, //single token
-            'notification' => $notification,
-            'data' => $extraNotificationData
+            'data' => $notificationData
         ];
 
         $headers = [
@@ -223,7 +234,7 @@ class DriversNotifications extends Command
         }
 
         $notification = new Notification;
-        $notification->device_token_ids = $tokens;
+        $notification->device_token_ids = implode(',', $tokens);
         $notification->type = $notificationType;
         $notification->status = $status;
         $notification->save();
