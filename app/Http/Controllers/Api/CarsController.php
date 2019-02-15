@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use DB;
 use App\Models\Car;
 use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
@@ -89,7 +90,9 @@ class CarsController extends BaseApiController
      */
     public function book($id, Request $request)
     {
-        if (auth()->user()->status != \ConstUserStatus::APPROVED) {
+        $user = auth()->user();
+
+        if ($user->status != \ConstUserStatus::APPROVED) {
             return $this->error(403, 'Your account is not approved');
         }
 
@@ -123,20 +126,22 @@ class CarsController extends BaseApiController
         }
 
         if (!$this->bookingsRepository->checkIntervalIsNotBooked(
-            auth()->user()->id, $model->id, $startingAt, $endingAt
+            $user->id, $model->id, $startingAt, $endingAt
         )) {
             return $this->error(422, 'Picked range contains already booked hours', 'validation');
         }
 
-        $booking = $this->bookingsRepository->create([
-            'user_id' => auth()->user()->id,
-            'car_id' => $id,
-            'booking_starting_at' => $startingAt->timestamp,
-            'booking_ending_at' => $endingAt->timestamp,
-            'is_recurring' => $request->is_recurring,
-            'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
-            'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
-        ]);
+        DB::transaction(function () use ($request, $id, $user, $startingAt, $endingAt, &$booking) {
+            $booking = $this->bookingsRepository->create([
+                'user_id' => $user->id,
+                'car_id' => $id,
+                'booking_starting_at' => $startingAt->timestamp,
+                'booking_ending_at' => $endingAt->timestamp,
+                'is_recurring' => $request->is_recurring,
+                'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
+                'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
+            ]);
+        });
 
         return $this->success([
             'booking' => $booking

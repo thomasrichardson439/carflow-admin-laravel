@@ -524,15 +524,17 @@ class UsersController extends Controller
 //            ]);
         }
 
-        $booking = $this->bookingsRepository->create([
-            'user_id' => $id,
-            'car_id' => $car_id,
-            'booking_starting_at' => $startingAt->timestamp,
-            'booking_ending_at' => $endingAt->timestamp,
-            'is_recurring' => $request->is_recurring,
-            'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
-            'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
-        ]);
+        DB::transaction(function () use ($request, $id, $car_id, $startingAt, $endingAt, &$booking) {
+            $booking = $this->bookingsRepository->create([
+                'user_id' => $id,
+                'car_id' => $car_id,
+                'booking_starting_at' => $startingAt->timestamp,
+                'booking_ending_at' => $endingAt->timestamp,
+                'is_recurring' => $request->is_recurring,
+                'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
+                'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
+            ]);
+        });
         $data['booking'] = $booking;
         return view('admin.users.booking_complete', $data);
     }
