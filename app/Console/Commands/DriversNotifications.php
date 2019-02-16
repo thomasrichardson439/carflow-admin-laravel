@@ -143,8 +143,6 @@ class DriversNotifications extends Command
                                 $deviceTokens[$k_index] = $deviceToken->device_token . ',';
                             }
                         }
-
-
                     }
                 }
 

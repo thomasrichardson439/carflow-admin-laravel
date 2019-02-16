@@ -200,6 +200,7 @@ class BookingsRepository extends BaseRepository
             $booking->save();
 
             if($booking->is_recurring){
+                //TODO check this part because there is no check for availability, actually we need to fix logic and don't allow to book car if car has recurring bookings on this time period
                 $newBooking = new Booking();
                 $newBooking->user_id = $booking->user_id;
                 $newBooking->car_id = $booking->car_id;

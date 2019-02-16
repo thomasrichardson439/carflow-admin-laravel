@@ -26,6 +26,7 @@ class BaseApiController extends Controller
      * Should be called when endpoint is failed
      * @param int $httpCode
      * @param string $errorMessage
+     * @param string $type
      * @return JsonResponse
      */
     protected function error(int $httpCode, string $errorMessage, string $type = 'http')

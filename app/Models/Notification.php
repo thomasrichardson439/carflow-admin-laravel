@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  *
  * @property int $id
- * @property int $device_token_id
+ * @property string $device_token_ids
  * @property int $type
+ * @property int $status
  * @property Carbon $updated_at
  * @property Carbon $created_at
  *
@@ -36,8 +37,9 @@ class Notification extends Model
 
     protected $visible = [
         'id',
-        'device_token_id',
+        'device_token_ids',
         'type',
+        'status',
         'created_at',
     ];
 }
