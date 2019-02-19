@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Booking;
 use App\Models\Notification;
 use Illuminate\Console\Command;
@@ -45,19 +46,27 @@ class DriversNotifications extends Command
          * Trigger: 24 hours before pick up
          */
 
+        Log::debug('Cron job is started sending notifications');
+
 //        dd([
-//            now()->minute(0)->second(0)->addHours(24),
-//            now()->minute(0)->second(0)->addHours(24)->addMinutes(5)
+//            now()->second(0)->addHours(24),
+//            now()->second(59)->addHours(24)
 //        ]);
         $bookings24hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->minute(0)->second(0)->addHours(24),
-                now()->minute(0)->second(0)->addHours(24)->addMinutes(5)
+                now()->second(0)->addHours(24),
+                now()->second(59)->addHours(24)
             ])
             ->get();
 
         $allNotifications[Notification::TYPE_BEFORE_24] = $bookings24hr;
+
+        if($bookings24hr){
+            Log::debug('24 hrs trigger - We found '.count($bookings24hr).' notifications');
+        }else{
+            Log::debug('24 hrs trigger - We found 0 notifications');
+        }
 
         /**
          * Trigger: 4 hours before pick up
@@ -65,12 +74,18 @@ class DriversNotifications extends Command
         $bookings4hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->minute(0)->second(0)->addHours(4),
-                now()->minute(0)->second(0)->addHours(4)->addMinutes(5)
+                now()->second(0)->addHours(4),
+                now()->second(59)->addHours(4)
             ])
             ->get();
 
         $allNotifications[Notification::TYPE_BEFORE_4] = $bookings4hr;
+
+        if($bookings4hr){
+            Log::debug('4 hrs trigger - We found '.count($bookings4hr).' notifications');
+        }else{
+            Log::debug('4 hrs trigger - We found 0 notifications');
+        }
 
         /**
          * Trigger: 1 hour before pick up
@@ -78,12 +93,18 @@ class DriversNotifications extends Command
         $bookings1hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->minute(0)->second(0)->addHours(1),
-                now()->minute(0)->second(0)->addHours(1)->addMinutes(5)
+                now()->second(0)->addHours(1),
+                now()->second(59)->addHours(1)
             ])
             ->get();
 
         $allNotifications[Notification::TYPE_BEFORE_1] = $bookings1hr;
+
+        if($bookings1hr){
+            Log::debug('1 hr trigger - We found '.count($bookings1hr).' notifications');
+        }else{
+            Log::debug('1 hr trigger - We found 0 notifications');
+        }
 
         /**
          * Trigger: 30 minutes after a pickup is missed
@@ -91,12 +112,18 @@ class DriversNotifications extends Command
         $bookingsPickupMissed30mins = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->minute(0)->second(0)->subMinutes(30),
-                now()->minute(0)->second(0)->subMinutes(30)->addMinutes(5)
+                now()->second(0)->subMinutes(30),
+                now()->second(59)->subMinutes(30)
             ])
             ->get();
 
         $allNotifications[Notification::TYPE_MISSED_0_5] = $bookingsPickupMissed30mins;
+
+        if($bookingsPickupMissed30mins){
+            Log::debug('30 mins trigger - We found '.count($bookingsPickupMissed30mins).' missed notifications');
+        }else{
+            Log::debug('30 mins trigger - We found 0 missed notifications');
+        }
 
         /**
          * Trigger: 1 hour after a pickup is missed and no response to the 30 minutes late notification
@@ -104,12 +131,18 @@ class DriversNotifications extends Command
         $bookingsPickupMissed60mins = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->minute(0)->second(0)->subMinutes(60),
-                now()->minute(0)->second(0)->subMinutes(60)->addMinutes(5)
+                now()->second(0)->subMinutes(60),
+                now()->second(59)->subMinutes(60)
             ])
             ->get();
 
         $allNotifications[Notification::TYPE_MISSED_1] = $bookingsPickupMissed60mins;
+
+        if($bookingsPickupMissed60mins){
+            Log::debug('60 mins trigger - We found '.count($bookingsPickupMissed60mins).' missed notifications');
+        }else{
+            Log::debug('60 mins trigger - We found 0 missed notifications');
+        }
 
         /**
          * Trigger: 1 hour and 30 minutes after a missed pickup
@@ -117,12 +150,18 @@ class DriversNotifications extends Command
         $bookingsPickupMissed90mins = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->minute(0)->second(0)->subMinutes(90),
-                now()->minute(0)->second(0)->subMinutes(90)->addMinutes(5)
+                now()->second(0)->subMinutes(90),
+                now()->second(59)->subMinutes(90)
             ])
             ->get();
 
         $allNotifications[Notification::TYPE_MISSED_1_5] = $bookingsPickupMissed90mins;
+
+        if($bookingsPickupMissed90mins){
+            Log::debug('90 mins trigger - We found '.count($bookingsPickupMissed90mins).' missed notifications');
+        }else{
+            Log::debug('90 mins trigger - We found 0 missed notifications');
+        }
 
         if($allNotifications){
             foreach ($allNotifications as $notificationType=>$userNotifications){
@@ -179,6 +218,8 @@ class DriversNotifications extends Command
                 }
             }
         }
+
+        Log::debug('Cron job is finished sending notifications');
     }
 
     public function notification($tokens, $message, $notificationType)
@@ -204,7 +245,7 @@ class DriversNotifications extends Command
         }
 
         $fcmNotification = [
-            'registration_ids' => $tokens, //multple token array
+            'registration_ids' => $tokens, //multiple token array
             'data' => $notificationData
         ];
 
@@ -236,6 +277,8 @@ class DriversNotifications extends Command
         $notification->type = $notificationType;
         $notification->status = $status;
         $notification->save();
+
+        Log::debug('Notification - ' . $message . ' we sent to these tokens:' . implode(',', $tokens));
 
         return true;
     }
