@@ -54,11 +54,29 @@ class DriversNotifications extends Command
 
         Log::debug('Cron job is started sending notifications');
 
+        $now_start_24 = now()->second(0)->addHours(24);
+        $now_end_24 = now()->second(0)->addHours(24);
+
+        $now_start_4 = now()->second(0)->addHours(4);
+        $now_end_4 = now()->second(59)->addHours(4);
+
+        $now_start_1 = now()->second(0)->addHours(1);
+        $now_end_1 = now()->second(59)->addHours(1);
+
+        $now_missed_start_0_5 = now()->second(0)->subMinutes(30);
+        $now_missed_end_0_5 = now()->second(59)->subMinutes(30);
+
+        $now_missed_start_1 = now()->second(0)->subMinutes(60);
+        $now_missed_end_1 = now()->second(59)->subMinutes(60);
+
+        $now_missed_start_1_5 = now()->second(0)->subMinutes(90);
+        $now_missed_end_1_5 = now()->second(59)->subMinutes(90);
+
         $bookings24hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->second(0)->addHours(24),
-                now()->second(59)->addHours(24)
+                $now_start_24,
+                $now_end_24
             ])
             ->get();
 
@@ -76,8 +94,8 @@ class DriversNotifications extends Command
         $bookings4hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->second(0)->addHours(4),
-                now()->second(59)->addHours(4)
+                $now_start_4,
+                $now_end_4
             ])
             ->get();
 
@@ -95,8 +113,8 @@ class DriversNotifications extends Command
         $bookings1hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->second(0)->addHours(1),
-                now()->second(59)->addHours(1)
+                $now_start_1,
+                $now_end_1
             ])
             ->get();
 
@@ -114,8 +132,8 @@ class DriversNotifications extends Command
         $bookingsPickupMissed30mins = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->second(0)->subMinutes(30),
-                now()->second(59)->subMinutes(30)
+                $now_missed_start_0_5,
+                $now_missed_end_0_5
             ])
             ->get();
 
@@ -133,8 +151,8 @@ class DriversNotifications extends Command
         $bookingsPickupMissed60mins = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->second(0)->subMinutes(60),
-                now()->second(59)->subMinutes(60)
+                $now_missed_start_1,
+                $now_missed_end_1
             ])
             ->get();
 
@@ -152,8 +170,8 @@ class DriversNotifications extends Command
         $bookingsPickupMissed90mins = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
-                now()->second(0)->subMinutes(90),
-                now()->second(59)->subMinutes(90)
+                $now_missed_start_1_5,
+                $now_missed_end_1_5
             ])
             ->get();
 
