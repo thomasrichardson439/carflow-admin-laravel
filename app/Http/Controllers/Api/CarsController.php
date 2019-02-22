@@ -8,9 +8,6 @@ use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Validator;
 
 class CarsController extends BaseApiController
 {
@@ -131,17 +128,21 @@ class CarsController extends BaseApiController
             return $this->error(422, 'Picked range contains already booked hours', 'validation');
         }
 
-        DB::transaction(function () use ($request, $id, $user, $startingAt, $endingAt, &$booking) {
-            $booking = $this->bookingsRepository->create([
-                'user_id' => $user->id,
-                'car_id' => $id,
-                'booking_starting_at' => $startingAt->timestamp,
-                'booking_ending_at' => $endingAt->timestamp,
-                'is_recurring' => $request->is_recurring,
-                'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
-                'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
-            ]);
-        });
+        try {
+            DB::transaction(function () use ($request, $id, $user, $startingAt, $endingAt, &$booking) {
+                $booking = $this->bookingsRepository->create([
+                    'user_id' => $user->id,
+                    'car_id' => $id,
+                    'booking_starting_at' => $startingAt->timestamp,
+                    'booking_ending_at' => $endingAt->timestamp,
+                    'is_recurring' => $request->is_recurring,
+                    'starting_at_weekday' => $request->is_recurring ? strtolower($startingAt->format('l')) : null,
+                    'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
+                ]);
+            });
+        } catch(Exception $e) {
+            return $this->error(422, 'Picked range contains already booked hours', 'validation');
+        }
 
         return $this->success([
             'booking' => $booking

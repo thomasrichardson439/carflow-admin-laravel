@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Support\Facades\Log;
 use App\Models\Booking;
+use App\Repositories\BookingsRepository;
 use App\Models\Notification;
 use Illuminate\Console\Command;
 
@@ -24,13 +25,18 @@ class DriversNotifications extends Command
     protected $description = 'Send drivers notifications';
 
     /**
+     * @var BookingsRepository
+     */
+    private $bookingsRepository;
+
+    /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
         parent::__construct();
+
+        $this->bookingsRepository = new BookingsRepository();
     }
 
     /**
@@ -48,10 +54,6 @@ class DriversNotifications extends Command
 
         Log::debug('Cron job is started sending notifications');
 
-//        dd([
-//            now()->second(0)->addHours(24),
-//            now()->second(59)->addHours(24)
-//        ]);
         $bookings24hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
             ->whereBetween('booking_starting_at', [
@@ -62,9 +64,9 @@ class DriversNotifications extends Command
 
         $allNotifications[Notification::TYPE_BEFORE_24] = $bookings24hr;
 
-        if($bookings24hr){
-            Log::debug('24 hrs trigger - We found '.count($bookings24hr).' notifications');
-        }else{
+        if ($bookings24hr) {
+            Log::debug('24 hrs trigger - We found ' . count($bookings24hr) . ' notifications');
+        } else {
             Log::debug('24 hrs trigger - We found 0 notifications');
         }
 
@@ -81,9 +83,9 @@ class DriversNotifications extends Command
 
         $allNotifications[Notification::TYPE_BEFORE_4] = $bookings4hr;
 
-        if($bookings4hr){
-            Log::debug('4 hrs trigger - We found '.count($bookings4hr).' notifications');
-        }else{
+        if ($bookings4hr) {
+            Log::debug('4 hrs trigger - We found ' . count($bookings4hr) . ' notifications');
+        } else {
             Log::debug('4 hrs trigger - We found 0 notifications');
         }
 
@@ -100,9 +102,9 @@ class DriversNotifications extends Command
 
         $allNotifications[Notification::TYPE_BEFORE_1] = $bookings1hr;
 
-        if($bookings1hr){
-            Log::debug('1 hr trigger - We found '.count($bookings1hr).' notifications');
-        }else{
+        if ($bookings1hr) {
+            Log::debug('1 hr trigger - We found ' . count($bookings1hr) . ' notifications');
+        } else {
             Log::debug('1 hr trigger - We found 0 notifications');
         }
 
@@ -119,9 +121,9 @@ class DriversNotifications extends Command
 
         $allNotifications[Notification::TYPE_MISSED_0_5] = $bookingsPickupMissed30mins;
 
-        if($bookingsPickupMissed30mins){
-            Log::debug('30 mins trigger - We found '.count($bookingsPickupMissed30mins).' missed notifications');
-        }else{
+        if ($bookingsPickupMissed30mins) {
+            Log::debug('30 mins trigger - We found ' . count($bookingsPickupMissed30mins) . ' missed notifications');
+        } else {
             Log::debug('30 mins trigger - We found 0 missed notifications');
         }
 
@@ -138,9 +140,9 @@ class DriversNotifications extends Command
 
         $allNotifications[Notification::TYPE_MISSED_1] = $bookingsPickupMissed60mins;
 
-        if($bookingsPickupMissed60mins){
-            Log::debug('60 mins trigger - We found '.count($bookingsPickupMissed60mins).' missed notifications');
-        }else{
+        if ($bookingsPickupMissed60mins) {
+            Log::debug('60 mins trigger - We found ' . count($bookingsPickupMissed60mins) . ' missed notifications');
+        } else {
             Log::debug('60 mins trigger - We found 0 missed notifications');
         }
 
@@ -157,28 +159,28 @@ class DriversNotifications extends Command
 
         $allNotifications[Notification::TYPE_MISSED_1_5] = $bookingsPickupMissed90mins;
 
-        if($bookingsPickupMissed90mins){
-            Log::debug('90 mins trigger - We found '.count($bookingsPickupMissed90mins).' missed notifications');
-        }else{
+        if ($bookingsPickupMissed90mins) {
+            Log::debug('90 mins trigger - We found ' . count($bookingsPickupMissed90mins) . ' missed notifications');
+        } else {
             Log::debug('90 mins trigger - We found 0 missed notifications');
         }
 
-        if($allNotifications){
-            foreach ($allNotifications as $notificationType=>$userNotifications){
+        if ($allNotifications) {
+            foreach ($allNotifications as $notificationType => $userNotifications) {
                 $k_index = 0;
                 $deviceTokens = [];
                 $amount_of_tokens = 0;
-                foreach ($userNotifications as $key=>$notification){
-                    if($notification->user->deviceTokens){
-                        foreach ($notification->user->deviceTokens as $deviceKey=>$deviceToken){
-                            if($amount_of_tokens % 2 == 0){
+                foreach ($userNotifications as $key => $notification) {
+                    if ($notification->user->deviceTokens) {
+                        foreach ($notification->user->deviceTokens as $deviceKey => $deviceToken) {
+                            if ($amount_of_tokens % 2 == 0) {
                                 $k_index++;
                             }
                             $amount_of_tokens++;
 
-                            if(isset($deviceTokens[$k_index]) && $deviceTokens[$k_index]){
+                            if (isset($deviceTokens[$k_index]) && $deviceTokens[$k_index]) {
                                 $deviceTokens[$k_index] .= $deviceToken->device_token . ',';
-                            }else{
+                            } else {
                                 $deviceTokens[$k_index] = $deviceToken->device_token . ',';
                             }
                         }
@@ -211,9 +213,9 @@ class DriversNotifications extends Command
                         break;
                 }
 
-                if(!empty($message) && $deviceTokens){
-                    foreach ($deviceTokens as $k=>$tokens){
-                        $this->notification($tokens, $message, $notificationType);
+                if (!empty($message) && $deviceTokens) {
+                    foreach ($deviceTokens as $k => $tokens) {
+                        $this->notification($tokens, $message, $notificationType, $bookingsPickupMissed90mins);
                     }
                 }
             }
@@ -222,7 +224,7 @@ class DriversNotifications extends Command
         Log::debug('Cron job is finished sending notifications');
     }
 
-    public function notification($tokens, $message, $notificationType)
+    public function notification($tokens, $message, $notificationType, $bookingsPickupMissed90mins = array())
     {
         $tokens = trim($tokens, ',');
         $tokens = explode(',', $tokens);
@@ -235,12 +237,12 @@ class DriversNotifications extends Command
             "body" => $message
         ];
 
-        if($notificationType == Notification::TYPE_MISSED_0_5 || $notificationType == Notification::TYPE_MISSED_1){
+        if ($notificationType == Notification::TYPE_MISSED_0_5 || $notificationType == Notification::TYPE_MISSED_1) {
             $notificationData = array_merge($notificationData, [
-                'positiveText'      => 'yes',
-                'positiveScreen'    => 'Profile',
-                'negativeText'      => 'no',
-                'negativeScreen'    => 'RideHelp'
+                'positiveText' => 'yes',
+                'positiveScreen' => 'Profile',
+                'negativeText' => 'no',
+                'negativeScreen' => 'RideHelp'
             ]);
         }
 
@@ -255,7 +257,7 @@ class DriversNotifications extends Command
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$fcmUrl);
+        curl_setopt($ch, CURLOPT_URL, $fcmUrl);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -266,9 +268,9 @@ class DriversNotifications extends Command
 
         $response = json_decode($result);
 
-        if(is_object($response) &&  $response->success){
+        if (is_object($response) && $response->success) {
             $status = true;
-        }else{
+        } else {
             $status = false;
         }
 
@@ -277,6 +279,13 @@ class DriversNotifications extends Command
         $notification->type = $notificationType;
         $notification->status = $status;
         $notification->save();
+
+        /** Here we cancel all missed bookings */
+        if ($notificationType == Notification::TYPE_MISSED_1_5 && count($bookingsPickupMissed90mins) > 0) {
+            foreach ($bookingsPickupMissed90mins as $key=>$missedBookings){
+                $this->bookingsRepository->cancelRide($missedBookings);
+            }
+        }
 
         Log::debug('Notification - ' . $message . ' we sent to these tokens:' . implode(',', $tokens));
 
