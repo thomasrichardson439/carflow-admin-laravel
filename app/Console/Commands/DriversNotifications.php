@@ -248,7 +248,7 @@ class DriversNotifications extends Command
         $tokens = explode(',', $tokens);
 
         $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-        $firebaseLegacyServerKey = env('FIREBASE_LEGACY_SERVER_KEY', 'AAAAuU8tFkw:APA91bHX_53IW2inAuVysTvyUpDAShgJMQSNHTUBN-2R4ipZXTc09uV35Svr8yUrek9QPnzelmJPHWKoJF7SVI71GlEnLnc0tnWY718L4sXOGDCCk925lkbxuHQzpqbv1Wn6dwygWzSv');
+        $firebaseLegacyServerKey = env('FIREBASE_SERVER_KEY', 'AAAAuU8tFkw:APA91bHX_53IW2inAuVysTvyUpDAShgJMQSNHTUBN-2R4ipZXTc09uV35Svr8yUrek9QPnzelmJPHWKoJF7SVI71GlEnLnc0tnWY718L4sXOGDCCk925lkbxuHQzpqbv1Wn6dwygWzSv');
 
         $notificationData = [
             "title" => "CarFlo",
