@@ -248,7 +248,7 @@ class DriversNotifications extends Command
         $tokens = explode(',', $tokens);
 
         $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-        $firebaseLegacyServerKey = env('FIREBASE_LEGACY_SERVER_KEY', 'AIzaSyD_uyZ6v4tHRS4M7n65WyfzByxsbPDiGj0');
+        $firebaseLegacyServerKey = env('FIREBASE_LEGACY_SERVER_KEY', 'AAAAuU8tFkw:APA91bHX_53IW2inAuVysTvyUpDAShgJMQSNHTUBN-2R4ipZXTc09uV35Svr8yUrek9QPnzelmJPHWKoJF7SVI71GlEnLnc0tnWY718L4sXOGDCCk925lkbxuHQzpqbv1Wn6dwygWzSv');
 
         $notificationData = [
             "title" => "CarFlo",
@@ -266,23 +266,32 @@ class DriversNotifications extends Command
 
         $fcmNotification = [
             'registration_ids' => $tokens, //multiple token array
-            'data' => $notificationData
+            'data' => $notificationData,
+            'content_available' => true
         ];
 
-        $headers = [
-            'Authorization: key=' . $firebaseLegacyServerKey,
-            'Content-Type: application/json'
-        ];
+        $fcmData = json_encode($fcmNotification);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $fcmUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        // Prepare new cURL resource
+        $ch = curl_init($fcmUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fcmData);
+
+        // Set HTTP Header for POST request
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: key=' . $firebaseLegacyServerKey,
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($fcmData))
+        );
+
+        // Submit the POST request
         $result = curl_exec($ch);
+
+        // Close cURL session handle
         curl_close($ch);
+
+        Log::debug('FCM Response: ' . json_encode($result));
 
         $response = json_decode($result);
 
