@@ -48,6 +48,7 @@ class BookingsRepository extends BaseRepository
                     $query->orWhereBetween('booking_starting_at', [$start, $end]);
                     $query->orWhereBetween('booking_ending_at', [$start, $end]);
                 })
+                ->where('cancelled_at', '2000-00-00 00:00:00') //please have a look into database/migrations/2019_02_25_133736_add_cancelled_at_field_bookings_table.php
 //                    we had a bug when it was ignoring booking_starting_at and booking_ending_at and was displaying current bookings
 //                ->orWhere(function (Builder $query) use ($start, $end) {
                 ->where(function (Builder $query) use ($start, $end) {
@@ -231,6 +232,7 @@ class BookingsRepository extends BaseRepository
     public function cancelRide(Booking $booking) : array
     {
         $booking->status = Booking::STATUS_CANCELED;
+        $booking->cancelled_at = now()->second(0);
         $booking->save();
 
         return $this->show($booking);
@@ -258,7 +260,6 @@ class BookingsRepository extends BaseRepository
 
     /**
      * @param Booking $booking
-     * @param array $data
      * @return array - booking
      */
     public function sendLateNotification(Booking $booking) : array

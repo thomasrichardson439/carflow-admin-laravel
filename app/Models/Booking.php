@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $is_recurring
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $cancelled_at
  * @property string $status
  * @property string $starting_at_weekday
  * @property string $ending_at_weekday
@@ -52,6 +53,7 @@ class Booking extends Model
         'booking_ending_at',
         'created_at',
         'updated_at',
+        'cancelled_at'
     ];
 
     protected $visible = [

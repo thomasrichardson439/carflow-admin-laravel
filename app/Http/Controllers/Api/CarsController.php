@@ -8,6 +8,7 @@ use App\Repositories\BookingsRepository;
 use App\Repositories\CarsRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use \Illuminate\Database\QueryException;
 
 class CarsController extends BaseApiController
 {
@@ -140,7 +141,7 @@ class CarsController extends BaseApiController
                     'ending_at_weekday' => $request->is_recurring ? strtolower($endingAt->format('l')) : null,
                 ]);
             });
-        } catch(Exception $e) {
+        } catch(QueryException $e) {
             return $this->error(422, 'Picked range contains already booked hours', 'validation');
         }
 
