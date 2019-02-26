@@ -210,7 +210,7 @@ class AuthController extends BaseApiController
             return $this->error(409, 'Unable to find device token.');
         }
 
-        $deviceToken->forceDelete();
+        $deviceToken->delete();
 
         return $this->success([
             'message' => 'Device token was successfully removed.',
