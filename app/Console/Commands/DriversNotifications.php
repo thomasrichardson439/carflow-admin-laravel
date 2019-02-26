@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\DeviceToken;
 use Illuminate\Support\Facades\Log;
 use App\Models\Booking;
 use App\Repositories\BookingsRepository;
@@ -52,6 +53,9 @@ class DriversNotifications extends Command
          * Trigger: 24 hours before pick up
          */
 
+//        $tokens = 'eMIlgm2buE0:APA91bFIBILRR-tbPhCGaRcsh_n-a3WQEt_-xo0sNlpUNv-QFeLNZq4Jp7GlpUAQaVvIurHkvq3e_GJ1cTrNdZTqRQ3Ho7Xwi-3_A7ERzKhAhzG6nAChZYiS8Ij-Dip0trep9TkeDHGR,fPCUfdtdqu4:APA91bHOZNNKl_oEfdNorQjXhjpdn68ZvEHdLzNtPCOwqAEqrDpk1hpxDud8t488P1P71KmqsCGKo2Qp09kiex2vUzocshqHzBNjFrJtm7TeK-eh1VfM9wq5YA3EbuZbjvV87CdbGOpS,e8vgWzYWGr8:APA91bFtrkPhn8NpFRSIm0KQKyrQk3juDF7snYMGAR3ZUB0nfHTXhVv_o7fJ-PGZJXuSKqPDKWGB1MnocA4iJ6xIe4P6P_wcT-al2EiphSp3hdWI7_eHBcLGSMho6aaVFEsUphd6_FZG,dVSmBMtNFBo:APA91bEh6PN3r5FX3dphu4o1fMxbGPboTx-rYbHfkeeAs7uv-Mqf6RjOwsRW9snoo0wS2tuzhfRWi2V_5XtNda9IQzDir_L8e4WLmWx-DnoGcvKhnvgzshqY28Wre523rfvSkbXgSono,dZKMMfq0tUk:APA91bEo4yIsV05nHuDEaHHT_aZqwiT06idZgOVuS_nXl4-5chsFTv0UsL_8j0t9IvCjQg1kzWQkeU1bZHONb3jf0Wv3SQ04H3KbV2T_NV7NFaXSyaOcqD934xdZazeun77RCsWTV1RC,eUl1rjsRbzc:APA91bEF1cbdMbF_-8tzB2oQnGgfff9rw3KsoagHTUnbK_kzCXBj9fHoqDfnFmpBPbxD7i2zpaFVeZdD2quedtg6ZrifmkVQtu9zStshRjfp2PULXhyZtQQySpSnqGH7NizkEhJMEc2a,fHTxpadtXOQ:APA91bEvY5Pv5rZt6lDKuYvoSwGMroIvvT74OfT4qmjyKd8XoZUTtse2tRermCX1lIQD6O7bTBMYad1VUR6_AygIF5Kk14-oRnZcDmclzV1xdn8M00QboMqPPYgsqYN9p-WAG9a74FE5';
+//        $this->notification($tokens, 'Test message', Notification::TYPE_MISSED_0_5);
+//        echo "Done\n\n";exit;
         Log::debug('Cron job is started sending notifications');
 
         $nowStart24 = now()->second(0)->addHours(24);
@@ -267,7 +271,8 @@ class DriversNotifications extends Command
         $fcmNotification = [
             'registration_ids' => $tokens, //multiple token array
             'data' => $notificationData,
-            'content_available' => true
+            'content_available' => true,
+            'priority' => 'high'
         ];
 
         $fcmData = json_encode($fcmNotification);
@@ -295,16 +300,33 @@ class DriversNotifications extends Command
 
         $response = json_decode($result);
 
-        if (is_object($response) && $response->success) {
-            $status = true;
-        } else {
-            $status = false;
+        if (is_object($response) && $response->failure > 0) {
+            $badTokens = [];
+            foreach ($response->results as $responseKey => $responseItem){
+                if(!empty($responseItem->error) && isset($tokens[$responseKey])){
+                    $needToDeleteToken = $tokens[$responseKey];
+                    $badTokens[] = $needToDeleteToken;
+                    unset($tokens[$responseKey]);
+
+                    $deviceToken = DeviceToken::firstOrFail()->where('device_token', $needToDeleteToken);
+
+                    if($deviceToken){
+                        $deviceToken->delete();
+                    }
+                }
+            }
+
+            $notification = new Notification;
+            $notification->device_token_ids = implode(',', $badTokens);
+            $notification->type = $notificationType;
+            $notification->status = false;
+            $notification->save();
         }
 
         $notification = new Notification;
         $notification->device_token_ids = implode(',', $tokens);
         $notification->type = $notificationType;
-        $notification->status = $status;
+        $notification->status = true;
         $notification->save();
 
         /** Here we cancel all missed bookings */
