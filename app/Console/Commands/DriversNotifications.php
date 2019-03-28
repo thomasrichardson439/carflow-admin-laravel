@@ -53,10 +53,6 @@ class DriversNotifications extends Command
          * Trigger: 24 hours before pick up
          */
 
-//        $tokens = 'eMIlgm2buE0:APA91bFIBILRR-tbPhCGaRcsh_n-a3WQEt_-xo0sNlpUNv-QFeLNZq4Jp7GlpUAQaVvIurHkvq3e_GJ1cTrNdZTqRQ3Ho7Xwi-3_A7ERzKhAhzG6nAChZYiS8Ij-Dip0trep9TkeDHGR,fPCUfdtdqu4:APA91bHOZNNKl_oEfdNorQjXhjpdn68ZvEHdLzNtPCOwqAEqrDpk1hpxDud8t488P1P71KmqsCGKo2Qp09kiex2vUzocshqHzBNjFrJtm7TeK-eh1VfM9wq5YA3EbuZbjvV87CdbGOpS,e8vgWzYWGr8:APA91bFtrkPhn8NpFRSIm0KQKyrQk3juDF7snYMGAR3ZUB0nfHTXhVv_o7fJ-PGZJXuSKqPDKWGB1MnocA4iJ6xIe4P6P_wcT-al2EiphSp3hdWI7_eHBcLGSMho6aaVFEsUphd6_FZG,dVSmBMtNFBo:APA91bEh6PN3r5FX3dphu4o1fMxbGPboTx-rYbHfkeeAs7uv-Mqf6RjOwsRW9snoo0wS2tuzhfRWi2V_5XtNda9IQzDir_L8e4WLmWx-DnoGcvKhnvgzshqY28Wre523rfvSkbXgSono,dZKMMfq0tUk:APA91bEo4yIsV05nHuDEaHHT_aZqwiT06idZgOVuS_nXl4-5chsFTv0UsL_8j0t9IvCjQg1kzWQkeU1bZHONb3jf0Wv3SQ04H3KbV2T_NV7NFaXSyaOcqD934xdZazeun77RCsWTV1RC,eUl1rjsRbzc:APA91bEF1cbdMbF_-8tzB2oQnGgfff9rw3KsoagHTUnbK_kzCXBj9fHoqDfnFmpBPbxD7i2zpaFVeZdD2quedtg6ZrifmkVQtu9zStshRjfp2PULXhyZtQQySpSnqGH7NizkEhJMEc2a,fHTxpadtXOQ:APA91bEvY5Pv5rZt6lDKuYvoSwGMroIvvT74OfT4qmjyKd8XoZUTtse2tRermCX1lIQD6O7bTBMYad1VUR6_AygIF5Kk14-oRnZcDmclzV1xdn8M00QboMqPPYgsqYN9p-WAG9a74FE5';
-//        $tokens = 'dIWQPBB2_Ac:APA91bFGTl4lSJ53089aqXFQheNFFC4aicfsJsd3Dy2wWl6JnnPNpNtZAd2ZK2YHuE8YHnEBK315hsvxHdok6lXGgGfbUbanFoiGohbLsF79QNckvIwUA9s1HrkADrDZsaTkayYJsh8h';
-//        $this->notification($tokens, 'Test message', Notification::TYPE_MISSED_0_5);
-//        echo "Done\n\n";exit;
         Log::debug('Cron job is started sending notifications');
 
         $nowStart24 = now()->second(0)->addHours(24);
@@ -272,6 +268,7 @@ class DriversNotifications extends Command
         $fcmNotification = [
             'registration_ids' => $tokens, //multiple token array
             'data' => $notificationData,
+            'notification' => $notificationData,
             'content_available' => true,
             'priority' => 'high'
         ];
@@ -297,8 +294,6 @@ class DriversNotifications extends Command
         // Close cURL session handle
         curl_close($ch);
 
-//        echo '<pre>';
-//        var_dump($result);
         Log::debug('FCM Response: ' . json_encode($result));
 
         $response = json_decode($result);
