@@ -253,7 +253,8 @@ class DriversNotifications extends Command
 
         $notificationData = [
             "title" => "CarFlo",
-            "body" => $message
+            "body" => $message,
+            "sound" => "default"
         ];
 
         if ($notificationType == Notification::TYPE_MISSED_0_5 || $notificationType == Notification::TYPE_MISSED_1) {
