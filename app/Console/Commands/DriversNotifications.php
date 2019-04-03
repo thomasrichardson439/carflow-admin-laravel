@@ -49,10 +49,6 @@ class DriversNotifications extends Command
     {
         $allNotifications = [];
 
-        /**
-         * Trigger: 24 hours before pick up
-         */
-
         Log::debug('Cron job is started sending notifications');
 
         $nowStart24 = now()->second(0)->addHours(24);
@@ -72,6 +68,19 @@ class DriversNotifications extends Command
 
         $nowMissedStart15 = now()->second(0)->subMinutes(90);
         $nowMissedEnd15 = now()->second(59)->subMinutes(90);
+
+        $nowLeftStart2 = now()->second(0)->addHours(2);
+        $nowLeftEnd2 = now()->second(59)->addHours(2);
+
+        $nowLeftStart1 = now()->second(0)->addHours(1);
+        $nowLeftEnd1 = now()->second(59)->addHours(1);
+
+        $nowShouldBeReturnedStart = now()->second(0);
+        $nowShouldBeReturnedEnd = now()->second(59);
+
+        /**
+         * Trigger: 24 hours before pick up
+         */
 
         $bookings24hr = Booking::query()
             ->where('status', '=', Booking::STATUS_PENDING)
@@ -184,6 +193,63 @@ class DriversNotifications extends Command
             Log::debug('90 mins trigger - We found 0 missed notifications');
         }
 
+        /**
+         * Trigger: 2 hours left until vehicle is returned
+         */
+        $bookingsLeft120mins = Booking::query()
+            ->where('status', '=', Booking::STATUS_DRIVING)
+            ->whereBetween('booking_ending_at', [
+                $nowLeftStart2,
+                $nowLeftEnd2
+            ])
+            ->get();
+
+        $allNotifications[Notification::TYPE_LEFT_2] = $bookingsLeft120mins;
+
+        if ($bookingsLeft120mins) {
+            Log::debug('120 mins trigger - We found ' . count($bookingsLeft120mins) . ' left notifications');
+        } else {
+            Log::debug('120 mins trigger - We found 0 left notifications');
+        }
+
+        /**
+         * Trigger: 1 hour left until vehicle is returned
+         */
+        $bookingsLeft60mins = Booking::query()
+            ->where('status', '=', Booking::STATUS_DRIVING)
+            ->whereBetween('booking_ending_at', [
+                $nowLeftStart1,
+                $nowLeftEnd1
+            ])
+            ->get();
+
+        $allNotifications[Notification::TYPE_LEFT_1] = $bookingsLeft60mins;
+
+        if ($bookingsLeft60mins) {
+            Log::debug('60 mins trigger - We found ' . count($bookingsLeft60mins) . ' left notifications');
+        } else {
+            Log::debug('60 mins trigger - We found 0 left notifications');
+        }
+
+        /**
+         * Trigger: When the vehicle is supposed to be returned
+         */
+        $bookingsShouldBeReturned = Booking::query()
+            ->where('status', '=', Booking::STATUS_DRIVING)
+            ->whereBetween('booking_ending_at', [
+                $nowShouldBeReturnedStart,
+                $nowShouldBeReturnedEnd
+            ])
+            ->get();
+
+        $allNotifications[Notification::TYPE_SHOULD_BE_RETURNED] = $bookingsShouldBeReturned;
+
+        if ($bookingsShouldBeReturned) {
+            Log::debug('Should be trigger - We found ' . count($bookingsShouldBeReturned) . ' should be returned notifications');
+        } else {
+            Log::debug('Should be trigger - We found 0 should be returned notifications');
+        }
+
         if ($allNotifications) {
             foreach ($allNotifications as $notificationType => $userNotifications) {
                 $k_index = 0;
@@ -229,6 +295,18 @@ class DriversNotifications extends Command
 
                     case Notification::TYPE_MISSED_1_5:
                         $message = "You missed a vehicle that you rented.";
+                        break;
+
+                    case Notification::TYPE_LEFT_2:
+                        $message = "You have two hours of driving left.";
+                        break;
+
+                    case Notification::TYPE_LEFT_1:
+                        $message = "You have one hour left to return the vehicle.";
+                        break;
+
+                    case Notification::TYPE_SHOULD_BE_RETURNED:
+                        $message = "Your vehicle should be returned. Don’t forget to do the inspection.";
                         break;
                 }
 

@@ -25,6 +25,9 @@ class Notification extends Model
     public const TYPE_MISSED_0_5 = 4;
     public const TYPE_MISSED_1 = 5;
     public const TYPE_MISSED_1_5 = 6;
+    public const TYPE_LEFT_2 = 7;
+    public const TYPE_LEFT_1 = 8;
+    public const TYPE_SHOULD_BE_RETURNED = 9;
 
     protected $table = 'notifications';
 
